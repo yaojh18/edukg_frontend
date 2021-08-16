@@ -6,46 +6,172 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button"
+        android:id="@+id/question_answering"
         style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="320dp"
-        android:layout_height="78dp"
-        android:text="Button"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        android:layout_width="45dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="616dp"
+        android:text="知识问答"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Switch
-        android:id="@+id/switch1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Switch"
-        tools:layout_editor_absoluteX="130dp"
-        tools:layout_editor_absoluteY="80dp" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/user_system"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="55dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="616dp"
+        android:text="个人主页"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.856"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/submit"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="38dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="16dp"
+        android:onClick="search"
+        android:text="搜索"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.957"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/search_bar"
+        android:layout_width="332dp"
+        android:layout_height="39dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="搜一搜"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.163"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.022" />
+
+    <Spinner
+        android:id="@+id/spinner2"
+        android:layout_width="126dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:entries="@array/languages"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_bar" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner2"
+        app:tabMode="scrollable">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/ti_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_launcher_background"
+            android:text="语文" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/ti_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_launcher_foreground"
+            android:text="英语" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/ti_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_launcher_background"
+            android:text="数学" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/ti_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_launcher_background"
+            android:text="物理" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/ti_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_launcher_background"
+            android:text="生物" />
+
+
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/ti_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_launcher_background"
+            android:text="化学" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/ti_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_launcher_background"
+            android:text="地理" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/ti_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_launcher_background"
+            android:text="历史" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/ti_9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_launcher_background"
+            android:text="政治" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tab_layout" />
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:menu="@menu/bottom_nav_menu" />
+
+    <fragment
+        android:id="@+id/nav_host_fragment_activity_main"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/mobile_navigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
