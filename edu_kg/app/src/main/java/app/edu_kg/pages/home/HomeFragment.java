@@ -17,13 +17,12 @@ import app.edu_kg.R;
 import app.edu_kg.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
-
-    private HomeViewModel homeViewModel;
+    private HomeViewModel helperViewModel;
     private FragmentHomeBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
+        helperViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
