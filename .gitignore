@@ -1,5 +1,5 @@
-*.iml
-.DS_Store
-/build
-/edu_kg/.idea
-/test
+build
+edu_kg/.idea
+edu_app/.idea
+edu_app/
+test
