@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 edu_app/.idea
 edu_app/.gradle
 edu_kg/.idea
@@ -5,3 +6,8 @@ edu_kg/.gradle
 edu_kg/app/build
 edu_kg/local.properties
 test/
+=======
+build
+edu_kg/.idea
+test
+>>>>>>> fc434641e969acf21e16ff2bb9ded1bcfd8a68e7
