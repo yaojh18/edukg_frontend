@@ -1,0 +1,7 @@
+edu_app/.idea
+edu_app/.gradle
+edu_kg/.idea
+edu_kg/.gradle
+edu_kg/app/build
+edu_kg/local.properties
+test/

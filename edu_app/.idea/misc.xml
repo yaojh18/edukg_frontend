@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/EDUKG/frontend/edu_app/app/src/main/res/layout/activity_main.xml" value="0.1793478260869565" />
+        <entry key="..\:/EDUKG/frontend/edu_app/app/src/main/res/layout/fragment_dashboard.xml" value="0.1793478260869565" />
         <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_app/app/src/main/res/drawable-v24/ic_dashboard_black_24dp.xml" value="0.2601851851851852" />
         <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_app/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2601851851851852" />
         <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_app/app/src/main/res/layout/activity_main.xml" value="0.264" />
