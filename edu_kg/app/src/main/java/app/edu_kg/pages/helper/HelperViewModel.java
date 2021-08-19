@@ -1,6 +1,5 @@
 package app.edu_kg.pages.helper;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,6 @@ public class HelperViewModel extends ViewModel {
     MessageListAdapter adapter;
     public HelperViewModel(){
         adapter = new MessageListAdapter();
-        adapter.addUserMessage("test");
-        adapter.addRobotMessage("test");
     }
 }
 
@@ -49,7 +46,8 @@ class MessageListAdapter extends RecyclerView.Adapter {
             messageText.setText(message.message);
         }
     }
-    public static class UserMessage {
+
+    private static class UserMessage {
         String message;
         int type;
         static final int USER_MESSAGE = 0;
@@ -63,14 +61,14 @@ class MessageListAdapter extends RecyclerView.Adapter {
     private List<UserMessage> messageList;
 
     public MessageListAdapter() {
-        this.messageList = new ArrayList<UserMessage>();
+        messageList = new ArrayList<UserMessage>();
     }
 
-    public void addUserMessage(String message){
+    public void addUserMessage(String message) {
         messageList.add(new UserMessage(message, UserMessage.USER_MESSAGE));
     }
 
-    public void addRobotMessage(String message){
+    public void addRobotMessage(String message) {
         messageList.add(new UserMessage(message, UserMessage.ROBOT_MESSAGE));
     }
 

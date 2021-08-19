@@ -8,11 +8,44 @@
     tools:context=".pages.helper.HelperFragment"
     >
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/helper_action_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:elevation="15dp"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/thelper_action_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#eef1f6"
+            android:theme="@style/Widget.AppCompat.Toolbar"
+            app:popupTheme="@style/Theme.AppCompat.Light">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="18dp"
+                android:text="@string/helper_hint"
+                android:textColor="#000000"
+                android:textSize="16sp" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/message_board"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/helper_input_layout" />
+        android:layout_above="@+id/helper_input_layout"
+        android:layout_below="@+id/helper_action_bar_layout" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/helper_input_layout"
@@ -20,6 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="10dp"

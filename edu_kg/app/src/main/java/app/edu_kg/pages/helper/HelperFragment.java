@@ -36,6 +36,10 @@ public class HelperFragment extends Fragment {
         Context context = view.getContext();
 
         InputMethodManager inputMethod = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        RecyclerView messageRecycler = binding.messageBoard;
+
+        messageRecycler.setLayoutManager(new LinearLayoutManager(context));
+        messageRecycler.setAdapter(helperViewModel.adapter);
 
         EditText helperInput = binding.helperInput;
         helperInput.setOnKeyListener(new View.OnKeyListener() {
@@ -49,6 +53,7 @@ public class HelperFragment extends Fragment {
                         helperViewModel.adapter.addRobotMessage(response);
                         helperInput.setText("");
                         inputMethod.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        messageRecycler.scrollToPosition(helperViewModel.adapter.getItemCount() - 1);
                     }
                 }
                 return false;
@@ -65,12 +70,10 @@ public class HelperFragment extends Fragment {
                     helperViewModel.adapter.addRobotMessage(response);
                     helperInput.setText("");
                     inputMethod.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    messageRecycler.scrollToPosition(helperViewModel.adapter.getItemCount() - 1);
                 }
             }
         });
-        RecyclerView messageRecycler = binding.messageBoard;
-        messageRecycler.setLayoutManager(new LinearLayoutManager(context));
-        messageRecycler.setAdapter(helperViewModel.adapter);
 
         return view;
     }

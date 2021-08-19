@@ -16,12 +16,13 @@
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/activity_main.xml" value="0.25364583333333335" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/activity_profile.xml" value="0.2513586956521739" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/fragment_dashboard.xml" value="0.2513586956521739" />
-        <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/fragment_helper.xml" value="0.264" />
+        <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/fragment_helper.xml" value="0.27852004110996914" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/fragment_helper2.xml" value="0.2513586956521739" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/fragment_home.xml" value="0.2513586956521739" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/fragment_notifications.xml" value="0.2513586956521739" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/message_card.xml" value="0.4" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/message_card_left.xml" value="0.4" />
+        <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/message_card_right.xml" value="0.25364583333333335" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/menu/bottom_nav_menu.xml" value="0.4" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.26979166666666665" />
       </map>
