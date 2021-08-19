@@ -35,59 +35,59 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         contextView = inflater.inflate(R.layout.fragment_home, container, false);
-        tabLayout = contextView.findViewById(R.id.tab_layout);
-        viewpager = contextView.findViewById(R.id.view_pager);
+//        tabLayout = contextView.findViewById(R.id.tab_layout);
+//        viewpager = contextView.findViewById(R.id.view_pager);
         return contextView;
     }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        // fragment中嵌套fragment, Manager需要用(getChildFragmentManager())
-        MPagerAdapter mPagerAdapter = new MPagerAdapter(getChildFragmentManager());
-        initFragment();
-        tabLayout.setupWithViewPager(viewpager);
-        viewpager.setAdapter(mPagerAdapter);
-    }
-
-    private void initFragment() {
-        fragmentList.add(new TabFragment());
-        fragmentList.add(new TabFragment());
-        fragmentList.add(new TabFragment());
-        fragmentList.add(new TabFragment());
-        fragmentList.add(new TabFragment());
-    }
-
-
-    class MPagerAdapter extends FragmentPagerAdapter {
-
-
-        public MPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return (Fragment) fragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragmentList.size();
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            return super.instantiateItem(container, position);
-        }
-
-        //返回tablayout的标题文字;
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return temp[position];
-        }
-    }
-
-
-
+//
+//    @Override
+//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//        // fragment中嵌套fragment, Manager需要用(getChildFragmentManager())
+//        MPagerAdapter mPagerAdapter = new MPagerAdapter(getChildFragmentManager());
+//        initFragment();
+//        tabLayout.setupWithViewPager(viewpager);
+//        viewpager.setAdapter(mPagerAdapter);
+//    }
+//
+//    private void initFragment() {
+//        fragmentList.add(new TabFragment());
+//        fragmentList.add(new TabFragment());
+//        fragmentList.add(new TabFragment());
+//        fragmentList.add(new TabFragment());
+//        fragmentList.add(new TabFragment());
+//    }
+//
+//
+//    class MPagerAdapter extends FragmentPagerAdapter {
+//
+//
+//        public MPagerAdapter(FragmentManager fm) {
+//            super(fm);
+//        }
+//
+//        @Override
+//        public Fragment getItem(int position) {
+//            return (Fragment) fragmentList.get(position);
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return fragmentList.size();
+//        }
+//
+//        @Override
+//        public Object instantiateItem(ViewGroup container, int position) {
+//            return super.instantiateItem(container, position);
+//        }
+//
+//        //返回tablayout的标题文字;
+//        @Override
+//        public CharSequence getPageTitle(int position) {
+//            return temp[position];
+//        }
+//    }
+//
+//
+//
 }
