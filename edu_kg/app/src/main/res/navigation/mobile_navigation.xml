@@ -15,11 +15,11 @@
         android:id="@+id/navigation_helper"
         android:name="app.edu_kg.pages.helper.HelperFragment"
         android:label="@string/title_helper"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_helper" />
 
     <fragment
         android:id="@+id/navigation_profile"
         android:name="app.edu_kg.pages.profile.ProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_profile" />
 </navigation>

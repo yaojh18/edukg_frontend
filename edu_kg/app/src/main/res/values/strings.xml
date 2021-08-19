@@ -3,6 +3,5 @@
     <string name="title_home">栏目</string>
     <string name="title_helper">问答</string>
     <string name="title_profile">我的</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="helper_hint">想问点什么呢</string>
 </resources>
