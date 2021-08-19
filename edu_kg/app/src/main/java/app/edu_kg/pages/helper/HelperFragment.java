@@ -53,7 +53,8 @@ public class HelperFragment extends Fragment {
                         helperViewModel.adapter.addRobotMessage(response);
                         helperInput.setText("");
                         inputMethod.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                        messageRecycler.scrollToPosition(helperViewModel.adapter.getItemCount() - 1);
+                        if (messageRecycler.canScrollVertically(1))
+                            messageRecycler.scrollToPosition(helperViewModel.adapter.getItemCount() - 1);
                     }
                 }
                 return false;
@@ -70,7 +71,8 @@ public class HelperFragment extends Fragment {
                     helperViewModel.adapter.addRobotMessage(response);
                     helperInput.setText("");
                     inputMethod.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    messageRecycler.scrollToPosition(helperViewModel.adapter.getItemCount() - 1);
+                    if (messageRecycler.canScrollVertically(1))
+                        messageRecycler.scrollToPosition(helperViewModel.adapter.getItemCount() - 1);
                 }
             }
         });
