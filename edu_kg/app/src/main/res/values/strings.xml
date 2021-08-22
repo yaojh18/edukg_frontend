@@ -4,4 +4,10 @@
     <string name="title_helper">问答</string>
     <string name="title_profile">我的</string>
     <string name="helper_hint">问答中心</string>
+    <string name="not_logged_in">未登录</string>
+    <string name="user_profile">用户头像</string>
+    <string name="browse_history">浏览历史</string>
+    <string name="user_collection">用户收藏</string>
+    <string name="exercise_rec">试题推荐</string>
+    <string name="knowledge_rec">知识梳理</string>
 </resources>

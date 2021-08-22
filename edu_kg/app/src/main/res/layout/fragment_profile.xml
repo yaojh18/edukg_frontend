@@ -1,25 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:orientation="vertical"
     tools:context=".pages.profile.ProfileFragment">
 
-    <TextView
-        android:id="@+id/text_profile"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/helper_action_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:background="@color/teal_700"
+        android:alpha="0.5"
+        app:layout_constraintTop_toTopOf="parent"
+        android:clipChildren="false">
 
+<!--        <menu-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:background="@drawable/profile_menu"-->
+<!--            android:layout_gravity="end"-->
+<!--            android:layout_marginTop="15dp"-->
+<!--            android:layout_marginEnd="15dp">-->
 
+<!--        </menu>-->
+    </com.google.android.material.appbar.AppBarLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:clipChildren="false"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/user_picture"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="-40dp"
+                android:layout_marginStart="40dp"
+                android:src="@drawable/menu_profile"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/user_profile" />
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-32dp"
+                android:text="@string/not_logged_in"
+                android:layout_marginStart="20dp"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/browse_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/browse_history" />
+            <Button
+                android:id="@+id/user_collection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_collection" />
+            <Button
+                android:id="@+id/exercise_rec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/exercise_rec" />
+            <Button
+                android:id="@+id/knowledge_rec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/knowledge_rec" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

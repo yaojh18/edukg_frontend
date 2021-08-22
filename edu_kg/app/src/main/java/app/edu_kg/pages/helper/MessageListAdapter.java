@@ -6,22 +6,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import app.edu_kg.R;
 
-public class HelperViewModel extends ViewModel {
-
-    MessageListAdapter adapter;
-    public HelperViewModel(){
-        adapter = new MessageListAdapter();
-    }
-}
-
-class MessageListAdapter extends RecyclerView.Adapter {
+public class MessageListAdapter extends RecyclerView.Adapter {
 
     private static class ReceivedMessageHolder extends RecyclerView.ViewHolder {
         TextView messageText;
@@ -47,7 +39,7 @@ class MessageListAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private static class UserMessage {
+    public static class UserMessage {
         String message;
         int type;
         static final int USER_MESSAGE = 0;
@@ -58,7 +50,7 @@ class MessageListAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private List<UserMessage> messageList;
+    List<UserMessage> messageList;
 
     public MessageListAdapter() {
         messageList = new ArrayList<UserMessage>();
