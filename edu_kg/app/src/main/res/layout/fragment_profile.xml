@@ -1,34 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
-    android:orientation="vertical"
-    tools:context=".pages.profile.ProfileFragment">
+    android:orientation="vertical">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/helper_action_bar_layout"
-        android:layout_width="match_parent"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:fitsSystemWindows="true"
         android:layout_height="0dp"
         android:layout_weight="3"
-        android:background="@color/teal_700"
-        android:alpha="0.5"
-        app:layout_constraintTop_toTopOf="parent"
-        android:clipChildren="false">
+        android:layout_width="match_parent">
 
-<!--        <menu-->
-<!--            android:layout_width="40dp"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:background="@drawable/profile_menu"-->
-<!--            android:layout_gravity="end"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:layout_marginEnd="15dp">-->
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:background="?attr/colorSecondary"
+            android:alpha="0.5"
+            android:layout_width="match_parent">
 
-<!--        </menu>-->
-    </com.google.android.material.appbar.AppBarLayout>
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:fitsSystemWindows="true"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/ic_launcher"
+                android:scaleType="centerCrop"
+                android:fitsSystemWindows="true"
+                android:contentDescription="@string/user_profile" />
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:background="@android:color/transparent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_width="match_parent"
+                    app:menu="@menu/profile_actionbar"/>
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,51 +57,165 @@
             android:layout_height="wrap_content"
             android:clipChildren="false"
             android:orientation="horizontal">
+
             <ImageView
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 android:id="@+id/user_picture"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:layout_marginTop="-40dp"
                 android:layout_marginStart="40dp"
-                android:src="@drawable/menu_profile"
+                android:layout_marginTop="-40dp"
+                android:contentDescription="@string/user_profile"
                 android:scaleType="centerCrop"
-                android:contentDescription="@string/user_profile" />
+                android:background="@drawable/user_picture_outline"
+                android:src="@drawable/menu_profile" />
 
             <TextView
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="-32dp"
                 android:text="@string/not_logged_in"
-                android:layout_marginStart="20dp"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
         </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true">
+
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/browse_history"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/browse_history" />
-            <Button
-                android:id="@+id/user_collection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/user_collection" />
-            <Button
-                android:id="@+id/exercise_rec"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/exercise_rec" />
-            <Button
-                android:id="@+id/knowledge_rec"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/knowledge_rec" />
-        </LinearLayout>
+            android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/browse_history"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/browse_history"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/menu_profile" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:layout_marginStart="20dp"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="18sp"
+                        android:text="@string/browse_history"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/divider_line" />
+                <LinearLayout
+                    android:id="@+id/user_collection"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/user_collection"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/menu_profile" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:layout_marginStart="20dp"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="18sp"
+                        android:text="@string/user_collection"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/divider_line" />
+                <LinearLayout
+                    android:id="@+id/exercise_rec"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/exercise_rec"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/menu_profile" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:layout_marginStart="20dp"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="18sp"
+                        android:text="@string/exercise_rec"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/divider_line" />
+                <LinearLayout
+                    android:id="@+id/knowledge_rec"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/knowledge_rec"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/menu_profile" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:layout_marginStart="20dp"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="18sp"
+                        android:text="@string/knowledge_rec"/>
+                </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
     </LinearLayout>
 </LinearLayout>

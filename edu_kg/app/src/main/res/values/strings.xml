@@ -5,6 +5,7 @@
     <string name="title_profile">我的</string>
     <string name="helper_hint">问答中心</string>
     <string name="not_logged_in">未登录</string>
+    <string name="logged_in">已登录</string>
     <string name="user_profile">用户头像</string>
     <string name="browse_history">浏览历史</string>
     <string name="user_collection">用户收藏</string>
