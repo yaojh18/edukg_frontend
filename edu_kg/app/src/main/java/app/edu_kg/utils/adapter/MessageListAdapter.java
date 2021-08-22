@@ -1,4 +1,4 @@
-package app.edu_kg.pages.helper;
+package app.edu_kg.utils.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,22 +6,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import app.edu_kg.R;
 
-public class HelperViewModel extends ViewModel {
-
-    MessageListAdapter adapter;
-    public HelperViewModel(){
-        adapter = new MessageListAdapter();
-    }
-}
-
-class MessageListAdapter extends RecyclerView.Adapter {
+public class MessageListAdapter extends RecyclerView.Adapter {
 
     private static class ReceivedMessageHolder extends RecyclerView.ViewHolder {
         TextView messageText;
@@ -30,7 +22,7 @@ class MessageListAdapter extends RecyclerView.Adapter {
             super(itemView);
             messageText = (TextView) itemView.findViewById(R.id.message_card_left_text);
         }
-        void bind(UserMessage message) {
+        void bind(MessageListAdapter.UserMessage message) {
             messageText.setText(message.message);
         }
     }
@@ -42,12 +34,12 @@ class MessageListAdapter extends RecyclerView.Adapter {
             super(itemView);
             messageText = (TextView) itemView.findViewById(R.id.message_card_right_text);
         }
-        void bind(UserMessage message) {
+        void bind(MessageListAdapter.UserMessage message) {
             messageText.setText(message.message);
         }
     }
 
-    private static class UserMessage {
+    public static class UserMessage {
         String message;
         int type;
         static final int USER_MESSAGE = 0;
@@ -58,18 +50,18 @@ class MessageListAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private List<UserMessage> messageList;
+    List<MessageListAdapter.UserMessage> messageList;
 
     public MessageListAdapter() {
-        messageList = new ArrayList<UserMessage>();
+        messageList = new ArrayList<MessageListAdapter.UserMessage>();
     }
 
     public void addUserMessage(String message) {
-        messageList.add(new UserMessage(message, UserMessage.USER_MESSAGE));
+        messageList.add(new MessageListAdapter.UserMessage(message, MessageListAdapter.UserMessage.USER_MESSAGE));
     }
 
     public void addRobotMessage(String message) {
-        messageList.add(new UserMessage(message, UserMessage.ROBOT_MESSAGE));
+        messageList.add(new MessageListAdapter.UserMessage(message, MessageListAdapter.UserMessage.ROBOT_MESSAGE));
     }
 
     @Override
@@ -79,40 +71,40 @@ class MessageListAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        UserMessage message = messageList.get(position);
-        if (message.type == UserMessage.USER_MESSAGE)
-            return UserMessage.USER_MESSAGE;
+        MessageListAdapter.UserMessage message = messageList.get(position);
+        if (message.type == MessageListAdapter.UserMessage.USER_MESSAGE)
+            return MessageListAdapter.UserMessage.USER_MESSAGE;
         else
-            return UserMessage.ROBOT_MESSAGE;
+            return MessageListAdapter.UserMessage.ROBOT_MESSAGE;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        if (viewType == UserMessage.USER_MESSAGE) {
+        if (viewType == MessageListAdapter.UserMessage.USER_MESSAGE) {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.message_card_right, parent, false);
-            return new SentMessageHolder(view);
+            return new MessageListAdapter.SentMessageHolder(view);
         }
         else{
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.message_card_left, parent, false);
-            return new ReceivedMessageHolder(view);
+            return new MessageListAdapter.ReceivedMessageHolder(view);
         }
 
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        UserMessage message = messageList.get(position);
+        MessageListAdapter.UserMessage message = messageList.get(position);
 
         switch (holder.getItemViewType()) {
-            case UserMessage.USER_MESSAGE:
-                ((SentMessageHolder) holder).bind(message);
+            case MessageListAdapter.UserMessage.USER_MESSAGE:
+                ((MessageListAdapter.SentMessageHolder) holder).bind(message);
                 break;
-            case UserMessage.ROBOT_MESSAGE:
-                ((ReceivedMessageHolder) holder).bind(message);
+            case MessageListAdapter.UserMessage.ROBOT_MESSAGE:
+                ((MessageListAdapter.ReceivedMessageHolder) holder).bind(message);
         }
     }
 }

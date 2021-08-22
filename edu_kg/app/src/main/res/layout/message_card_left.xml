@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginStart="20dp"
-        app:cardBackgroundColor="#eef1f6"
+        app:cardBackgroundColor="?attr/colorSurface"
         app:cardCornerRadius="12dp"
         app:cardElevation="6dp"
         app:cardPreventCornerOverlap="false"
@@ -32,7 +32,7 @@
                 android:paddingLeft="12dp"
                 android:paddingTop="8dp"
                 android:paddingRight="12dp"
-                android:textColor="#000000"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="16sp" />
         </LinearLayout>
 
