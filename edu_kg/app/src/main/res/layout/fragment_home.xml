@@ -6,20 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".pages.home.HomeFragment">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/submit"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="38dp"
-        android:layout_height="39dp"
-        android:layout_marginTop="16dp"
-        android:onClick="search"
-        android:text="搜索"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.957"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textfield.TextInputEditText
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/search_bar"
         android:layout_width="332dp"
         android:layout_height="39dp"
@@ -28,19 +16,39 @@
         android:text="搜一搜"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.163"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.022" />
+        app:layout_constraintVertical_bias="0.023" />
 
-    <Spinner
-        android:id="@+id/spinner2"
-        android:layout_width="126dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
-        android:entries="@array/languages"
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="409dp"
+        android:layout_height="100dp"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_bar" />
+        app:layout_constraintTop_toBottomOf="@+id/search_bar">
+
+        <LinearLayout
+            android:id="@+id/id_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" />
+
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:id="@+id/entity_list"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

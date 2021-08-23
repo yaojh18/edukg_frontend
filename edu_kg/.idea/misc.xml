@@ -5,7 +5,6 @@
       <map>
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/drawable-v24/ic_dashboard_black_24dp.xml" value="0.175" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.26979166666666665" />
-        <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/drawable/helper_send.xml" value="0.12447916666666667" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.26979166666666665" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/drawable/ic_helper_black_24dp.xml" value="0.26979166666666665" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.26979166666666665" />
@@ -16,13 +15,10 @@
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/activity_main.xml" value="0.25364583333333335" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/activity_profile.xml" value="0.2513586956521739" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/fragment_dashboard.xml" value="0.2513586956521739" />
-        <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/fragment_helper.xml" value="0.27852004110996914" />
+        <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/fragment_helper.xml" value="0.2513586956521739" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/fragment_helper2.xml" value="0.2513586956521739" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/fragment_home.xml" value="0.2513586956521739" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/fragment_notifications.xml" value="0.2513586956521739" />
-        <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/message_card.xml" value="0.4" />
-        <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/message_card_left.xml" value="0.4" />
-        <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/layout/message_card_right.xml" value="0.25364583333333335" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/menu/bottom_nav_menu.xml" value="0.4" />
         <entry key="..\:/EDUKG/frontend/edu_kg/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_kg/app/src/main/res/drawable/ic_launcher_background.xml" value="0.26461538461538464" />
@@ -31,10 +27,15 @@
         <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_kg/app/src/main/res/layout/activity_home.xml" value="0.2526041666666667" />
         <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_kg/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_kg/app/src/main/res/layout/activity_profile.xml" value="0.2526041666666667" />
-        <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_kg/app/src/main/res/layout/fragment_helper.xml" value="0.12864583333333332" />
+        <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_kg/app/src/main/res/layout/activity_search.xml" value="0.1" />
+        <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_kg/app/src/main/res/layout/fragment_helper.xml" value="0.264" />
         <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_kg/app/src/main/res/layout/fragment_home.xml" value="0.2526041666666667" />
         <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_kg/app/src/main/res/layout/fragment_profile.xml" value="0.2526041666666667" />
+        <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_kg/app/src/main/res/layout/fragment_search.xml" value="0.2246376811594203" />
         <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_kg/app/src/main/res/layout/fragment_tab.xml" value="0.265625" />
+        <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_kg/app/src/main/res/layout/message_card_left.xml" value="0.2246376811594203" />
+        <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_kg/app/src/main/res/layout/message_card_right.xml" value="0.2246376811594203" />
+        <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_kg/app/src/main/res/layout/subject_item.xml" value="0.2246376811594203" />
         <entry key="..\:/Users/hanyu/AndroidStudioProjects/edukg_frontend/edu_kg/app/src/main/res/menu/bottom_nav_menu.xml" value="0.2526041666666667" />
       </map>
     </option>
