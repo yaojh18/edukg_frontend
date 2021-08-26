@@ -25,7 +25,7 @@ import java.nio.charset.StandardCharsets;
 import app.edu_kg.R;
 import app.edu_kg.pages.result.ResultActivity;
 import app.edu_kg.pages.search.SearchViewModel;
-import app.edu_kg.utils.request;
+import app.edu_kg.utils.Request;
 
 import app.edu_kg.databinding.ActivitySearchBinding;
 
@@ -40,7 +40,6 @@ public class SearchActivity extends AppCompatActivity {
         Log.e("test", "jump into SearchActivity");
         super.onCreate(savedInstanceState);
         searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
-        this.getSupportActionBar().hide();
         binding = ActivitySearchBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);

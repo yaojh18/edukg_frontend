@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 
 import app.edu_kg.R;
 import app.edu_kg.pages.result.ResultViewModel;
-import app.edu_kg.utils.request;
+import app.edu_kg.utils.Request;
 
 import app.edu_kg.databinding.ActivityResultBinding;
 
