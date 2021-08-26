@@ -3,6 +3,8 @@ package app.edu_kg.utils;
 import android.os.Handler;
 import android.util.Pair;
 
+import androidx.annotation.Nullable;
+
 import org.json.JSONObject;
 
 import java.util.Objects;
@@ -140,6 +142,83 @@ public class Request {
                 }
             }
         }).start();
+    }
+
+
+    @Nullable
+    public static JSONObject getSubjectEntityList(String subject) {
+        final String url = "http://localhost:8080/API/homeList";
+        RequestBody requestBody =
+                new FormBody.Builder()
+                        .add("course", subject)
+                        .build();
+        okhttp3.Request request =
+                new okhttp3.Request.Builder().
+                        url(url).
+                        post(requestBody).
+                        build();
+        try{
+            Response response = client.newCall(request).execute();
+            if (!response.isSuccessful())
+                return null;
+            else{
+                JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                return json;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
+    public static JSONObject getSearchResult(String searchStr, String subject, String order) {
+        final String url = "http://localhost:8080/API/instanceList";
+        RequestBody requestBody =
+                new FormBody.Builder()
+                        .add("searchKey ", searchStr)
+                        .add("course", subject)
+
+                        .build();
+        okhttp3.Request request =
+                new okhttp3.Request.Builder().
+                        url(url).
+                        post(requestBody).
+                        build();
+        try{
+            Response response = client.newCall(request).execute();
+            if (!response.isSuccessful())
+                return null;
+            else{
+                JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static JSONObject getEntityDetail(String entityName) {
+        final String url = "http://localhost:8080/API/instanceList";
+        RequestBody requestBody =
+                new FormBody.Builder()
+
+                        .build();
+        okhttp3.Request request =
+                new okhttp3.Request.Builder().
+                        url(url).
+                        post(requestBody).
+                        build();
+        try{
+            Response response = client.newCall(request).execute();
+            if (!response.isSuccessful())
+                return null;
+            else{
+                JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
 

@@ -1,8 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="languages">
+    <string-array name="type">
         <item>实体搜索</item>
         <item>文本搜索</item>
         <item>试题搜索</item>
+    </string-array>
+
+    <string-array name="subject">
+        <item>国文</item>
+        <item>英文</item>
+        <item>数学</item>
+        <item>物理</item>
+        <item>化学</item>
+        <item>生物</item>
+        <item>地理</item>
+        <item>历史</item>
+        <item>政治</item>
+    </string-array>
+
+    <string-array name="order">
+        <item>按默认排序</item>
+        <item>按首字母排序</item>
+
     </string-array>
 </resources>
