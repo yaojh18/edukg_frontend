@@ -28,12 +28,12 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@mipmap/ic_launcher"
                 android:scaleType="centerCrop"
                 android:fitsSystemWindows="true"
                 android:contentDescription="@string/user_profile" />
 
                 <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/log_menu"
                     android:background="@android:color/transparent"
                     android:layout_height="?attr/actionBarSize"
                     android:layout_width="match_parent"
@@ -59,8 +59,6 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:clickable="true"
-                android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 android:id="@+id/user_picture"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
@@ -94,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
                 <LinearLayout
-                    android:id="@+id/browse_history"
+                    android:id="@+id/change_profile"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackgroundBorderless"
                     android:layout_width="match_parent"
@@ -102,13 +100,13 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_marginStart="20dp"
                         android:layout_gravity="center"
-                        android:contentDescription="@string/browse_history"
+                        android:contentDescription="@string/change_profile"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/menu_profile" />
+                        android:src="@drawable/change_profile" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -117,7 +115,66 @@
                         android:layout_marginStart="20dp"
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="18sp"
-                        android:text="@string/browse_history"/>
+                        android:text="@string/change_profile" />
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:layout_height="20dp"
+                        android:layout_width="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_gravity="center"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/go" />
+
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/divider_line" />
+                <LinearLayout
+                    android:id="@+id/user_history"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/user_history"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/user_history" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:layout_marginStart="20dp"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="18sp"
+                        android:text="@string/user_history"/>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:layout_height="20dp"
+                        android:layout_width="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_gravity="center"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/go" />
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"
@@ -134,13 +191,13 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_marginStart="20dp"
                         android:layout_gravity="center"
                         android:contentDescription="@string/user_collection"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/menu_profile" />
+                        android:src="@drawable/user_collection" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -150,6 +207,19 @@
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="18sp"
                         android:text="@string/user_collection"/>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:layout_height="20dp"
+                        android:layout_width="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_gravity="center"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/go" />
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"
@@ -166,13 +236,13 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_marginStart="20dp"
                         android:layout_gravity="center"
                         android:contentDescription="@string/exercise_rec"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/menu_profile" />
+                        android:src="@drawable/exercise_rec" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -182,38 +252,19 @@
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="18sp"
                         android:text="@string/exercise_rec"/>
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/divider_line" />
-                <LinearLayout
-                    android:id="@+id/knowledge_rec"
-                    android:clickable="true"
-                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
 
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="20dp"
+                        android:layout_height="20dp"
+                        android:layout_width="20dp"
+                        android:layout_marginEnd="20dp"
                         android:layout_gravity="center"
-                        android:contentDescription="@string/knowledge_rec"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/menu_profile" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
-                        android:layout_marginStart="20dp"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="18sp"
-                        android:text="@string/knowledge_rec"/>
+                        android:src="@drawable/go" />
                 </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

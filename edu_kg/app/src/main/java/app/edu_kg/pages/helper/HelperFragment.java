@@ -1,21 +1,20 @@
 package app.edu_kg.pages.helper;
 import app.edu_kg.MainActivity;
 import app.edu_kg.MainViewModel;
-import app.edu_kg.R;
 import app.edu_kg.utils.*;
 
-import android.app.Application;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -23,8 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputLayout;
-
-import java.util.Objects;
 
 import app.edu_kg.databinding.FragmentHelperBinding;
 
@@ -46,6 +43,20 @@ public class HelperFragment extends Fragment {
         messageRecycler.setAdapter(helperViewModel.adapter);
 
         EditText helperInput = binding.helperInput;
+
+        @SuppressLint("HandlerLeak")
+        Handler handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                int message_num = msg.what;
+                if (message_num == Constant.MESSAGE_LIST_RESPONSE){
+                    String message = (String) msg.obj;
+                    helperViewModel.adapter.addRobotMessage(message);
+                    binding.messageBoard.scrollToPosition(helperViewModel.adapter.getItemCount() - 1);
+                }
+            }
+        };
+
         helperInput.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
@@ -53,23 +64,15 @@ public class HelperFragment extends Fragment {
                     String text = helperInput.getText().toString();
                     if (!text.equals("")){
                         helperViewModel.adapter.addUserMessage(text);
-                        String response = request.inputQuestion(text);
-                        helperViewModel.adapter.addRobotMessage(response);
                         helperInput.setText("");
                         messageRecycler.scrollToPosition(helperViewModel.adapter.getItemCount() - 1);
+                        Request.inputQuestion(text, handler);
                     }
                 }
                 return false;
             }
         });
-        helperInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                Log.v("Focus", String.valueOf(hasFocus));
-                if (hasFocus)
-                    messageRecycler.scrollToPosition(helperViewModel.adapter.getItemCount() - 1);
-            }
-        });
+
         TextInputLayout helperInputLayout = binding.helperInputLayout;
         helperInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,10 +80,9 @@ public class HelperFragment extends Fragment {
                 String text = helperInput.getText().toString();
                 if (!text.equals("")){
                     helperViewModel.adapter.addUserMessage(text);
-                    String response = request.inputQuestion(text);
-                    helperViewModel.adapter.addRobotMessage(response);
                     helperInput.setText("");
                     messageRecycler.scrollToPosition(helperViewModel.adapter.getItemCount() - 1);
+                    Request.inputQuestion(text, handler);
                 }
             }
         });

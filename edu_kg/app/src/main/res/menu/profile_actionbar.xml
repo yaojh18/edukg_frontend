@@ -12,5 +12,5 @@
         android:icon="@drawable/log_out"
         app:showAsAction="always"
         android:visible="false"
-        android:title="@string/not_logged_in" />
+        android:title="@string/logged_in" />
 </menu>
