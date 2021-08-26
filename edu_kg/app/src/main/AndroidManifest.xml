@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".pages.search.SearchActivity" />
+        <activity android:name=".pages.result.ResultActivity" />
     </application>
 
 </manifest>

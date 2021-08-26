@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    tools:context=".pages.search.SearchActivity">
+    tools:context=".pages.result.ResultActivity">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/search_input_layout"
@@ -59,12 +59,6 @@
             android:entries="@array/order" />
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/clear_history"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:text="清除历史记录" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/board"

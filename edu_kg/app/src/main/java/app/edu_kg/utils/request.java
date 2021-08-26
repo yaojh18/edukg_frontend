@@ -39,11 +39,40 @@ public class request{
 
     }
 
+
     @Nullable
-    public static String[] getCustomSubject() {
-        final String url = "http://localhost:8080/API/getCustomSubject";
+    public static JSONObject getSubjectEntityList(String subject) {
+        final String url = "http://localhost:8080/API/homeList";
         RequestBody requestBody =
                 new FormBody.Builder()
+                        .add("course", subject)
+                        .build();
+        Request request =
+                new Request.Builder().
+                        url(url).
+                        post(requestBody).
+                        build();
+        try{
+            Response response = client.newCall(request).execute();
+            if (!response.isSuccessful())
+                return null;
+            else{
+                JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                return json;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
+    public static JSONObject getSearchResult(String searchStr, String subject, String order) {
+        final String url = "http://localhost:8080/API/instanceList";
+        RequestBody requestBody =
+                new FormBody.Builder()
+                        .add("searchKey ", searchStr)
+                        .add("course", subject)
+
                         .build();
         Request request =
                 new Request.Builder().
@@ -63,84 +92,11 @@ public class request{
         }
     }
 
-    @Nullable
-    public static String[] getSubjectEntityList(String subject) {
-        final String url = "http://localhost:8080/API/getCustomSubject";
+    public static JSONObject getEntityDetail(String entityName) {
+        final String url = "http://localhost:8080/API/instanceList";
         RequestBody requestBody =
                 new FormBody.Builder()
-                        .add("subject", subject)
-                        .build();
-        Request request =
-                new Request.Builder().
-                        url(url).
-                        post(requestBody).
-                        build();
-        try{
-            Response response = client.newCall(request).execute();
-            if (!response.isSuccessful())
-                return null;
-            else{
-                JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
-                return null;
-            }
-        } catch (Exception e) {
-            return null;
-        }
-    }
 
-    @Nullable
-    public static String[] getSearchHistory() {
-        final String url = "http://localhost:8080/API/getCustomSubject";
-        RequestBody requestBody =
-                new FormBody.Builder()
-                        .build();
-        Request request =
-                new Request.Builder().
-                        url(url).
-                        post(requestBody).
-                        build();
-        try{
-            Response response = client.newCall(request).execute();
-            if (!response.isSuccessful())
-                return null;
-            else{
-                JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
-                return null;
-            }
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    @Nullable
-    public static String[] getPopularSearch() {
-        final String url = "http://localhost:8080/API/getCustomSubject";
-        RequestBody requestBody =
-                new FormBody.Builder()
-                        .build();
-        Request request =
-                new Request.Builder().
-                        url(url).
-                        post(requestBody).
-                        build();
-        try{
-            Response response = client.newCall(request).execute();
-            if (!response.isSuccessful())
-                return null;
-            else{
-                JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
-                return null;
-            }
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public static JSONObject getSearchResult(String searchStr, String type, String subject, String order) {
-        final String url = "http://localhost:8080/API/getCustomSubject";
-        RequestBody requestBody =
-                new FormBody.Builder()
-                        .add("searchStr", searchStr)
                         .build();
         Request request =
                 new Request.Builder().

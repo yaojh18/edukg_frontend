@@ -19,6 +19,7 @@
     </string-array>
 
     <string-array name="order">
+        <item>按默认排序</item>
         <item>按首字母排序</item>
 
     </string-array>
