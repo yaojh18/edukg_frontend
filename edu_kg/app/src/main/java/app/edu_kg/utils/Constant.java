@@ -5,4 +5,5 @@ public class Constant {
     public final static int LOGIN_RESPONSE = 1002;
     public final static int REGISTER_RESPONSE = 1003;
     public final static int MODIFY_RESPONSE = 1004;
+    public final static int LIST_RESPONSE = 1005;
 }

@@ -6,35 +6,35 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import app.edu_kg.R;
 
-public class MessageListAdapter extends RecyclerView.Adapter {
+public class MessageListAdapter extends Adapter<ViewHolder> {
 
-    private static class ReceivedMessageHolder extends RecyclerView.ViewHolder {
+    private static class ReceivedMessageHolder extends ViewHolder {
         TextView messageText;
 
         ReceivedMessageHolder(View itemView) {
             super(itemView);
             messageText = (TextView) itemView.findViewById(R.id.message_card_left_text);
         }
-        void bind(MessageListAdapter.UserMessage message) {
+        void bind(UserMessage message) {
             messageText.setText(message.message);
         }
     }
 
-    private static class SentMessageHolder extends RecyclerView.ViewHolder {
+    private static class SentMessageHolder extends ViewHolder {
         TextView messageText;
 
         SentMessageHolder(View itemView) {
             super(itemView);
             messageText = (TextView) itemView.findViewById(R.id.message_card_right_text);
         }
-        void bind(MessageListAdapter.UserMessage message) {
+        void bind(UserMessage message) {
             messageText.setText(message.message);
         }
     }
@@ -80,7 +80,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         if (viewType == MessageListAdapter.UserMessage.USER_MESSAGE) {
             view = LayoutInflater.from(parent.getContext())
@@ -96,7 +96,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         MessageListAdapter.UserMessage message = messageList.get(position);
 
         switch (holder.getItemViewType()) {
