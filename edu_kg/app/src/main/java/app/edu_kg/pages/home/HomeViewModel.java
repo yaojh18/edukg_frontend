@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.w3c.dom.Text;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -28,9 +31,9 @@ public class HomeViewModel extends ViewModel {
     final int total_subject = 9;
     public boolean isEditting = false;
     public static int selectSubject;
-    final static String[] subject = new String[]{"国文", "英文", "数学", "物理", "化学", "生物", "地理", "历史", "政治"};
+    final static String[] subject = new String[]{"语文", "英文", "数学", "物理", "化学", "生物", "地理", "历史", "政治"};
 
-    final static String[] subjectEng = new String[]{"chinese", "english", "math", "physics", "chemistry", "biology", "geo", "history", "politics"};
+    final static String[] subjectEng = {"chinese", "english", "math", "physics", "chemistry", "biology", "geo", "history", "politics"};
 
     boolean[] selected = new boolean[total_subject];
 
@@ -45,31 +48,37 @@ public class HomeViewModel extends ViewModel {
 class EntityListAdapter extends RecyclerView.Adapter {
 
     private static class EntityHolder extends RecyclerView.ViewHolder {
-        TextView messageText;
-
+        TextView first_text;
+        TextView second_text;
+        ImageView endIcon;
         EntityHolder(View itemView) {
             super(itemView);
-            messageText = (TextView) itemView.findViewById(R.id.message_card_left_text);
-            messageText.setOnClickListener(new View.OnClickListener() {
+            first_text = (TextView) itemView.findViewById(R.id.first_text_view);
+            second_text = (TextView) itemView.findViewById(R.id.second_text_view);
+            endIcon = itemView.findViewById(R.id.item_image_end);
+            endIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), DetailActivity.class);
-                    intent.putExtra("entity", messageText.getText().toString());
+                    intent.putExtra("entity", first_text.getText().toString());
                     intent.putExtra("subject", HomeViewModel.subjectEng[HomeViewModel.selectSubject]);
                     v.getContext().startActivity(intent);
                 }
             });
         }
         void bind(EntityListAdapter.Entity entity) {
-            messageText.setText(entity.text);
+            first_text.setText(entity.label);
+            second_text.setText(entity.category);
         }
     }
 
 
     private static class Entity {
-        String text;
-        Entity (String text){
-            this.text = text;
+        String label;
+        String category;
+        Entity (String label, String category){
+            this.label = label;
+            this.category = category;
         }
     }
 
@@ -80,7 +89,7 @@ class EntityListAdapter extends RecyclerView.Adapter {
     }
 
     public void addEntity(String label, String category) {
-        entityList.add(new app.edu_kg.pages.home.EntityListAdapter.Entity(label + "\n" + category));
+        entityList.add(new app.edu_kg.pages.home.EntityListAdapter.Entity(label, category));
     }
 
     public void clearEntity() {
@@ -98,7 +107,7 @@ class EntityListAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.message_card_left, parent, false);
+                .inflate(R.layout.list_item, parent, false);
         return new EntityListAdapter.EntityHolder(view);
     }
 

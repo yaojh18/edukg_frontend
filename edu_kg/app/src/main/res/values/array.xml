@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="type">
-        <item>实体搜索</item>
-        <item>文本搜索</item>
-        <item>试题搜索</item>
+        <item>实体</item>
+        <item>文本</item>
+        <item>试题</item>
+        <item>提纲</item>
     </string-array>
 
     <string-array name="subject">
@@ -19,8 +20,8 @@
     </string-array>
 
     <string-array name="order">
-        <item>按默认排序</item>
-        <item>按首字母排序</item>
+        <item>默认</item>
+        <item>首字母</item>
 
     </string-array>
 </resources>

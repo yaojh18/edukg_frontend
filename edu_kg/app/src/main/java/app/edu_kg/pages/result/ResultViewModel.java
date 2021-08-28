@@ -25,23 +25,29 @@ public class ResultViewModel extends ViewModel {
 class ResultListAdapter extends RecyclerView.Adapter {
 
     private static class ResultHolder extends RecyclerView.ViewHolder {
-        TextView messageText;
-
+        TextView firstText;
+        TextView secondText;
         ResultHolder(View itemView) {
             super(itemView);
-            messageText = (TextView) itemView.findViewById(R.id.message_card_right_text);
+            firstText = (TextView) itemView.findViewById(R.id.first_text_view);
+            secondText = (TextView) itemView.findViewById(R.id.second_text_view);
         }
 
         void bind(app.edu_kg.pages.result.ResultListAdapter.Result result) {
-            messageText.setText(result.text);
+            firstText.setText(result.entity);
+            secondText.setText(result.category + " " + result.course);
         }
     }
 
 
     private static class Result {
-        String text;
-        Result (String text){
-            this.text = text;
+        String entity;
+        String category;
+        String course;
+        Result (String entity, String category, String course){
+            this.entity = entity;
+            this.category = category;
+            this.course = course;
         }
     }
 
@@ -51,8 +57,8 @@ class ResultListAdapter extends RecyclerView.Adapter {
         resultList = new ArrayList<Result>();
     }
 
-    public void addResult(String text) {
-        resultList.add(new ResultListAdapter.Result(text));
+    public void addResult(String entity, String category, String course) {
+        resultList.add(new ResultListAdapter.Result(entity, category, course));
     }
 
     public void clearResult() {

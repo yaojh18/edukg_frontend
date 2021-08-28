@@ -2,10 +2,15 @@ package app.edu_kg.pages.search;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -33,6 +38,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private SearchViewModel searchViewModel;
     private ActivitySearchBinding binding;
+    private final String[] typeList = {"实体", "文本", "试题", "提纲"};
     private final String historyDir = "history.txt";
 
     @Override
@@ -46,39 +52,58 @@ public class SearchActivity extends AppCompatActivity {
         initSearch();
         initHistory(view);
         clearHistory();
+        initTypeSetting();
+        initBack();
     }
 
     private void initSearch() {
         TextInputLayout SearchInputLayout = binding.searchInputLayout;
+        EditText searchInput = binding.searchInput;
+        searchInput.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent event) {
+                Log.e("test", "get key");
+                if (i == KeyEvent.KEYCODE_ENTER) {
+                    jumpToResult(view);
+                }
+                return false;
+            }
+        });
         SearchInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("test", "jump to result");
-                String searchInput = binding.searchInput.getText().toString();
-                String type = binding.type.getSelectedItem().toString();
-                String subject = binding.subject.getSelectedItem().toString();
-                String order = binding.order.getSelectedItem().toString();
-                addHistory(searchInput, type, subject, order);
-                Intent intent = new Intent(SearchActivity.this, ResultActivity.class);
-                intent.putExtra("searchInput", searchInput);
-                intent.putExtra("type", type);
-                intent.putExtra("subject", subject);
-                intent.putExtra("order", order);
-                startActivity(intent);
-                initHistory(view);
+                jumpToResult(view);
             }
         });
+
+    }
+
+    private void jumpToResult(View view) {
+        Log.e("test", "jump to result");
+        String type = typeList[searchViewModel.select_type];
+        String searchInput = binding.searchInput.getText().toString();
+        String course = binding.subject.getSelectedItem().toString();
+        String order = binding.order.getSelectedItem().toString();
+        addHistory(searchInput, type, course, order);
+        Intent intent = new Intent(SearchActivity.this, ResultActivity.class);
+        intent.putExtra("searchInput", searchInput);
+        intent.putExtra("type", type);
+        intent.putExtra("course", course);
+        intent.putExtra("order", order);
+        initHistory(view);
+        startActivity(intent);
     }
 
     private void initHistory(View view) {
         RecyclerView historyRecycler = binding.board;
         historyRecycler.setLayoutManager(new LinearLayoutManager(view.getContext()));
         historyRecycler.setAdapter(searchViewModel.adapter);
-        String[] history = loadHistory();
+        String[] histories = loadHistory();
         searchViewModel.adapter.clearHistory();
-        if(history != null) {
-            for(int i = history.length - 1; i >= 0 ; --i) {
-                searchViewModel.adapter.addHistory(history[i]);
+        if(histories != null) {
+            for(int i = histories.length - 1; i >= 0 ; --i) {
+                String[] history = histories[i].split(" ");
+                searchViewModel.adapter.addHistory(history[0], history[1], history[2], history[3]);
             }
         }
     }
@@ -128,6 +153,43 @@ public class SearchActivity extends AppCompatActivity {
                     e.printStackTrace();
                     Log.e("test", e.toString());
                 }
+            }
+        });
+    }
+
+    private void initTypeSetting() {
+        for(int i = 0; i < 4; ++i) {
+            TextView textView = (TextView)binding.typeSetting.getChildAt(i);
+            textView.setId(i);
+            if(searchViewModel.select_type == i) {
+                textView.setBackgroundColor(Color.GRAY);
+            }
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    binding.typeSetting.getChildAt(searchViewModel.select_type).setBackgroundColor(Color.WHITE);
+                    searchViewModel.select_type = v.getId();
+                    v.setBackgroundColor(Color.GRAY);
+                    /*
+                    if(v.getId() != 0) {
+                        binding.order.setVisibility(View.GONE);
+                    }
+                    else {
+                        binding.order.setVisibility(View.VISIBLE);
+                    }
+                    */
+                }
+            });
+        }
+    }
+
+    private void initBack() {
+        MaterialToolbar back = binding.back;
+        back.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("test", "finish");
+                finish();
             }
         });
     }

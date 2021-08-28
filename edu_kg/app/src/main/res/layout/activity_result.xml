@@ -7,58 +7,12 @@
     android:orientation="vertical"
     tools:context=".pages.result.ResultActivity">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/search_input_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/back"
+        android:background="@android:color/transparent"
+        android:layout_height="40dp"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"
-        app:endIconDrawable="@drawable/helper_send"
-        app:endIconMode="custom">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/search_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
-            tools:ignore="SpeakableTextPresentCheck" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <LinearLayout
-        android:id="@+id/search_set"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:orientation="horizontal">
-
-        <Spinner
-            android:id="@+id/type"
-            android:layout_width="126dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:entries="@array/type" />
-
-        <Spinner
-            android:id="@+id/subject"
-            android:layout_width="126dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:entries="@array/subject" />
-
-        <Spinner
-            android:id="@+id/order"
-            android:layout_width="126dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:entries="@array/order" />
-
-    </LinearLayout>
+        app:navigationIcon="@drawable/back"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/board"
