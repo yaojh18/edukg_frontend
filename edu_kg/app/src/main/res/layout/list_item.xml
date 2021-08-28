@@ -31,8 +31,7 @@
         android:layout_toStartOf="@+id/item_image_end"
         android:orientation="vertical"
         android:paddingBottom="16dp"
-        android:paddingTop="16dp"
-        >
+        android:paddingTop="16dp">
 
         <TextView
             android:id="@+id/first_text_view"
@@ -60,4 +59,5 @@
         android:layout_marginTop="16dp"
         android:scaleType="centerInside"
         android:src="@drawable/go"/>
+
 </RelativeLayout>

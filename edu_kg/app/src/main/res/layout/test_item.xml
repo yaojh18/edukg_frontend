@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".pages.search.SearchActivity">
+
+    <TextView
+        android:id="@+id/question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        tools:text="Second Line"
+        style="@style/TextAppearance.AppCompat.Body1"/>
+
+    <TextView
+        android:id="@+id/opt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        tools:text="Second Line"
+        style="@style/TextAppearance.AppCompat.Body1"/>
+
+    <TextView
+        android:id="@+id/opt2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        tools:text="Second Line"
+        style="@style/TextAppearance.AppCompat.Body1"/>
+
+    <TextView
+        android:id="@+id/opt3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        tools:text="Second Line"
+        style="@style/TextAppearance.AppCompat.Body1"/>
+
+    <TextView
+        android:id="@+id/opt4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        tools:text="Second Line"
+        style="@style/TextAppearance.AppCompat.Body1"/>
+
+</LinearLayout>
