@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,7 +21,7 @@ import app.edu_kg.pages.result.ResultActivity;
 
 public class SearchViewModel extends ViewModel {
     HistoryListAdapter adapter;
-
+    static int select_type = 0;
     public SearchViewModel() {
         adapter = new HistoryListAdapter();
     }
@@ -29,35 +30,47 @@ public class SearchViewModel extends ViewModel {
 class HistoryListAdapter extends RecyclerView.Adapter {
 
     private static class HistoryHolder extends RecyclerView.ViewHolder {
-        TextView messageText;
-
+        TextView firstText;
+        TextView secondText;
+        ImageView endIcon;
         HistoryHolder(View itemView) {
             super(itemView);
-            messageText = (TextView) itemView.findViewById(R.id.message_card_right_text);
-            messageText.setOnClickListener(new View.OnClickListener() {
+            firstText = (TextView) itemView.findViewById(R.id.first_text_view);
+            secondText = (TextView) itemView.findViewById(R.id.second_text_view);
+            endIcon = itemView.findViewById(R.id.item_image_end);
+            endIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String[] history = messageText.getText().toString().split(" ");
+                    String searchKey = firstText.getText().toString();
+                    String[] setting = secondText.getText().toString().split(" ");
                     Intent intent = new Intent(v.getContext(), ResultActivity.class);
-                    intent.putExtra("searchKey", history[0]);
-                    intent.putExtra("type", history[1]);
-                    intent.putExtra("course", history[2]);
-                    intent.putExtra("order", history[3]);
+                    intent.putExtra("searchKey", searchKey);
+                    intent.putExtra("type", setting[0]);
+                    intent.putExtra("course", setting[1]);
+                    intent.putExtra("order", setting[2]);
                     v.getContext().startActivity(intent);
                 }
             });
+
         }
 
         void bind(app.edu_kg.pages.search.HistoryListAdapter.History history) {
-            messageText.setText(history.text);
+            firstText.setText(history.searchKey);
+            secondText.setText(history.type+" "+history.course+" "+history.order);
         }
     }
 
 
     private static class History {
-        String text;
-        History (String text){
-            this.text = text;
+        String searchKey;
+        String type;
+        String course;
+        String order;
+        History (String searchKey, String type, String course, String order){
+            this.searchKey = searchKey;
+            this.type = type;
+            this.course = course;
+            this.order = order;
         }
     }
 
@@ -67,8 +80,8 @@ class HistoryListAdapter extends RecyclerView.Adapter {
         historyList = new ArrayList<History>();
     }
 
-    public void addHistory(String text) {
-        historyList.add(new HistoryListAdapter.History(text));
+    public void addHistory(String searchKey, String type, String course, String order) {
+        historyList.add(new HistoryListAdapter.History(searchKey, type, course, order));
     }
 
     public void clearHistory() {
@@ -85,7 +98,7 @@ class HistoryListAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.message_card_right, parent, false);
+                .inflate(R.layout.list_item, parent, false);
         return new HistoryHolder(view);
     }
 

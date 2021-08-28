@@ -144,81 +144,88 @@ public class Request {
         }).start();
     }
 
+    public static void getHomeList(String course, Handler handler) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = "http://" + ip + ":8080/API/homeList";
+                HttpUrl urlQuery =
+                        HttpUrl.parse(url).newBuilder().
+                                addQueryParameter("course", course)
+                                .build();
+                okhttp3.Request request =
+                        new okhttp3.Request.Builder().
+                                url(urlQuery).
+                                get().
+                                build();
 
-    @Nullable
-    public static JSONObject getSubjectEntityList(String subject) {
-        final String url = "http://localhost:8080/API/homeList";
-        RequestBody requestBody =
-                new FormBody.Builder()
-                        .add("course", subject)
-                        .build();
-        okhttp3.Request request =
-                new okhttp3.Request.Builder().
-                        url(url).
-                        post(requestBody).
-                        build();
-        try{
-            Response response = client.newCall(request).execute();
-            if (!response.isSuccessful())
-                return null;
-            else{
-                JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
-                return json;
+                try {
+                    Response response = client.newCall(request).execute();
+                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                    handler.sendMessage(handler.obtainMessage(Constant.HOME_ENTITY_RESPONSE, json));
+                } catch (Exception e) {
+                    handler.sendMessage(handler.obtainMessage(Constant.HOME_ENTITY_RESPONSE, "error"));
+                }
             }
-        } catch (Exception e) {
-            return null;
-        }
+        }).start();
+    }
+
+    public static void getInstanceList(String searchKey, String course, String order, Handler handler) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = "http://" + ip + ":8080/API/instanceList";
+                HttpUrl urlQuery =
+                        HttpUrl.parse(url).newBuilder().
+                                addQueryParameter("searchKey", searchKey).
+                                addQueryParameter("course", course).
+                                addQueryParameter("order", order)
+                                .build();
+                okhttp3.Request request =
+                        new okhttp3.Request.Builder().
+                                url(urlQuery).
+                                get().
+                                build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                    handler.sendMessage(handler.obtainMessage(Constant.INSTANCE_LIST_RESPONSE, json));
+                } catch (Exception e) {
+                    handler.sendMessage(handler.obtainMessage(Constant.INSTANCE_LIST_RESPONSE, "error"));
+                }
+            }
+        }).start();
+    }
+
+    public static void getLinkInstance(String context, String course, Handler handler) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = "http://" + ip + ":8080/API/linkInstance";
+                HttpUrl urlQuery =
+                        HttpUrl.parse(url).newBuilder().
+                                addQueryParameter("searchKey", context).
+                                addQueryParameter("course", course)
+                                .build();
+                okhttp3.Request request =
+                        new okhttp3.Request.Builder().
+                                url(urlQuery).
+                                get().
+                                build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                    handler.sendMessage(handler.obtainMessage(Constant.LINK_INSTANCE_RESPONSE, json));
+                } catch (Exception e) {
+                    handler.sendMessage(handler.obtainMessage(Constant.LINK_INSTANCE_RESPONSE, "error"));
+                }
+            }
+        }).start();
     }
 
 
-    public static JSONObject getSearchResult(String searchStr, String subject, String order) {
-        final String url = "http://localhost:8080/API/instanceList";
-        RequestBody requestBody =
-                new FormBody.Builder()
-                        .add("searchKey ", searchStr)
-                        .add("course", subject)
 
-                        .build();
-        okhttp3.Request request =
-                new okhttp3.Request.Builder().
-                        url(url).
-                        post(requestBody).
-                        build();
-        try{
-            Response response = client.newCall(request).execute();
-            if (!response.isSuccessful())
-                return null;
-            else{
-                JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
-                return null;
-            }
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public static JSONObject getEntityDetail(String entityName) {
-        final String url = "http://localhost:8080/API/instanceList";
-        RequestBody requestBody =
-                new FormBody.Builder()
-
-                        .build();
-        okhttp3.Request request =
-                new okhttp3.Request.Builder().
-                        url(url).
-                        post(requestBody).
-                        build();
-        try{
-            Response response = client.newCall(request).execute();
-            if (!response.isSuccessful())
-                return null;
-            else{
-                JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
-                return null;
-            }
-        } catch (Exception e) {
-            return null;
-        }
-    }
 }
 

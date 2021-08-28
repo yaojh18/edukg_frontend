@@ -1,10 +1,14 @@
 package app.edu_kg.pages.home;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +39,7 @@ import java.util.Arrays;
 import app.edu_kg.R;
 import app.edu_kg.databinding.FragmentHomeBinding;
 import app.edu_kg.pages.search.SearchActivity;
+import app.edu_kg.utils.Constant;
 import app.edu_kg.utils.Request;
 
 public class HomeFragment extends Fragment {
@@ -53,7 +58,7 @@ public class HomeFragment extends Fragment {
 
     View selectedSubject = null;
 
-
+    private Handler handler;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +67,7 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         mInflater = inflater;
+        initHandler();
         initSubjectListPic();
         loadSubject();
         initSubjectSetting();
@@ -72,6 +78,43 @@ public class HomeFragment extends Fragment {
             e.printStackTrace();
         }
         return view;
+    }
+
+    private void initHandler() {
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                int message_num = msg.what;
+                if (message_num == Constant.HOME_ENTITY_RESPONSE){
+                    JSONObject json = null;
+                    try {
+                        json = (JSONObject) msg.obj;
+                    } catch(Exception e) {
+                        homeViewModel.adapter.addEntity("载入失败", "");
+                        Log.e("test", "loading error");
+                        return;
+                    }
+                    JSONArray entities = null;
+                    try {
+                        entities = json.getJSONObject("data").getJSONArray("result");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    homeViewModel.adapter.clearEntity();
+                    for(int i = 0; i < entities.length(); ++i) {
+                        String label = null;
+                        String category = null;
+                        try {
+                            label = entities.getJSONObject(i).getString("label");
+                            category = entities.getJSONObject(i).getString("category");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        homeViewModel.adapter.addEntity(label, category);
+                    }
+                }
+            }
+        };
     }
 
     private void initSubjectListPic() {
@@ -140,8 +183,6 @@ public class HomeFragment extends Fragment {
                 public void onClick(View v) {
                     homeViewModel.selected[v.getId()] = !homeViewModel.selected[v.getId()];
                     view.setBackgroundColor(homeViewModel.selected[v.getId()]?defaultColor:abandonColor);
-                    //Log.e("test", String.valueOf(v.getId()));
-                    //Log.e("test", Arrays.toString(homeViewModel.selected));
                 }
             });
             mGallery.addView(view);
@@ -221,14 +262,7 @@ public class HomeFragment extends Fragment {
         RecyclerView messageRecycler = binding.entityBoard;
         messageRecycler.setLayoutManager(new LinearLayoutManager(view.getContext()));
         messageRecycler.setAdapter(homeViewModel.adapter);
-        //JSONObject json = request.getSubjectEntityList(subjectList[selectedSubject.getId()]);
-        JSONObject json = new JSONObject("{ \"code\": 200表示成功，其他尚未定义, \"data\": { \"result\": [ { \"label\": 搜索到的实体名称1, \"category\": 搜索到的实体所属类1, \"course\": 所属学科 }, { \"label\": 搜索到的实体名称2, \"category\":搜索到的实体所属类2, \"course\":所属学科 }, ... ], \"result_size\": 搜索到的实体数量 } }");
-        JSONArray entities = json.getJSONObject("data").getJSONArray("result");
-        homeViewModel.adapter.clearEntity();
-        for(int i = 0; i < entities.length(); ++i) {
-            String label = entities.getJSONObject(i).getString("label");
-            String category = entities.getJSONObject(i).getString("category");
-            homeViewModel.adapter.addEntity(label, category);
-        }
+        Request.getHomeList(homeViewModel.subjectEng[selectedSubject.getId()], handler);
+        //JSONObject json = new JSONObject("{ \"code\": 200表示成功，其他尚未定义, \"data\": { \"result\": [ { \"label\": 搜索到的实体名称1, \"category\": 搜索到的实体所属类1, \"course\": 所属学科 }, { \"label\": 搜索到的实体名称2, \"category\":搜索到的实体所属类2, \"course\":所属学科 }, ... ], \"result_size\": 搜索到的实体数量 } }");
     }
 }
