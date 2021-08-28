@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/menu_home"
+        android:title="题卡" />
+
+    <item
+        android:id="@+id/navigation_helper"
+        android:icon="@drawable/menu_helper"
+        android:title="交卷" />
+
+</menu>
