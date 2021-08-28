@@ -1,6 +1,7 @@
 package app.edu_kg.utils.adapter;
 
-import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -8,6 +9,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,25 +17,26 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView.*;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import app.edu_kg.R;
+import app.edu_kg.pages.home.HomeViewModel;
 import app.edu_kg.utils.Constant;
 import kotlin.Triple;
 
 public class ItemListAdapter extends Adapter<ViewHolder> {
 
-    private static class ItemHolder extends ViewHolder {
+    private static class ItemHolder extends ViewHolder implements View.OnClickListener{
         TextView title;
         TextView content;
         ImageView image;
+        OnItemClickListener onItemClickListener;
 
-        ItemHolder(View itemView) {
+        ItemHolder(View itemView, OnItemClickListener listener) {
             super(itemView);
+            itemView.setOnClickListener(this);
+            onItemClickListener = listener;
             title = (TextView) itemView.findViewById(R.id.first_text_view);
             content = (TextView) itemView.findViewById(R.id.second_text_view);
             image = (ImageView) itemView.findViewById(R.id.item_image_start);
@@ -45,6 +48,11 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
             if (message.imageId != null)
                 image.setImageResource(message.imageId);
         }
+
+        @Override
+        public void onClick(View view) {
+            onItemClickListener.onItemClick(getAdapterPosition());
+        }
     }
 
     public static class ItemMessage {
@@ -52,7 +60,7 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
         String category;
         Integer imageId;
         String course;
-        ItemMessage (String label, @Nullable String category, @Nullable String course, @Nullable Integer imageId){
+        public ItemMessage(String label, @Nullable String category, String course, @Nullable Integer imageId){
             this.label = label;
             this.category = category;
             this.course = course;
@@ -60,32 +68,13 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
         }
     }
 
-    @FunctionalInterface
-    interface RequestFunction {
-        void request(String keyword, String course, Handler handler);
-    }
+    private List<ItemMessage> itemList;
+    private OnItemClickListener onItemClickListener;
 
-    public List<ItemMessage> itemList;
 
-    public ItemListAdapter(RequestFunction function, String keyword, String course) {
-        itemList = new ArrayList<ItemMessage>();
-        Handler handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == Constant.LIST_RESPONSE) {
-                    Pair<Boolean, ArrayList<Triple<String, String, String>>> obj = (Pair<Boolean, ArrayList<Triple<String, String, String>>>) msg.obj;
-                    if (obj.first) {
-                        ArrayList<Triple<String, String, String>> newItemList = obj.second;
-                        for (Triple<String, String, String> item : newItemList) {
-                            itemList.add(new ItemMessage(item.getFirst(), item.getSecond(), item.getThird(), null));
-                        }
-                    } else {
-                        itemList.add(new ItemMessage("请求出现错误", null, null, null));
-                    }
-                }
-            }
-        };
-        function.request(keyword, course, handler);
+    public ItemListAdapter(ArrayList<ItemMessage> itemList, OnItemClickListener onItemClickListener) {
+        this.itemList = itemList;
+        this.onItemClickListener = onItemClickListener;
     }
 
     @Override
@@ -99,12 +88,16 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
         View view;
         view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item, parent, false);
-        return new ItemHolder(view);
+        return new ItemHolder(view, onItemClickListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ItemMessage message = itemList.get(position);
         ((ItemHolder) holder).bind(message);
+    }
+
+    public interface OnItemClickListener{
+        void onItemClick(int position);
     }
 }

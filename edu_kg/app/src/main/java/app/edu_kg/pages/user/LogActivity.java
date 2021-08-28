@@ -46,16 +46,16 @@ public class LogActivity extends AppCompatActivity {
         Handler handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
-                if (msg.what == Constant.REGISTER_RESPONSE || msg.what == Constant.LOGIN_RESPONSE){
-                    Pair<Boolean, String> obj = (Pair<Boolean, String>) msg.obj;
-                    if (obj.first){
-                        intent.putExtra("username", username.getText().toString());
-                        intent.putExtra("token", obj.second);
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
-                    else
-                        hint.setText(obj.second);
+                if (msg.what == Constant.LOGIN_RESPONSE_SUCCESS || msg.what == Constant.REGISTER_RESPONSE_SUCCESS){
+                    String obj = (String) msg.obj;
+                    intent.putExtra("username", username.getText().toString());
+                    intent.putExtra("token", obj);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+                else if (msg.what == Constant.LOGIN_RESPONSE_FAIL || msg.what == Constant.REGISTER_RESPONSE_FAIL){
+                    String obj = (String) msg.obj;
+                    hint.setText(obj);
                 }
             }
         };

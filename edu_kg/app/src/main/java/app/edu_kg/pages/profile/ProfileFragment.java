@@ -3,6 +3,7 @@ package app.edu_kg.pages.profile;
 import app.edu_kg.R;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Layout;
@@ -21,6 +22,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
@@ -29,16 +31,16 @@ import java.util.Objects;
 import app.edu_kg.MainActivity;
 import app.edu_kg.MainViewModel;
 import app.edu_kg.databinding.FragmentProfileBinding;
+import app.edu_kg.pages.user.HistoryActivity;
 import app.edu_kg.pages.user.LogActivity;
 import app.edu_kg.pages.user.ModifyActivity;
+import app.edu_kg.utils.Constant;
 
 public class ProfileFragment extends Fragment {
 
     private MainViewModel profileViewModel;
     private FragmentProfileBinding binding;
     private ActivityResultLauncher<Intent> launcher;
-    final int LOGIN = 1000;
-    final int MODIFY = 1001;
 
 
     @Override
@@ -93,14 +95,24 @@ public class ProfileFragment extends Fragment {
                         return true;
 
                     case(R.id.log_out):
-                        item.setVisible(false);
-                        MenuItem logIn = logMenuToolbar.getMenu().getItem(0);
-                        logIn.setVisible(true);
-                        profileViewModel.username = "未登录";
-                        profileViewModel.token = "";
-                        username.setText(profileViewModel.username);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setMessage("你确定要登出吗？");
+                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                item.setVisible(false);
+                                MenuItem logIn = logMenuToolbar.getMenu().getItem(0);
+                                logIn.setVisible(true);
+                                profileViewModel.username = "未登录";
+                                profileViewModel.token = "";
+                                username.setText(profileViewModel.username);
+                            }
+                        });
+                        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) { }
+                        });
+                        builder.create();
                         return true;
-
                     default:
                         return false;
                 }
@@ -122,6 +134,58 @@ public class ProfileFragment extends Fragment {
                     launcher.launch(intent);
                 }
 
+            }
+        });
+        LinearLayout userHistory = binding.userHistory;
+        userHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (profileViewModel.token.equals("")){
+                    Intent intent = new Intent(context, LogActivity.class);
+                    intent.putExtra("func_type", "login");
+                    launcher.launch(intent);
+                }
+                else{
+                    Intent intent = new Intent(context, HistoryActivity.class);
+                    intent.putExtra("token", profileViewModel.token);
+                    intent.putExtra("page_type", Constant.HISTORY_PAGE);
+                    startActivity(intent);
+                }
+            }
+        });
+        LinearLayout userCollection = binding.userCollection;
+        userCollection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (profileViewModel.token.equals("")){
+                    Intent intent = new Intent(context, LogActivity.class);
+                    intent.putExtra("func_type", "login");
+                    launcher.launch(intent);
+                }
+                else{
+                    Intent intent = new Intent(context, HistoryActivity.class);
+                    intent.putExtra("token", profileViewModel.token);
+                    intent.putExtra("page_type", Constant.COLLECTION_PAGE);
+                    startActivity(intent);
+                }
+
+            }
+        });
+        LinearLayout exerciseRec = binding.exerciseRec;
+        exerciseRec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (profileViewModel.token.equals("")){
+                    Intent intent = new Intent(context, LogActivity.class);
+                    intent.putExtra("func_type", "login");
+                    launcher.launch(intent);
+                }
+                else{
+                    Intent intent = new Intent(context, HistoryActivity.class);
+                    intent.putExtra("token", profileViewModel.token);
+                    intent.putExtra("page_type", Constant.RECOMMENDATION_PAGE);
+                    startActivity(intent);
+                }
             }
         });
         return view;

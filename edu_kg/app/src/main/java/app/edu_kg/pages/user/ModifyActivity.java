@@ -48,13 +48,9 @@ public class ModifyActivity extends AppCompatActivity {
         Handler handler = new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
-                if (msg.what == Constant.MODIFY_RESPONSE){
-                    Pair<Boolean, String> obj = (Pair<Boolean, String>) msg.obj;
-                    if (obj.first){
-                        hint.setText("修改密码成功");
-                    }
-                    else
-                        hint.setText(obj.second);
+                if (msg.what == Constant.MODIFY_RESPONSE_SUCCESS || msg.what == Constant.MODIFY_RESPONSE_FAIL){
+                    String obj = (String) msg.obj;
+                    hint.setText(obj);
                 }
             }
         };

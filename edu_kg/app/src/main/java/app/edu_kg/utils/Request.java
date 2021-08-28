@@ -7,15 +7,18 @@ import androidx.annotation.Nullable;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 import javax.net.ssl.HandshakeCompletedEvent;
 
+import kotlin.Triple;
 import okhttp3.*;
 
 public class Request {
     final static OkHttpClient client = new OkHttpClient();
-    final static String ip = "183.172.242.16";
+    final static String ip = "183.172.143.172";
 
     public static void inputQuestion(String question, final Handler handler) {
         new Thread(new Runnable() {
@@ -63,15 +66,12 @@ public class Request {
                     Response response = client.newCall(request).execute();
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
                     if (!response.isSuccessful())
-                        handler.sendMessage(handler.obtainMessage(Constant.LOGIN_RESPONSE,
-                                new Pair<Boolean, String>(false, json.getString("msg"))));
+                        handler.sendMessage(handler.obtainMessage(Constant.LOGIN_RESPONSE_FAIL, json.getString("msg")));
                     else
-                        handler.sendMessage(handler.obtainMessage(Constant.REGISTER_RESPONSE,
-                                new Pair<Boolean, String>(true, json.getString("token"))));
+                        handler.sendMessage(handler.obtainMessage(Constant.LOGIN_RESPONSE_SUCCESS, json.getString("token")));
 
                 } catch (Exception e) {
-                    handler.sendMessage(handler.obtainMessage(Constant.REGISTER_RESPONSE,
-                            new Pair<Boolean, String>(true, "其他错误")));
+                    handler.sendMessage(handler.obtainMessage(Constant.LOGIN_RESPONSE_FAIL, "未知错误"));
                 }
             }
         }).start();
@@ -92,19 +92,17 @@ public class Request {
                                 url(url).
                                 post(requestBody).
                                 build();
+
                 try {
                     Response response = client.newCall(request).execute();
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
                     if (!response.isSuccessful())
-                        handler.sendMessage(handler.obtainMessage(Constant.REGISTER_RESPONSE,
-                                new Pair<Boolean, String>(false, json.getString("msg"))));
+                        handler.sendMessage(handler.obtainMessage(Constant.REGISTER_RESPONSE_FAIL, json.getString("msg")));
                     else
-                        handler.sendMessage(handler.obtainMessage(Constant.REGISTER_RESPONSE,
-                                new Pair<Boolean, String>(true, json.getString("token"))));
+                        handler.sendMessage(handler.obtainMessage(Constant.REGISTER_RESPONSE_SUCCESS, json.getString("token")));
 
                 } catch (Exception e) {
-                    handler.sendMessage(handler.obtainMessage(Constant.REGISTER_RESPONSE,
-                            new Pair<Boolean, String>(false, "其他错误")));
+                    handler.sendMessage(handler.obtainMessage(Constant.REGISTER_RESPONSE_FAIL, "未知错误"));
                 }
             }
         }).start();
@@ -130,16 +128,121 @@ public class Request {
                     Response response = client.newCall(request).execute();
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
                     if (!response.isSuccessful())
-                        handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
-                                new Pair<Boolean, String>(false, json.getString("msg"))));
+                        handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE_FAIL,json.getString("msg")));
                     else
-                        handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
-                                new Pair<Boolean, String>(true, json.getString("msg"))));
+                        handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE_SUCCESS,json.getString("msg")));
 
                 } catch (Exception e) {
-                    handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
-                            new Pair<Boolean, String>(false, "其他错误")));
+                    handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE_FAIL, "未知错误"));
                 }
+            }
+        }).start();
+    }
+
+    public static void userHistory(String token, Handler handler) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = "http://" + ip + ":8080/user/changePassword";
+                RequestBody requestBody =
+                        new FormBody.Builder()
+                                .add("token", token)
+                                .build();
+                okhttp3.Request request =
+                        new okhttp3.Request.Builder().
+                                url(url).
+                                post(requestBody).
+                                build();
+//                try {
+//                    Response response = client.newCall(request).execute();
+//                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+//                    if (!response.isSuccessful())
+//                        handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
+//                                new Pair<Boolean, String>(false, json.getString("msg"))));
+//                    else
+//                        handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
+//                                new Pair<Boolean, String>(true, json.getString("msg"))));
+//
+//                } catch (Exception e) {
+//                    handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
+//                            new Pair<Boolean, String>(false, "其他错误")));
+//                }
+                ArrayList<Triple<String, String, String>> result = new ArrayList<Triple<String, String, String>>();
+                result.add(new Triple<>("test1", "test1", "test1"));
+                result.add(new Triple<>("test2", "test2", "test2"));
+                handler.sendMessage(handler.obtainMessage(Constant.LIST_RESPONSE_SUCCESS, result));
+            }
+        }).start();
+    }
+
+    public static void userCollection(String token, Handler handler) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = "http://" + ip + ":8080/user/changePassword";
+                RequestBody requestBody =
+                        new FormBody.Builder()
+                                .add("token", token)
+                                .build();
+                okhttp3.Request request =
+                        new okhttp3.Request.Builder().
+                                url(url).
+                                post(requestBody).
+                                build();
+//                try {
+//                    Response response = client.newCall(request).execute();
+//                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+//                    if (!response.isSuccessful())
+//                        handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
+//                                new Pair<Boolean, String>(false, json.getString("msg"))));
+//                    else
+//                        handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
+//                                new Pair<Boolean, String>(true, json.getString("msg"))));
+//
+//                } catch (Exception e) {
+//                    handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
+//                            new Pair<Boolean, String>(false, "其他错误")));
+//                }
+                ArrayList<Triple<String, String, String>> result = new ArrayList<Triple<String, String, String>>();
+                result.add(new Triple<>("test1", "test1", "test1"));
+                result.add(new Triple<>("test2", "test2", "test2"));
+                handler.sendMessage(handler.obtainMessage(Constant.LIST_RESPONSE_SUCCESS, result));
+            }
+        }).start();
+    }
+
+    public static void exerciseRecommendation(String token, Handler handler) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = "http://" + ip + ":8080/user/changePassword";
+                RequestBody requestBody =
+                        new FormBody.Builder()
+                                .add("token", token)
+                                .build();
+                okhttp3.Request request =
+                        new okhttp3.Request.Builder().
+                                url(url).
+                                post(requestBody).
+                                build();
+//                try {
+//                    Response response = client.newCall(request).execute();
+//                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+//                    if (!response.isSuccessful())
+//                        handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
+//                                new Pair<Boolean, String>(false, json.getString("msg"))));
+//                    else
+//                        handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
+//                                new Pair<Boolean, String>(true, json.getString("msg"))));
+//
+//                } catch (Exception e) {
+//                    handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
+//                            new Pair<Boolean, String>(false, "其他错误")));
+//                }
+                ArrayList<Triple<String, String, String>> result = new ArrayList<Triple<String, String, String>>();
+                result.add(new Triple<>("test1", "test1", "test1"));
+                result.add(new Triple<>("test2", "test2", "test2"));
+                handler.sendMessage(handler.obtainMessage(Constant.LIST_RESPONSE_SUCCESS, result));
             }
         }).start();
     }

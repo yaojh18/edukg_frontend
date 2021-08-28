@@ -50,18 +50,18 @@ public class MessageListAdapter extends Adapter<ViewHolder> {
         }
     }
 
-    List<MessageListAdapter.UserMessage> messageList;
+    List<UserMessage> messageList;
 
     public MessageListAdapter() {
-        messageList = new ArrayList<MessageListAdapter.UserMessage>();
+        messageList = new ArrayList<UserMessage>();
     }
 
     public void addUserMessage(String message) {
-        messageList.add(new MessageListAdapter.UserMessage(message, MessageListAdapter.UserMessage.USER_MESSAGE));
+        messageList.add(new UserMessage(message, UserMessage.USER_MESSAGE));
     }
 
     public void addRobotMessage(String message) {
-        messageList.add(new MessageListAdapter.UserMessage(message, MessageListAdapter.UserMessage.ROBOT_MESSAGE));
+        messageList.add(new UserMessage(message, UserMessage.ROBOT_MESSAGE));
     }
 
     @Override
@@ -71,40 +71,40 @@ public class MessageListAdapter extends Adapter<ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        MessageListAdapter.UserMessage message = messageList.get(position);
-        if (message.type == MessageListAdapter.UserMessage.USER_MESSAGE)
-            return MessageListAdapter.UserMessage.USER_MESSAGE;
+        UserMessage message = messageList.get(position);
+        if (message.type == UserMessage.USER_MESSAGE)
+            return UserMessage.USER_MESSAGE;
         else
-            return MessageListAdapter.UserMessage.ROBOT_MESSAGE;
+            return UserMessage.ROBOT_MESSAGE;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        if (viewType == MessageListAdapter.UserMessage.USER_MESSAGE) {
+        if (viewType == UserMessage.USER_MESSAGE) {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.message_card_right, parent, false);
-            return new MessageListAdapter.SentMessageHolder(view);
+            return new SentMessageHolder(view);
         }
         else{
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.message_card_left, parent, false);
-            return new MessageListAdapter.ReceivedMessageHolder(view);
+            return new ReceivedMessageHolder(view);
         }
 
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        MessageListAdapter.UserMessage message = messageList.get(position);
+        UserMessage message = messageList.get(position);
 
         switch (holder.getItemViewType()) {
-            case MessageListAdapter.UserMessage.USER_MESSAGE:
-                ((MessageListAdapter.SentMessageHolder) holder).bind(message);
+            case UserMessage.USER_MESSAGE:
+                ((SentMessageHolder) holder).bind(message);
                 break;
-            case MessageListAdapter.UserMessage.ROBOT_MESSAGE:
-                ((MessageListAdapter.ReceivedMessageHolder) holder).bind(message);
+            case UserMessage.ROBOT_MESSAGE:
+                ((ReceivedMessageHolder) holder).bind(message);
         }
     }
 }

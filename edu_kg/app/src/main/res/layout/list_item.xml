@@ -8,6 +8,7 @@
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
     android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackgroundBorderless"
     android:minHeight="72dp"
     android:paddingEnd="?listPreferredItemPaddingRight"
     android:paddingStart="?listPreferredItemPaddingLeft">
