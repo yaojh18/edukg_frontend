@@ -1,5 +1,12 @@
 package app.edu_kg.utils;
 
+
+import java.util.HashMap;
+import java.util.Map;
+import app.edu_kg.utils.adapter.SubjectGridAdapter.Subject;
+
+import app.edu_kg.R;
+
 public class Constant {
     public final static int MESSAGE_LIST_RESPONSE = 1001;
     public final static int LOGIN_RESPONSE_SUCCESS = 1002;
@@ -20,4 +27,25 @@ public class Constant {
     public final static int HISTORY_PAGE = 3000;
     public final static int COLLECTION_PAGE = 3001;
     public final static int RECOMMENDATION_PAGE = 3002;
+
+    public enum SUBJECT_NAME
+    {
+        CHINESE, MATH, ENGLISH, PHYSICS, CHEMISTRY, ADD, SUBTRACT,
+        BIOLOGY, POLITICS, HISTORY, GEOGRAPHY, FOLD, UNFOLD;
+    }
+
+    public final static Map<SUBJECT_NAME, Subject> subjectMap = new HashMap<SUBJECT_NAME, Subject>(){{
+       put(SUBJECT_NAME.CHINESE, new Subject("语文", R.drawable.subject_chinese, SUBJECT_NAME.CHINESE));
+       put(SUBJECT_NAME.MATH, new Subject("数学", R.drawable.subject_math, SUBJECT_NAME.MATH));
+       put(SUBJECT_NAME.ENGLISH, new Subject("英语", R.drawable.subject_english, SUBJECT_NAME.ENGLISH));
+       put(SUBJECT_NAME.PHYSICS, new Subject("物理", R.drawable.subject_physics, SUBJECT_NAME.PHYSICS));
+       put(SUBJECT_NAME.CHEMISTRY, new Subject("化学", R.drawable.subject_chemistry, SUBJECT_NAME.CHEMISTRY));
+       put(SUBJECT_NAME.BIOLOGY, new Subject("生物", R.drawable.subject_biology, SUBJECT_NAME.BIOLOGY));
+       put(SUBJECT_NAME.POLITICS, new Subject("政治", R.drawable.subject_politics, SUBJECT_NAME.POLITICS));
+       put(SUBJECT_NAME.HISTORY, new Subject("历史", R.drawable.subject_history, SUBJECT_NAME.HISTORY));
+       put(SUBJECT_NAME.GEOGRAPHY, new Subject("地理", R.drawable.subject_geography, SUBJECT_NAME.GEOGRAPHY));
+       put(SUBJECT_NAME.FOLD, new Subject("收起", R.drawable.subject_fold, SUBJECT_NAME.FOLD));
+       put(SUBJECT_NAME.UNFOLD, new Subject("展开", R.drawable.subject_unfold, SUBJECT_NAME.UNFOLD));
+       put(SUBJECT_NAME.ADD, new Subject("添加", R.drawable.menu_home, SUBJECT_NAME.ADD));
+    }};
 }

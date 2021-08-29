@@ -8,47 +8,23 @@
     tools:context=".pages.helper.HelperFragment"
     >
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/helper_action_bar_layout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/helper_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:fitsSystemWindows="true"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/helper_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/white"
-            android:theme="@style/Widget.AppCompat.Toolbar"
-            app:popupTheme="@style/Theme.AppCompat.Light">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="18dp"
-                android:text="@string/helper_hint"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="16sp" />
-
-        </androidx.appcompat.widget.Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:clipToPadding="false" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/message_board"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/helper_input_layout"
-        android:layout_below="@+id/helper_action_bar_layout" />
+        android:layout_below="@id/helper_toolbar"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/helper_input_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
@@ -57,7 +33,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="10dp"
         app:endIconDrawable="@drawable/helper_send"
-        app:endIconMode="custom">
+        app:endIconMode="custom"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/helper_input"

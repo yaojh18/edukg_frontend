@@ -3,7 +3,6 @@
     <string name="title_home">栏目</string>
     <string name="title_helper">问答</string>
     <string name="title_profile">我的</string>
-    <string name="helper_hint">问答中心</string>
     <string name="not_logged_in">未登录</string>
     <string name="logged_in">已登录</string>
     <string name="login">登录</string>
@@ -12,7 +11,6 @@
     <string name="user_history">浏览历史</string>
     <string name="user_collection">用户收藏</string>
     <string name="exercise_rec">试题推荐</string>
-    <string name="knowledge_rec">知识梳理</string>
     <string name="change_profile">更改信息</string>
     <string name="to_register">没有账号？点此注册</string>
     <string name="password">密码</string>
@@ -23,5 +21,6 @@
     <string name="change_confirm">确认修改</string>
     <string name="user_background">用户背景</string>
     <string name="select_picture">选择图片</string>
+    <string name="subject_title">我的兴趣</string>
 
 </resources>

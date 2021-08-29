@@ -135,9 +135,9 @@ public class HomeFragment extends Fragment {
                 }
                 View view = mInflater.inflate(R.layout.subject_item,
                         mGallery, false);
-                ImageView img = (ImageView) view.findViewById(R.id.id_index_gallery_item_image);
+                ImageView img = (ImageView) view.findViewById(R.id.subject_item_image);
                 img.setImageResource(mImgIds[i]);
-                TextView txt = (TextView) view.findViewById(R.id.id_index_gallery_item_text);
+                TextView txt = (TextView) view.findViewById(R.id.subject_item_text);
                 txt.setText(homeViewModel.subject[i]);
                 txt.setTextColor(Color.BLACK);
                 view.setId(i);
@@ -169,9 +169,9 @@ public class HomeFragment extends Fragment {
         for(int i = 0; i < homeViewModel.total_subject; ++i) {
             View view = mInflater.inflate(R.layout.subject_item,
                     mGallery, false);
-            ImageView img = (ImageView) view.findViewById(R.id.id_index_gallery_item_image);
+            ImageView img = (ImageView) view.findViewById(R.id.subject_item_image);
             img.setImageResource(mImgIds[i]);
-            TextView txt = (TextView) view.findViewById(R.id.id_index_gallery_item_text);
+            TextView txt = (TextView) view.findViewById(R.id.subject_item_text);
             txt.setText(homeViewModel.subject[i]);
             txt.setTextColor(Color.BLACK);
             view.setId(i);
@@ -190,7 +190,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void initSearchButton(View v) {
-        Button btn = (Button)v.findViewById(R.id.search_bar);
+        ImageView btn = (ImageView)v.findViewById(R.id.search_bar);
         btn.setOnClickListener(v1 -> {
             Log.e("test", "search button clicked");
             Intent i = new Intent(getActivity(), SearchActivity.class);

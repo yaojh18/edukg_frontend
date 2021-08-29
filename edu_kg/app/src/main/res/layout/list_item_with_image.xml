@@ -9,7 +9,7 @@
     android:background="?selectableItemBackground"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackgroundBorderless"
-    android:minHeight="72dp"
+    android:minHeight="200dp"
     android:paddingEnd="?listPreferredItemPaddingRight"
     android:paddingStart="?listPreferredItemPaddingLeft">
 
@@ -18,11 +18,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="true"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_toStartOf="@+id/item_image_end"
-        android:layout_alignParentStart="true"
         android:orientation="vertical"
         android:paddingTop="16dp"
         android:paddingBottom="16dp">
@@ -42,6 +42,14 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             tools:text="Second Line" />
+
+        <ImageView
+            android:id="@+id/item_image_start"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:layout_marginTop="16dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/back" />
     </LinearLayout>
 
     <ImageView

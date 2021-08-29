@@ -26,7 +26,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-import java.util.Objects;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import app.edu_kg.MainActivity;
 import app.edu_kg.MainViewModel;
@@ -95,23 +95,23 @@ public class ProfileFragment extends Fragment {
                         return true;
 
                     case(R.id.log_out):
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setMessage("你确定要登出吗？");
-                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                item.setVisible(false);
-                                MenuItem logIn = logMenuToolbar.getMenu().getItem(0);
-                                logIn.setVisible(true);
-                                profileViewModel.username = "未登录";
-                                profileViewModel.token = "";
-                                username.setText(profileViewModel.username);
-                            }
-                        });
-                        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) { }
-                        });
-                        builder.create();
+                        AlertDialog dialog = new MaterialAlertDialogBuilder(context)
+                                .setTitle("你确定要登出吗？")
+                                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        item.setVisible(false);
+                                        MenuItem logIn = logMenuToolbar.getMenu().getItem(0);
+                                        logIn.setVisible(true);
+                                        profileViewModel.username = "未登录";
+                                        profileViewModel.token = "";
+                                        username.setText(profileViewModel.username);
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) { }
+                                }).show();
                         return true;
                     default:
                         return false;

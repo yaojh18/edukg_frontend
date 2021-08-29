@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.appbar.MaterialToolbar;
@@ -30,7 +31,6 @@ import java.nio.charset.StandardCharsets;
 import app.edu_kg.R;
 import app.edu_kg.pages.result.ResultActivity;
 import app.edu_kg.pages.search.SearchViewModel;
-import app.edu_kg.pages.test.TestActivity;
 import app.edu_kg.utils.Request;
 
 import app.edu_kg.databinding.ActivitySearchBinding;
@@ -88,7 +88,7 @@ public class SearchActivity extends AppCompatActivity {
         addHistory(searchInput, type, course, order);
         Intent intent = null;
         if(type.equals("试题")) {
-            intent = new Intent(SearchActivity.this, TestActivity.class);
+            intent = new Intent(SearchActivity.this, ResultActivity.class);
         }
         else if(type.equals("提纲")) {
             intent = new Intent(SearchActivity.this, ResultActivity.class);
@@ -194,8 +194,8 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void initBack() {
-        MaterialToolbar back = binding.back;
-        back.setNavigationOnClickListener(new View.OnClickListener() {
+        ImageView back = binding.back;
+        back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.e("test", "finish");

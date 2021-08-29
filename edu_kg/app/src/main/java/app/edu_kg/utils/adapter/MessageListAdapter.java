@@ -50,7 +50,7 @@ public class MessageListAdapter extends Adapter<ViewHolder> {
         }
     }
 
-    List<UserMessage> messageList;
+    private List<UserMessage> messageList;
 
     public MessageListAdapter() {
         messageList = new ArrayList<UserMessage>();
@@ -98,13 +98,9 @@ public class MessageListAdapter extends Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         UserMessage message = messageList.get(position);
-
-        switch (holder.getItemViewType()) {
-            case UserMessage.USER_MESSAGE:
-                ((SentMessageHolder) holder).bind(message);
-                break;
-            case UserMessage.ROBOT_MESSAGE:
-                ((ReceivedMessageHolder) holder).bind(message);
-        }
+        if (holder.getItemViewType() == UserMessage.USER_MESSAGE)
+            ((SentMessageHolder) holder).bind(message);
+        else
+            ((ReceivedMessageHolder) holder).bind(message);
     }
 }

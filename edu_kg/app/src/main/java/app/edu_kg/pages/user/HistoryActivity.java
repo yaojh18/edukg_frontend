@@ -17,9 +17,11 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.util.Pair;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
@@ -71,14 +73,15 @@ public class HistoryActivity extends AppCompatActivity implements ItemListAdapte
                     adapter.notifyDataSetChanged();
                 }
                 else if (msg.what == Constant.LIST_RESPONSE_FAIL){
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setMessage("请求出现错误");
-                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            activity.finish();
-                        }
-                    });
-                    builder.create();
+                    AlertDialog dialog = new MaterialAlertDialogBuilder(activity)
+                            .setTitle("取回数据错误")
+                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    activity.finish();
+                                }
+                            })
+                            .show();
                 }
             }
         };

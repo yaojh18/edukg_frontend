@@ -5,24 +5,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="60dp"
     tools:context=".pages.home.HomeFragment">
 
 
-    <com.google.android.material.button.MaterialButton
+    <ImageView
         android:id="@+id/search_bar"
-        android:layout_width="0dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="搜一搜"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:src="@drawable/search_bar"
+        android:scaleType="fitCenter"
+        android:clickable="true"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023" />
+        app:layout_constraintStart_toStartOf="parent">
+
+    </ImageView>
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"

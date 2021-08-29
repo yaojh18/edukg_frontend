@@ -60,7 +60,10 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
         String category;
         Integer imageId;
         String course;
-        public ItemMessage(String label, @Nullable String category, String course, @Nullable Integer imageId){
+        static final int IMAGE_VIEW = 0;
+        static final int TEXT_VIEW = 1;
+
+        public ItemMessage(String label, String course, @Nullable String category, @Nullable Integer imageId){
             this.label = label;
             this.category = category;
             this.course = course;
@@ -82,12 +85,25 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
         return itemList.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        ItemMessage message = itemList.get(position);
+        if (message.imageId != null)
+            return ItemMessage.IMAGE_VIEW;
+        else
+            return ItemMessage.TEXT_VIEW;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item, parent, false);
+        if (viewType == ItemMessage.IMAGE_VIEW)
+            view = LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.list_item_with_image, parent, false);
+        else
+            view = LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.list_item, parent, false);
         return new ItemHolder(view, onItemClickListener);
     }
 

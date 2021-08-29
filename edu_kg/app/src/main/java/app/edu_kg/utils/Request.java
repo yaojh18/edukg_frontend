@@ -5,6 +5,7 @@ import android.util.Pair;
 
 import androidx.annotation.Nullable;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -18,22 +19,21 @@ import okhttp3.*;
 
 public class Request {
     final static OkHttpClient client = new OkHttpClient();
-    final static String ip = "183.172.143.172";
+    final static String ip = "183.172.243.65";
 
-    public static void inputQuestion(String question, final Handler handler) {
+    public static void inputQuestion(String question, @Nullable String course, final Handler handler) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 final String url = "http://" + ip + ":8080/API/inputQuestion";
-                HttpUrl urlQuery =
-                        HttpUrl.parse(url).newBuilder().
-                                addQueryParameter("inputQuestion", question)
+                HttpUrl.Builder urlQuery = HttpUrl.parse(url).newBuilder()
+                                .addQueryParameter("inputQuestion", question);
+                if (course != null)
+                    urlQuery.addQueryParameter("course", course);
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                                .url(urlQuery.build())
+                                .get()
                                 .build();
-                okhttp3.Request request =
-                        new okhttp3.Request.Builder().
-                                url(urlQuery).
-                                get().
-                                build();
 
                 try {
                     Response response = client.newCall(request).execute();
@@ -41,7 +41,7 @@ public class Request {
                     String message = json.getJSONObject("data").getString("result");
                     handler.sendMessage(handler.obtainMessage(Constant.MESSAGE_LIST_RESPONSE, message));
                 } catch (Exception e) {
-                    handler.sendMessage(handler.obtainMessage(Constant.MESSAGE_LIST_RESPONSE, "其他错误"));
+                    handler.sendMessage(handler.obtainMessage(Constant.MESSAGE_LIST_RESPONSE, "服务器错误!"));
                 }
             }
         }).start();
@@ -52,16 +52,14 @@ public class Request {
             @Override
             public void run() {
                 final String url = "http://" + ip + ":8080/user/login";
-                RequestBody requestBody =
-                        new FormBody.Builder()
+                RequestBody requestBody = new FormBody.Builder()
                                 .add("userName", username)
                                 .add("password", password)
                                 .build();
-                okhttp3.Request request =
-                        new okhttp3.Request.Builder().
-                                url(url).
-                                post(requestBody).
-                                build();
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                                .url(url)
+                                .post(requestBody)
+                                .build();
                 try {
                     Response response = client.newCall(request).execute();
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
@@ -82,16 +80,14 @@ public class Request {
             @Override
             public void run() {
                 final String url = "http://" + ip + ":8080/user/register";
-                RequestBody requestBody =
-                        new FormBody.Builder()
+                RequestBody requestBody = new FormBody.Builder()
                                 .add("userName", username)
                                 .add("password", password)
                                 .build();
-                okhttp3.Request request =
-                        new okhttp3.Request.Builder().
-                                url(url).
-                                post(requestBody).
-                                build();
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                                .url(url)
+                                .post(requestBody)
+                                .build();
 
                 try {
                     Response response = client.newCall(request).execute();
@@ -113,17 +109,15 @@ public class Request {
             @Override
             public void run() {
                 final String url = "http://" + ip + ":8080/user/changePassword";
-                RequestBody requestBody =
-                        new FormBody.Builder()
+                RequestBody requestBody = new FormBody.Builder()
                                 .add("token", token)
                                 .add("oldPassword", oldPassword)
                                 .add("newPassword", newPassword)
                                 .build();
-                okhttp3.Request request =
-                        new okhttp3.Request.Builder().
-                                url(url).
-                                post(requestBody).
-                                build();
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                                .url(url)
+                                .post(requestBody)
+                                .build();
                 try {
                     Response response = client.newCall(request).execute();
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
@@ -141,36 +135,34 @@ public class Request {
 
     public static void userHistory(String token, Handler handler) {
         new Thread(new Runnable() {
+
             @Override
             public void run() {
-                final String url = "http://" + ip + ":8080/user/changePassword";
-                RequestBody requestBody =
-                        new FormBody.Builder()
-                                .add("token", token)
+                final String url = "http://" + ip + ":8080/user/getHistoriesList";
+                HttpUrl urlQuery = HttpUrl.parse(url).newBuilder()
+                                .addQueryParameter("token", token)
                                 .build();
-                okhttp3.Request request =
-                        new okhttp3.Request.Builder().
-                                url(url).
-                                post(requestBody).
-                                build();
-//                try {
-//                    Response response = client.newCall(request).execute();
-//                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
-//                    if (!response.isSuccessful())
-//                        handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
-//                                new Pair<Boolean, String>(false, json.getString("msg"))));
-//                    else
-//                        handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
-//                                new Pair<Boolean, String>(true, json.getString("msg"))));
-//
-//                } catch (Exception e) {
-//                    handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
-//                            new Pair<Boolean, String>(false, "其他错误")));
-//                }
-                ArrayList<Triple<String, String, String>> result = new ArrayList<Triple<String, String, String>>();
-                result.add(new Triple<>("test1", "test1", "test1"));
-                result.add(new Triple<>("test2", "test2", "test2"));
-                handler.sendMessage(handler.obtainMessage(Constant.LIST_RESPONSE_SUCCESS, result));
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                                .url(urlQuery)
+                                .get()
+                                .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                    if (response.isSuccessful()){
+                        JSONArray data = json.getJSONArray("data");
+                        ArrayList<Triple<String, String, String>> res = new ArrayList<Triple<String, String, String>>();
+                        for (int i = 0; i < data.length(); i++){
+                            JSONObject item = data.getJSONObject(i);
+                            res.add(new Triple<String, String, String>(item.getString("instanceName"), item.getString("course"), null));
+                        }
+                        handler.sendMessage(handler.obtainMessage(Constant.LIST_RESPONSE_SUCCESS, res));
+                    }
+                    else throw new Exception();
+
+                } catch (Exception e) {
+                    handler.sendMessage(handler.obtainMessage(Constant.LIST_RESPONSE_FAIL, ""));
+                }
             }
         }).start();
     }
@@ -179,34 +171,31 @@ public class Request {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final String url = "http://" + ip + ":8080/user/changePassword";
-                RequestBody requestBody =
-                        new FormBody.Builder()
-                                .add("token", token)
-                                .build();
-                okhttp3.Request request =
-                        new okhttp3.Request.Builder().
-                                url(url).
-                                post(requestBody).
-                                build();
-//                try {
-//                    Response response = client.newCall(request).execute();
-//                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
-//                    if (!response.isSuccessful())
-//                        handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
-//                                new Pair<Boolean, String>(false, json.getString("msg"))));
-//                    else
-//                        handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
-//                                new Pair<Boolean, String>(true, json.getString("msg"))));
-//
-//                } catch (Exception e) {
-//                    handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
-//                            new Pair<Boolean, String>(false, "其他错误")));
-//                }
-                ArrayList<Triple<String, String, String>> result = new ArrayList<Triple<String, String, String>>();
-                result.add(new Triple<>("test1", "test1", "test1"));
-                result.add(new Triple<>("test2", "test2", "test2"));
-                handler.sendMessage(handler.obtainMessage(Constant.LIST_RESPONSE_SUCCESS, result));
+                final String url = "http://" + ip + ":8080/user/getFavoritesList";
+                HttpUrl urlQuery = HttpUrl.parse(url).newBuilder()
+                        .addQueryParameter("token", token)
+                        .build();
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                        .url(urlQuery)
+                        .get()
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                    if (response.isSuccessful()){
+                        JSONArray data = json.getJSONArray("data");
+                        ArrayList<Triple<String, String, String>> res = new ArrayList<Triple<String, String, String>>();
+                        for (int i = 0; i < data.length(); i++){
+                            JSONObject item = data.getJSONObject(i);
+                            res.add(new Triple<String, String, String>(item.getString("instanceName"), item.getString("course"), null));
+                        }
+                        handler.sendMessage(handler.obtainMessage(Constant.LIST_RESPONSE_SUCCESS, res));
+                    }
+                    else throw new Exception();
+
+                } catch (Exception e) {
+                    handler.sendMessage(handler.obtainMessage(Constant.LIST_RESPONSE_FAIL, ""));
+                }
             }
         }).start();
     }
@@ -216,15 +205,13 @@ public class Request {
             @Override
             public void run() {
                 final String url = "http://" + ip + ":8080/user/changePassword";
-                RequestBody requestBody =
-                        new FormBody.Builder()
+                RequestBody requestBody = new FormBody.Builder()
                                 .add("token", token)
                                 .build();
-                okhttp3.Request request =
-                        new okhttp3.Request.Builder().
-                                url(url).
-                                post(requestBody).
-                                build();
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                                .url(url)
+                                .post(requestBody)
+                                .build();
 //                try {
 //                    Response response = client.newCall(request).execute();
 //                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
