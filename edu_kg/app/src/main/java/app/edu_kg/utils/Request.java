@@ -301,6 +301,33 @@ public class Request {
         }).start();
     }
 
+    public static void getQuestionList(String name, String course, Handler handler) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = "http://" + ip + ":8080/API/questionList";
+                HttpUrl urlQuery =
+                        HttpUrl.parse(url).newBuilder().
+                                addQueryParameter("name", name).
+                                addQueryParameter("course", course)
+                                .build();
+                okhttp3.Request request =
+                        new okhttp3.Request.Builder().
+                                url(urlQuery).
+                                get().
+                                build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                    handler.sendMessage(handler.obtainMessage(Constant.QUESTION_LIST_RESPONSE, json));
+                } catch (Exception e) {
+                    handler.sendMessage(handler.obtainMessage(Constant.QUESTION_LIST_RESPONSE, "error"));
+                }
+            }
+        }).start();
+    }
+
     public static void getLinkInstance(String context, String course, Handler handler) {
         new Thread(new Runnable() {
             @Override
@@ -308,7 +335,7 @@ public class Request {
                 final String url = "http://" + ip + ":8080/API/linkInstance";
                 HttpUrl urlQuery =
                         HttpUrl.parse(url).newBuilder().
-                                addQueryParameter("searchKey", context).
+                                addQueryParameter("context", context).
                                 addQueryParameter("course", course)
                                 .build();
                 okhttp3.Request request =
@@ -327,7 +354,6 @@ public class Request {
             }
         }).start();
     }
-
 
 
 }
