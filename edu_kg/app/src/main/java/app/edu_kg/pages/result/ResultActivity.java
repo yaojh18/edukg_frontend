@@ -94,7 +94,14 @@ public class ResultActivity extends AppCompatActivity {
                     }
                 }
                 else if(message_num == Constant.LINK_INSTANCE_RESPONSE) {
-                    JSONObject json = (JSONObject) msg.obj;
+                    JSONObject json;
+                    try {
+                        json = (JSONObject) msg.obj;
+                    } catch(Exception e) {
+                        resultViewModel.adapter.addResult("载入失败", "", "");
+                        Log.e("test", "loading error");
+                        return;
+                    }
                     JSONArray entities = null;
                     try {
                         entities = json.getJSONObject("data").getJSONArray("result");

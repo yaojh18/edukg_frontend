@@ -38,6 +38,7 @@
         </activity>
         <activity android:name=".pages.search.SearchActivity" />
         <activity android:name=".pages.result.ResultActivity" />
+        <activity android:name=".pages.test.TestActivity" />
     </application>
 
 </manifest>
