@@ -1,7 +1,6 @@
 package app.edu_kg.utils;
 
 import android.os.Handler;
-import android.util.Pair;
 
 import androidx.annotation.Nullable;
 
@@ -9,10 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
-
-import javax.net.ssl.HandshakeCompletedEvent;
 
 import kotlin.Triple;
 import okhttp3.*;
@@ -151,10 +147,10 @@ public class Request {
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
                     if (response.isSuccessful()){
                         JSONArray data = json.getJSONArray("data");
-                        ArrayList<Triple<String, String, String>> res = new ArrayList<Triple<String, String, String>>();
+                        ArrayList<Triple<String, String, String>> res = new ArrayList<>();
                         for (int i = 0; i < data.length(); i++){
                             JSONObject item = data.getJSONObject(i);
-                            res.add(new Triple<String, String, String>(item.getString("instanceName"), item.getString("course"), null));
+                            res.add(new Triple<>(item.getString("instanceName"), item.getString("course"), null));
                         }
                         handler.sendMessage(handler.obtainMessage(Constant.LIST_RESPONSE_SUCCESS, res));
                     }
@@ -184,10 +180,10 @@ public class Request {
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
                     if (response.isSuccessful()){
                         JSONArray data = json.getJSONArray("data");
-                        ArrayList<Triple<String, String, String>> res = new ArrayList<Triple<String, String, String>>();
+                        ArrayList<Triple<String, String, String>> res = new ArrayList<>();
                         for (int i = 0; i < data.length(); i++){
                             JSONObject item = data.getJSONObject(i);
-                            res.add(new Triple<String, String, String>(item.getString("instanceName"), item.getString("course"), null));
+                            res.add(new Triple<>(item.getString("instanceName"), item.getString("course"), null));
                         }
                         handler.sendMessage(handler.obtainMessage(Constant.LIST_RESPONSE_SUCCESS, res));
                     }
@@ -252,9 +248,18 @@ public class Request {
                 try {
                     Response response = client.newCall(request).execute();
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
-                    handler.sendMessage(handler.obtainMessage(Constant.HOME_ENTITY_RESPONSE, json));
+                    if (response.isSuccessful()){
+                        JSONArray data = json.getJSONObject("data").getJSONArray("result");
+                        ArrayList<Triple<String, String, String>> res = new ArrayList<>();
+                        for (int i = 0; i < data.length(); i++){
+                            JSONObject item = data.getJSONObject(i);
+                            res.add(new Triple<>(item.getString("label"), item.getString("course"), item.getString("category")));
+                        }
+                        handler.sendMessage(handler.obtainMessage(Constant.HOME_ENTITY_RESPONSE_SUCCESS, res));
+                    }
+                    else throw new Exception();
                 } catch (Exception e) {
-                    handler.sendMessage(handler.obtainMessage(Constant.HOME_ENTITY_RESPONSE, "error"));
+                    handler.sendMessage(handler.obtainMessage(Constant.HOME_ENTITY_RESPONSE_FAIL, ""));
                 }
             }
         }).start();

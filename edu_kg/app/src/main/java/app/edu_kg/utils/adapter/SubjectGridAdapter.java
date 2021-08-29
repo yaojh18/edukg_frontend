@@ -1,11 +1,5 @@
 package app.edu_kg.utils.adapter;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +8,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import app.edu_kg.R;
-import app.edu_kg.pages.home.HomeViewModel;
 import app.edu_kg.utils.Constant;
-import kotlin.Triple;
 
 public class SubjectGridAdapter extends Adapter<ViewHolder> {
 
@@ -43,9 +33,12 @@ public class SubjectGridAdapter extends Adapter<ViewHolder> {
 
         }
         void bind(Subject subject) {
-            image.setImageResource(subject.imageId);
+            if (subject.isOut)
+                image.setImageResource(R.drawable.subject_add);
+            else
+                image.setImageResource(subject.imageId);
             text.setText(subject.name);
-            view.setSelected(subject.isSelected);
+            view.setSelected(subject.isSelected || subject.isOut);
         }
 
         @Override
@@ -59,13 +52,20 @@ public class SubjectGridAdapter extends Adapter<ViewHolder> {
         public String name;
         public Constant.SUBJECT_NAME id;
         public boolean isSelected;
-        public boolean isEditable;
+        public boolean isOut;
         public Subject(String name, int imageId, Constant.SUBJECT_NAME id){
             this.name = name;
             this.imageId = imageId;
             this.id = id;
             this.isSelected = false;
-            this.isEditable = false;
+            this.isOut = false;
+        }
+        public Subject(String name, int imageId, Constant.SUBJECT_NAME id, boolean isSelected, boolean isOut){
+            this.name = name;
+            this.imageId = imageId;
+            this.id = id;
+            this.isSelected = isSelected;
+            this.isOut = isOut;
         }
     }
 

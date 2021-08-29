@@ -9,14 +9,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.text.Layout;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -26,11 +23,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import app.edu_kg.databinding.FragmentHelperBinding;
-import app.edu_kg.utils.adapter.ItemListAdapter;
 import app.edu_kg.utils.adapter.SubjectGridAdapter;
 
 public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSubjectClickListener {
@@ -78,8 +73,8 @@ public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSub
                         helperInput.setText("");
                         messageRecycler.scrollToPosition(helperViewModel.helperMessageAdapter.getItemCount() - 1);
                         String subject = null;
-                        if (helperViewModel.subjectSelected < helperViewModel.helperSubjectList.size())
-                            subject = Functional.subjChe2Eng(helperViewModel.helperSubjectList.get(helperViewModel.subjectSelected).name);
+                        if (helperViewModel.helperSubjectSelected < helperViewModel.helperSubjectList.size())
+                            subject = Functional.subjChe2Eng(helperViewModel.helperSubjectList.get(helperViewModel.helperSubjectSelected).name);
                         Request.inputQuestion(text, subject, handler);
                     }
                 }
@@ -97,8 +92,8 @@ public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSub
                     helperInput.setText("");
                     messageRecycler.scrollToPosition(helperViewModel.helperMessageAdapter.getItemCount() - 1);
                     String subject = null;
-                    if (helperViewModel.subjectSelected < helperViewModel.helperSubjectList.size())
-                        subject = Functional.subjChe2Eng(helperViewModel.helperSubjectList.get(helperViewModel.subjectSelected).name);
+                    if (helperViewModel.helperSubjectSelected < helperViewModel.helperSubjectList.size())
+                        subject = Functional.subjChe2Eng(helperViewModel.helperSubjectList.get(helperViewModel.helperSubjectSelected).name);
                     Request.inputQuestion(text, subject, handler);
                 }
             }
@@ -124,14 +119,6 @@ public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSub
         SubjectGridAdapter.Subject subject = subjectList.get(position);
 
         switch (subject.id){
-            case CHINESE: case MATH: case ENGLISH: case PHYSICS: case CHEMISTRY: case BIOLOGY: case POLITICS: case HISTORY: case GEOGRAPHY:
-                if (helperViewModel.subjectSelected < subjectList.size()){
-                    SubjectGridAdapter.Subject oldSubject = subjectList.get(helperViewModel.subjectSelected);
-                    oldSubject.isSelected = false;
-                }
-                subject.isSelected = true;
-                helperViewModel.subjectSelected = position;
-                break;
             case FOLD:
                 subjectList.remove(position);
                 subjectList.remove(position - 1);
@@ -139,19 +126,30 @@ public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSub
                 subjectList.remove(position - 3);
                 subjectList.remove(position - 4);
                 subjectList.remove(position - 5);
-                subjectList.add(Constant.subjectMap.get(Constant.SUBJECT_NAME.UNFOLD));
+                subjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.UNFOLD));
                 break;
             case UNFOLD:
                 subjectList.remove(position);
-                subjectList.add(Constant.subjectMap.get(Constant.SUBJECT_NAME.CHEMISTRY));
-                subjectList.add(Constant.subjectMap.get(Constant.SUBJECT_NAME.BIOLOGY));
-                subjectList.add(Constant.subjectMap.get(Constant.SUBJECT_NAME.POLITICS));
-                subjectList.add(Constant.subjectMap.get(Constant.SUBJECT_NAME.HISTORY));
-                subjectList.add(Constant.subjectMap.get(Constant.SUBJECT_NAME.GEOGRAPHY));
-                subjectList.add(Constant.subjectMap.get(Constant.SUBJECT_NAME.FOLD));
+                subjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.CHEMISTRY));
+                subjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.BIOLOGY));
+                subjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.POLITICS));
+                subjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.HISTORY));
+                subjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.GEOGRAPHY));
+                subjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.FOLD));
                 break;
             default:
-                return;
+                if (helperViewModel.helperSubjectSelected == position){
+                    subject.isSelected = false;
+                    helperViewModel.helperSubjectSelected = 100;
+                }
+                else{
+                    if (helperViewModel.helperSubjectSelected < subjectList.size()){
+                        SubjectGridAdapter.Subject oldSubject = subjectList.get(helperViewModel.helperSubjectSelected);
+                        oldSubject.isSelected = false;
+                    }
+                    subject.isSelected = true;
+                    helperViewModel.helperSubjectSelected = position;
+                }
         }
         helperViewModel.helperSubjectAdapter.notifyDataSetChanged();
     }

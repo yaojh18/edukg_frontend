@@ -3,9 +3,7 @@ package app.edu_kg.utils;
 public class Functional {
     public static String subjChe2Eng(String ch) {
         switch(ch) {
-            case "语文":
-                return "chinese";
-            case "英文":
+            case "英语":
                 return "english";
             case "数学":
                 return "math";

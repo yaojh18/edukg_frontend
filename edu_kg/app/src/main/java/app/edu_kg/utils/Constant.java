@@ -1,8 +1,7 @@
 package app.edu_kg.utils;
 
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.EnumMap;
 import app.edu_kg.utils.adapter.SubjectGridAdapter.Subject;
 
 import app.edu_kg.R;
@@ -19,7 +18,8 @@ public class Constant {
     public final static int REGISTER_RESPONSE_FAIL = 1009;
 
 
-    public final static int HOME_ENTITY_RESPONSE = 2005;
+    public final static int HOME_ENTITY_RESPONSE_SUCCESS = 2004;
+    public final static int HOME_ENTITY_RESPONSE_FAIL = 2005;
     public final static int LINK_INSTANCE_RESPONSE = 2006;
     public final static int INSTANCE_LIST_RESPONSE = 2007;
     public final static int QUESTION_LIST_RESPONSE = 2008;
@@ -31,11 +31,11 @@ public class Constant {
     
     public enum SUBJECT_NAME
     {
-        CHINESE, MATH, ENGLISH, PHYSICS, CHEMISTRY, ADD, SUBTRACT,
+        CHINESE, MATH, ENGLISH, PHYSICS, CHEMISTRY,
         BIOLOGY, POLITICS, HISTORY, GEOGRAPHY, FOLD, UNFOLD;
     }
 
-    public final static Map<SUBJECT_NAME, Subject> subjectMap = new HashMap<SUBJECT_NAME, Subject>(){{
+    public final static EnumMap<SUBJECT_NAME, Subject> helperSubjectMap = new EnumMap<SUBJECT_NAME, Subject>(SUBJECT_NAME.class){{
        put(SUBJECT_NAME.CHINESE, new Subject("语文", R.drawable.subject_chinese, SUBJECT_NAME.CHINESE));
        put(SUBJECT_NAME.MATH, new Subject("数学", R.drawable.subject_math, SUBJECT_NAME.MATH));
        put(SUBJECT_NAME.ENGLISH, new Subject("英语", R.drawable.subject_english, SUBJECT_NAME.ENGLISH));
@@ -47,6 +47,32 @@ public class Constant {
        put(SUBJECT_NAME.GEOGRAPHY, new Subject("地理", R.drawable.subject_geography, SUBJECT_NAME.GEOGRAPHY));
        put(SUBJECT_NAME.FOLD, new Subject("收起", R.drawable.subject_fold, SUBJECT_NAME.FOLD));
        put(SUBJECT_NAME.UNFOLD, new Subject("展开", R.drawable.subject_unfold, SUBJECT_NAME.UNFOLD));
-       put(SUBJECT_NAME.ADD, new Subject("添加", R.drawable.menu_home, SUBJECT_NAME.ADD));
     }};
+
+    public final static EnumMap<SUBJECT_NAME, Subject> homeSubjectMap = new EnumMap<SUBJECT_NAME, Subject>(SUBJECT_NAME.class){{
+        put(SUBJECT_NAME.CHINESE, new Subject("语文", R.drawable.subject_chinese, SUBJECT_NAME.CHINESE));
+        put(SUBJECT_NAME.MATH, new Subject("数学", R.drawable.subject_math, SUBJECT_NAME.MATH));
+        put(SUBJECT_NAME.ENGLISH, new Subject("英语", R.drawable.subject_english, SUBJECT_NAME.ENGLISH));
+        put(SUBJECT_NAME.PHYSICS, new Subject("物理", R.drawable.subject_physics, SUBJECT_NAME.PHYSICS));
+        put(SUBJECT_NAME.CHEMISTRY, new Subject("化学", R.drawable.subject_chemistry, SUBJECT_NAME.CHEMISTRY));
+        put(SUBJECT_NAME.BIOLOGY, new Subject("生物", R.drawable.subject_biology, SUBJECT_NAME.BIOLOGY));
+        put(SUBJECT_NAME.POLITICS, new Subject("政治", R.drawable.subject_politics, SUBJECT_NAME.POLITICS));
+        put(SUBJECT_NAME.HISTORY, new Subject("历史", R.drawable.subject_history, SUBJECT_NAME.HISTORY));
+        put(SUBJECT_NAME.GEOGRAPHY, new Subject("地理", R.drawable.subject_geography, SUBJECT_NAME.GEOGRAPHY));
+        put(SUBJECT_NAME.FOLD, new Subject("收起", R.drawable.subject_fold, SUBJECT_NAME.FOLD));
+        put(SUBJECT_NAME.UNFOLD, new Subject("展开", R.drawable.subject_unfold, SUBJECT_NAME.UNFOLD));
+    }};
+
+    public final static EnumMap<SUBJECT_NAME, Subject> manageSubjectMap = new EnumMap<SUBJECT_NAME, Subject>(SUBJECT_NAME.class){{
+        put(SUBJECT_NAME.CHINESE, new Subject("语文", R.drawable.subject_remove, SUBJECT_NAME.CHINESE));
+        put(SUBJECT_NAME.MATH, new Subject("数学", R.drawable.subject_remove, SUBJECT_NAME.MATH));
+        put(SUBJECT_NAME.ENGLISH, new Subject("英语", R.drawable.subject_remove, SUBJECT_NAME.ENGLISH));
+        put(SUBJECT_NAME.PHYSICS, new Subject("物理", R.drawable.subject_remove, SUBJECT_NAME.PHYSICS));
+        put(SUBJECT_NAME.CHEMISTRY, new Subject("化学", R.drawable.subject_remove, SUBJECT_NAME.CHEMISTRY));
+        put(SUBJECT_NAME.BIOLOGY, new Subject("生物", R.drawable.subject_remove, SUBJECT_NAME.BIOLOGY));
+        put(SUBJECT_NAME.POLITICS, new Subject("政治", R.drawable.subject_remove, SUBJECT_NAME.POLITICS));
+        put(SUBJECT_NAME.HISTORY, new Subject("历史", R.drawable.subject_remove, SUBJECT_NAME.HISTORY));
+        put(SUBJECT_NAME.GEOGRAPHY, new Subject("地理", R.drawable.subject_remove, SUBJECT_NAME.GEOGRAPHY));
+    }};
+
 }

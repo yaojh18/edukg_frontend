@@ -1,15 +1,8 @@
 package app.edu_kg.utils.adapter;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,13 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import app.edu_kg.R;
-import app.edu_kg.pages.home.HomeViewModel;
-import app.edu_kg.utils.Constant;
-import kotlin.Triple;
 
 public class ItemListAdapter extends Adapter<ViewHolder> {
 
@@ -75,7 +64,7 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
     private OnItemClickListener onItemClickListener;
 
 
-    public ItemListAdapter(ArrayList<ItemMessage> itemList, OnItemClickListener onItemClickListener) {
+    public ItemListAdapter(List<ItemMessage> itemList, OnItemClickListener onItemClickListener) {
         this.itemList = itemList;
         this.onItemClickListener = onItemClickListener;
     }

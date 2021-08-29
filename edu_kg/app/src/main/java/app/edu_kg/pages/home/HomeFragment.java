@@ -3,266 +3,198 @@ package app.edu_kg.pages.home;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-
+import app.edu_kg.MainActivity;
+import app.edu_kg.MainViewModel;
 import app.edu_kg.R;
 import app.edu_kg.databinding.FragmentHomeBinding;
 import app.edu_kg.pages.search.SearchActivity;
 import app.edu_kg.utils.Constant;
+import app.edu_kg.utils.Functional;
 import app.edu_kg.utils.Request;
+import app.edu_kg.utils.adapter.ItemListAdapter;
+import app.edu_kg.utils.adapter.SubjectGridAdapter;
+import kotlin.Triple;
 
-public class HomeFragment extends Fragment {
-    private HomeViewModel homeViewModel;
+public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClickListener, SubjectGridAdapter.OnSubjectClickListener {
+    private MainViewModel homeViewModel;
     private FragmentHomeBinding binding;
 
-    private LinearLayout mGallery;
-    private int[] mImgIds;
-    private LayoutInflater mInflater;
-
-    int selectedColor = Color.BLUE;
-    int defaultColor = Color.WHITE;
-    int abandonColor = Color.GRAY;
-
-    final String subjectDir = "subjectDir.txt";
-
-    View selectedSubject = null;
-
     private Handler handler;
+    private final boolean EDIT_SUBJECT = true;
+    private boolean mode = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        mInflater = inflater;
-        initHandler();
-        initSubjectListPic();
-        loadSubject();
-        initSubjectSetting();
-        initSearchButton(view);
-        try {
-            initEntityList(view);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return view;
-    }
+        Context context = view.getContext();
+        homeViewModel = ((MainActivity) context).mainViewModel;
 
-    private void initHandler() {
-        handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                int message_num = msg.what;
-                if (message_num == Constant.HOME_ENTITY_RESPONSE){
-                    JSONObject json = null;
-                    try {
-                        json = (JSONObject) msg.obj;
-                    } catch(Exception e) {
-                        homeViewModel.adapter.addEntity("载入失败", "");
-                        Log.e("test", "loading error");
-                        return;
-                    }
-                    JSONArray entities = null;
-                    try {
-                        entities = json.getJSONObject("data").getJSONArray("result");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    homeViewModel.adapter.clearEntity();
-                    for(int i = 0; i < entities.length(); ++i) {
-                        String label = null;
-                        String category = null;
-                        try {
-                            label = entities.getJSONObject(i).getString("label");
-                            category = entities.getJSONObject(i).getString("category");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        homeViewModel.adapter.addEntity(label, category);
-                    }
-                }
-            }
-        };
-    }
-
-    private void initSubjectListPic() {
-        mImgIds = new int[homeViewModel.total_subject];
-        for (int i = 0; i < homeViewModel.total_subject; ++i) {
-            mImgIds[i] = R.drawable.menu_home;
-        }
-    }
-
-    private void initSubjectListView() {
-        mGallery = (LinearLayout) binding.idGallery;
-        mGallery.removeAllViews();
-        homeViewModel.selectSubject = -1;
-        for (int i = 0; i < homeViewModel.total_subject; ++i) {
-            if(homeViewModel.selected[i]) {
-                if(homeViewModel.selectSubject == -1) {
-                    homeViewModel.selectSubject = i;
-                }
-                View view = mInflater.inflate(R.layout.subject_item,
-                        mGallery, false);
-                ImageView img = (ImageView) view.findViewById(R.id.subject_item_image);
-                img.setImageResource(mImgIds[i]);
-                TextView txt = (TextView) view.findViewById(R.id.subject_item_text);
-                txt.setText(homeViewModel.subject[i]);
-                txt.setTextColor(Color.BLACK);
-                view.setId(i);
-                view.setBackgroundColor(homeViewModel.selectSubject==i?selectedColor:defaultColor);
-                if(homeViewModel.selectSubject==i) {
-                    selectedSubject = view;
-                }
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(selectedSubject != null) {
-                            selectedSubject.setBackgroundColor(defaultColor);
-                            v.setBackgroundColor(selectedColor);
-                            homeViewModel.selectSubject = v.getId();
-                            selectedSubject = v;
-
-                        }
-                    }
-                });
-                mGallery.addView(view);
-            }
-        }
-    }
-
-    private void initSubjectListEditView() {
-        mGallery = (LinearLayout) binding.idGallery;
-        mGallery.removeAllViews();
-
-        for(int i = 0; i < homeViewModel.total_subject; ++i) {
-            View view = mInflater.inflate(R.layout.subject_item,
-                    mGallery, false);
-            ImageView img = (ImageView) view.findViewById(R.id.subject_item_image);
-            img.setImageResource(mImgIds[i]);
-            TextView txt = (TextView) view.findViewById(R.id.subject_item_text);
-            txt.setText(homeViewModel.subject[i]);
-            txt.setTextColor(Color.BLACK);
-            view.setId(i);
-
-            view.setBackgroundColor(homeViewModel.selected[i]?defaultColor:abandonColor);
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    homeViewModel.selected[v.getId()] = !homeViewModel.selected[v.getId()];
-                    view.setBackgroundColor(homeViewModel.selected[v.getId()]?defaultColor:abandonColor);
-                }
-            });
-            mGallery.addView(view);
-        }
-    }
-
-    private void initSearchButton(View v) {
-        ImageView btn = (ImageView)v.findViewById(R.id.search_bar);
+        // init search button
+        ImageView btn = binding.searchBar;
         btn.setOnClickListener(v1 -> {
-            Log.e("test", "search button clicked");
             Intent i = new Intent(getActivity(), SearchActivity.class);
             startActivity(i);
         });
-    }
 
-    private void initSubjectSetting() {
-        Button subjectSetting = binding.subjectSetting;
-
-        if (homeViewModel.isEditting) {
-            initSubjectListEditView();
-            binding.subjectSetting.setText("完成");
-        }
-        else {
-            initSubjectListView();
-            binding.subjectSetting.setText("编辑");
-        }
-
-        subjectSetting.setOnClickListener(new View.OnClickListener(){
-
+        // get list message
+        handler = new Handler(Looper.getMainLooper()) {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onClick(View v) {
-                homeViewModel.isEditting = !homeViewModel.isEditting;
-                if (homeViewModel.isEditting) {
-                    initSubjectListEditView();
-                    binding.subjectSetting.setText("完成");
+            public void handleMessage(Message msg) {
+                if (msg.what == Constant.HOME_ENTITY_RESPONSE_SUCCESS) {
+                    ArrayList<Triple<String, String, String>> obj = (ArrayList<Triple<String, String, String>>) msg.obj;
+                    homeViewModel.homeList.clear();
+                    for (Triple<String, String, String> item : obj) {
+                        homeViewModel.homeList.add(new ItemListAdapter.ItemMessage(item.getFirst(), item.getSecond(), item.getThird(), null));
+                    }
+                    homeViewModel.homeListAdapter.notifyDataSetChanged();
                 }
-                else {
-                    selectedSubject = mGallery.getChildAt(0);
-                    homeViewModel.selectSubject = selectedSubject.getId();
-                    initSubjectListView();
-                    saveSubject();
-                    binding.subjectSetting.setText("编辑");
+                else if (msg.what == Constant.HOME_ENTITY_RESPONSE_FAIL){
+                    AlertDialog dialog = new MaterialAlertDialogBuilder(context)
+                            .setTitle("取回数据错误")
+                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) { }
+                            })
+                            .show();
+                }
+            }
+        };
+        Request.getHomeList("chinese", handler);
+
+        // init list recycler
+        RecyclerView itemRecycler = binding.entityBoard;
+        homeViewModel.homeListAdapter = new ItemListAdapter(homeViewModel.homeList, this);
+        itemRecycler.setLayoutManager(new LinearLayoutManager(context));
+        itemRecycler.setAdapter(homeViewModel.homeListAdapter);
+
+        // init subject recycler
+        RecyclerView subjectRecycler = binding.subjectSetting;
+        subjectRecycler.setLayoutManager(new GridLayoutManager(context, 5));
+        homeViewModel.homeSubjectAdapter = new SubjectGridAdapter(homeViewModel.homeSubjectList,this);
+        homeViewModel.presentSubjectAdapter = new SubjectGridAdapter(homeViewModel.presentSubjectList, this);
+        subjectRecycler.setAdapter(homeViewModel.homeSubjectAdapter);
+
+        // init subject manager
+        LinearLayout subjectManager = binding.subjectManager;
+        subjectManager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mode = !mode;
+                TextView text = binding.subjectManagerText;
+                ImageView image = binding.subjectManagerImage;
+                if (mode == EDIT_SUBJECT){
+                    subjectRecycler.setAdapter(homeViewModel.presentSubjectAdapter);
+                    text.setText(R.string.subject_manager_finish);
+                    image.setImageResource(R.drawable.subject_manager_finish);
+                }
+                else{
+                    // clear
+                    Constant.homeSubjectMap.forEach((name, subject) -> {
+                        subject.isSelected = false;
+                    });
+                    homeViewModel.homeSubjectList.clear();
+                    homeViewModel.homeSubjectSelected = 0;
+
+                    // update
+                    for (Constant.SUBJECT_NAME name : homeViewModel.presentSet){
+                        homeViewModel.homeSubjectList.add(Constant.homeSubjectMap.get(name));
+                        if (homeViewModel.homeSubjectList.size() >= 5) break;
+                    }
+                    if (homeViewModel.presentSet.size() > 5){
+                        homeViewModel.homeSubjectList.remove(4);
+                        homeViewModel.homeSubjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.UNFOLD));
+                    }
+                    SubjectGridAdapter.Subject firstSubject = homeViewModel.homeSubjectList.get(0);
+                    firstSubject.isSelected = true;
+                    Request.getHomeList(Functional.subjChe2Eng(firstSubject.name), handler);
+
+                    // update adapter
+                    subjectRecycler.setAdapter(homeViewModel.homeSubjectAdapter);
+                    text.setText(R.string.subject_manager);
+                    image.setImageResource(R.drawable.subject_add);
                 }
             }
         });
+
+        return view;
     }
 
-    private void saveSubject() {
-        try {
-            FileOutputStream out = getActivity().openFileOutput(subjectDir, Context.MODE_PRIVATE);
-            for(int i = 0; i < homeViewModel.total_subject; ++i) {
-                out.write(homeViewModel.selected[i]? 1: 0);
+    // do your work here.
+    @Override
+    public void onItemClick(int position) {
+
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void onSubjectClick(int position) {
+        if (mode != EDIT_SUBJECT){
+            List<SubjectGridAdapter.Subject> subjectList = homeViewModel.homeSubjectList;
+            SubjectGridAdapter.Subject subject = subjectList.get(position);
+            switch (subject.id){
+                case FOLD:
+                    while (subjectList.size() > 4){
+                        subjectList.remove(subjectList.size() - 1);
+                    }
+                    subjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.UNFOLD));
+                    break;
+                case UNFOLD:
+                    subjectList.clear();
+                    for (Constant.SUBJECT_NAME name : homeViewModel.presentSet){
+                        subjectList.add(Constant.homeSubjectMap.get(name));
+                    }
+                    subjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.FOLD));
+                    break;
+                default:
+                    if (homeViewModel.homeSubjectSelected < subjectList.size()){
+                        SubjectGridAdapter.Subject oldSubject = subjectList.get(homeViewModel.homeSubjectSelected);
+                        oldSubject.isSelected = false;
+                    }
+                    subject.isSelected = true;
+                    homeViewModel.homeSubjectSelected = position;
+                    Request.getHomeList(Functional.subjChe2Eng(subjectList.get(homeViewModel.homeSubjectSelected).name), handler);
             }
-            out.flush();
-            out.close();
-            Log.e("test", "save successfully");
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("test", e.toString());
+            homeViewModel.homeSubjectAdapter.notifyDataSetChanged();
         }
-    }
-
-    private void loadSubject() {
-        FileInputStream in;
-        try {
-            in = getActivity().getApplicationContext().openFileInput(subjectDir);
-            for(int i = 0; i < homeViewModel.total_subject; ++i) {
-                int val = in.read();
-                homeViewModel.selected[i] = val == 1;
+        else{
+            SubjectGridAdapter.Subject subject = homeViewModel.presentSubjectList.get(position);
+            if (homeViewModel.presentSet.size() > 1 || !homeViewModel.presentSet.contains(subject.id)){
+                subject.isOut = ! subject.isOut;
+                if (subject.isOut)
+                    homeViewModel.presentSet.remove(subject.id);
+                else
+                    homeViewModel.presentSet.add(subject.id);
+                homeViewModel.presentSubjectAdapter.notifyDataSetChanged();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-    }
-
-    private void initEntityList(View view) throws JSONException {
-        RecyclerView messageRecycler = binding.entityBoard;
-        messageRecycler.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        messageRecycler.setAdapter(homeViewModel.adapter);
-        Request.getHomeList(homeViewModel.subjectEng[selectedSubject.getId()], handler);
-        //JSONObject json = new JSONObject("{ \"code\": 200表示成功，其他尚未定义, \"data\": { \"result\": [ { \"label\": 搜索到的实体名称1, \"category\": 搜索到的实体所属类1, \"course\": 所属学科 }, { \"label\": 搜索到的实体名称2, \"category\":搜索到的实体所属类2, \"course\":所属学科 }, ... ], \"result_size\": 搜索到的实体数量 } }");
     }
 }
