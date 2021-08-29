@@ -113,7 +113,11 @@ public class SearchActivity extends AppCompatActivity {
         if(histories != null) {
             for(int i = histories.length - 1; i >= 0 ; --i) {
                 String[] history = histories[i].split(" ");
-                searchViewModel.adapter.addHistory(history[0], history[1], history[2], history[3]);
+                try {
+                    searchViewModel.adapter.addHistory(history[0], history[1], history[2], history[3]);
+                } catch(Exception e) {
+                    Log.e("history error", e.toString());
+                }
             }
         }
     }
@@ -180,14 +184,14 @@ public class SearchActivity extends AppCompatActivity {
                     binding.typeSetting.getChildAt(searchViewModel.select_type).setBackgroundColor(Color.WHITE);
                     searchViewModel.select_type = v.getId();
                     v.setBackgroundColor(Color.GRAY);
-                    /*
+
                     if(v.getId() != 0) {
                         binding.order.setVisibility(View.GONE);
                     }
                     else {
                         binding.order.setVisibility(View.VISIBLE);
                     }
-                    */
+
                 }
             });
         }

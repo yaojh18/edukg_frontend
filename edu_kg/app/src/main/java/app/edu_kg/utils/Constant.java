@@ -22,12 +22,13 @@ public class Constant {
     public final static int HOME_ENTITY_RESPONSE = 2005;
     public final static int LINK_INSTANCE_RESPONSE = 2006;
     public final static int INSTANCE_LIST_RESPONSE = 2007;
+    public final static int QUESTION_LIST_RESPONSE = 2008;
 
 
     public final static int HISTORY_PAGE = 3000;
     public final static int COLLECTION_PAGE = 3001;
     public final static int RECOMMENDATION_PAGE = 3002;
-
+    
     public enum SUBJECT_NAME
     {
         CHINESE, MATH, ENGLISH, PHYSICS, CHEMISTRY, ADD, SUBTRACT,

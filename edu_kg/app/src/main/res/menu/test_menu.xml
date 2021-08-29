@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/nav_all"
         android:icon="@drawable/menu_home"
-        android:title="题卡" />
+        android:title="做题" />
 
     <item
-        android:id="@+id/navigation_helper"
+        android:id="@+id/nav_submit"
         android:icon="@drawable/menu_helper"
         android:title="交卷" />
 
