@@ -19,6 +19,7 @@ import javax.xml.transform.Result;
 
 import app.edu_kg.R;
 import app.edu_kg.pages.result.ResultActivity;
+import app.edu_kg.pages.test.TestActivity;
 
 public class SearchViewModel extends ViewModel {
     HistoryListAdapter adapter;
@@ -42,14 +43,26 @@ class HistoryListAdapter extends RecyclerView.Adapter {
             endIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String searchKey = firstText.getText().toString();
+                    String searchInput = firstText.getText().toString();
                     String[] setting = secondText.getText().toString().split(" ");
-                    Intent intent = new Intent(v.getContext(), ResultActivity.class);
-                    intent.putExtra("searchKey", searchKey);
-                    intent.putExtra("type", setting[0]);
-                    intent.putExtra("course", setting[1]);
-                    intent.putExtra("order", setting[2]);
-                    Log.e("test", searchKey + setting[0] + setting[1] + setting[2]);
+                    String type = setting[0];
+                    String course = setting[1];
+                    String order = setting[2];
+                    Intent intent;
+                    if(type.equals("试题")) {
+                        intent = new Intent(v.getContext(), TestActivity.class);
+                    }
+                    else if(type.equals("提纲")) {
+                        intent = new Intent(v.getContext(), ResultActivity.class);
+                    }
+                    else {
+                        intent = new Intent(v.getContext(), ResultActivity.class);
+                    }
+                    intent.putExtra("searchInput", searchInput);
+                    intent.putExtra("type", type);
+                    intent.putExtra("course", course);
+                    intent.putExtra("order", order);
+                    Log.e("test", searchInput + setting[0] + setting[1] + setting[2]);
                     v.getContext().startActivity(intent);
                 }
             });
@@ -68,7 +81,7 @@ class HistoryListAdapter extends RecyclerView.Adapter {
         String type;
         String course;
         String order;
-        History (String searchKey, String type, String course, String order){
+        History (String searchKey, String type, String course, String order) {
             this.searchKey = searchKey;
             this.type = type;
             this.course = course;

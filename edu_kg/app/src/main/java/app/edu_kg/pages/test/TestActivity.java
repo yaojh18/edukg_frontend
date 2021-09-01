@@ -61,14 +61,22 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void handleMessage(Message msg) {
                 Log.e("test", "in handler");
+
+                RecyclerView testRecycler = binding.question;
+                LinearLayoutManager ms = new LinearLayoutManager(binding.getRoot().getContext());
+                ms.setOrientation(LinearLayoutManager.HORIZONTAL);
+                testRecycler.setLayoutManager(ms);
+                testRecycler.setAdapter(testViewModel.adapter);
+
                 int message_num = msg.what;
-                if (message_num == Constant.INSTANCE_LIST_RESPONSE){
+                if (message_num == Constant.QUESTION_LIST_RESPONSE){
                     JSONObject json = null;
                     try {
+                        //Log.e("test", msg.obj.toString());
                         json = (JSONObject) msg.obj;
                     } catch(Exception e) {
                         testViewModel.adapter.addTest("载入失败，请重新载入", "", "", "", "", 0);
-                        Log.e("test", "loading error");
+                        Log.e("test", "载入失败");
                         return;
                     }
                     JSONArray entities = null;
@@ -77,7 +85,8 @@ public class TestActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    testViewModel.adapter.clear();
+                    //Log.e("test", entities.toString());
+                    //Log.e("test", String.valueOf(entities.length()));
                     for(int i = 0; i < entities.length(); ++i) {
                         String question = null;
                         String optA = null;
@@ -106,10 +115,6 @@ public class TestActivity extends AppCompatActivity {
 
     private void initTest(View view, Intent intent) {
         RecyclerView testRecycler = binding.question;
-        LinearLayoutManager ms = new LinearLayoutManager(view.getContext());
-        ms.setOrientation(LinearLayoutManager.HORIZONTAL);
-        testRecycler.setLayoutManager(ms);
-        testRecycler.setAdapter(testViewModel.adapter);
         testRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -156,6 +161,7 @@ public class TestActivity extends AppCompatActivity {
         testViewModel.adapter.addTest("question 1", "opt1", "opt2", "opt3", "opt4", 0);
         testViewModel.adapter.addTest("question 3", "opt1", "opt2", "opt3", "opt4", 0);
          */
+        testViewModel.adapter.clear();
     }
 
 
