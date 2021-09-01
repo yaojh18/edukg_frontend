@@ -43,6 +43,7 @@ public class MainViewModel extends ViewModel {
         helperSubjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.PHYSICS));
         helperSubjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.UNFOLD));
 
+
         homeList = new ArrayList<>();
         homeSubjectSelected = 0;
         homeSubjectList = new ArrayList<>();

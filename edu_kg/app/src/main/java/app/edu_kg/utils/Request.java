@@ -1,6 +1,7 @@
 package app.edu_kg.utils;
 
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -15,7 +16,7 @@ import okhttp3.*;
 
 public class Request {
     final static OkHttpClient client = new OkHttpClient();
-    final static String ip = "183.172.243.65";
+    final static String ip = "192.168.0.101";
 
     public static void inputQuestion(String question, @Nullable String course, final Handler handler) {
         new Thread(new Runnable() {
@@ -340,8 +341,10 @@ public class Request {
                     Response response = client.newCall(request).execute();
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
                     handler.sendMessage(handler.obtainMessage(Constant.LINK_INSTANCE_RESPONSE, json));
+                    Log.e("test", "getLinkInstance successful");
                 } catch (Exception e) {
                     handler.sendMessage(handler.obtainMessage(Constant.LINK_INSTANCE_RESPONSE, "error"));
+                    Log.e("test", "getLinkInstance fail");
                 }
             }
         }).start();
