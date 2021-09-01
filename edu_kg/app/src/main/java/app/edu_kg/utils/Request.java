@@ -216,7 +216,10 @@ public class Request {
                 try {
                     Response response = client.newCall(request).execute();
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
-                    handler.sendMessage(handler.obtainMessage(Constant.QUESTION_LIST_RESPONSE, json));
+                    if (response.isSuccessful())
+                        handler.sendMessage(handler.obtainMessage(Constant.QUESTION_LIST_RESPONSE, json));
+                    else
+                        throw new Exception();
                 } catch (Exception e) {
                     handler.sendMessage(handler.obtainMessage(Constant.QUESTION_LIST_RESPONSE, "error"));
                 }
@@ -408,7 +411,10 @@ public class Request {
                 try {
                     Response response = client.newCall(request).execute();
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
-                    handler.sendMessage(handler.obtainMessage(Constant.QUESTION_LIST_RESPONSE, json));
+                    if (response.isSuccessful())
+                        handler.sendMessage(handler.obtainMessage(Constant.QUESTION_LIST_RESPONSE, json));
+                    else
+                        throw new Exception();
                 } catch (Exception e) {
                     handler.sendMessage(handler.obtainMessage(Constant.QUESTION_LIST_RESPONSE, "error"));
                 }

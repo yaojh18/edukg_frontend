@@ -6,7 +6,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,10 +18,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.appbar.MaterialToolbar;
@@ -33,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.edu_kg.DataApplication;
-import app.edu_kg.MainActivity;
 import app.edu_kg.R;
 import app.edu_kg.pages.test.TestActivity;
 import app.edu_kg.pages.user.LogActivity;
@@ -41,7 +37,6 @@ import app.edu_kg.utils.Constant;
 import app.edu_kg.utils.Functional;
 import app.edu_kg.utils.Request;
 import app.edu_kg.utils.adapter.DetailPropertyTableAdapter;
-import app.edu_kg.utils.adapter.ItemListAdapter;
 import kotlin.Pair;
 import kotlin.Triple;
 

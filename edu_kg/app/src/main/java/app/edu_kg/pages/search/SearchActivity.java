@@ -11,8 +11,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,20 +18,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.json.JSONObject;
-
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import app.edu_kg.R;
 import app.edu_kg.pages.result.ResultActivity;
-import app.edu_kg.pages.search.SearchViewModel;
 import app.edu_kg.pages.test.TestActivity;
 import app.edu_kg.utils.Constant;
-import app.edu_kg.utils.Request;
 
 import app.edu_kg.databinding.ActivitySearchBinding;
 

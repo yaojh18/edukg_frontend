@@ -1,6 +1,8 @@
 package app.edu_kg.pages.test;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,9 +14,11 @@ import android.view.View;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationBarView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,6 +43,7 @@ public class TestActivity extends AppCompatActivity {
     private Handler handler;
     private int scrollState = 0;
     private boolean scrollable = false;
+    Activity activity = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,39 +77,40 @@ public class TestActivity extends AppCompatActivity {
                 if (message_num == Constant.QUESTION_LIST_RESPONSE){
                     JSONObject json = null;
                     try {
-                        //Log.e("test", msg.obj.toString());
                         json = (JSONObject) msg.obj;
-                    } catch(Exception e) {
-                        testViewModel.adapter.addTest("载入失败，请重新载入", "", "", "", "", 0);
-                        Log.e("test", "载入失败");
-                        return;
-                    }
-                    JSONArray entities = null;
-                    try {
-                        entities = json.getJSONArray("data");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    //Log.e("test", entities.toString());
-                    //Log.e("test", String.valueOf(entities.length()));
-                    for(int i = 0; i < entities.length(); ++i) {
-                        String question = null;
-                        String optA = null;
-                        String optB = null;
-                        String optC = null;
-                        String optD = null;
-                        int ans = 0;
-                        try {
-                            question = entities.getJSONObject(i).getString("qBody");
-                            optA = entities.getJSONObject(i).getString("A");
-                            optB = entities.getJSONObject(i).getString("B");
-                            optC = entities.getJSONObject(i).getString("C");
-                            optD = entities.getJSONObject(i).getString("D");
-                            ans = entities.getJSONObject(i).getString("qAnswer").getBytes()[0] - (byte)'A';
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        JSONArray entities = json.getJSONArray("data");
+                        if (entities.length() == 0)
+                            throw new Exception();
+                        for(int i = 0; i < entities.length(); ++i) {
+                            String question = null;
+                            String optA = null;
+                            String optB = null;
+                            String optC = null;
+                            String optD = null;
+                            int ans = 0;
+                            try {
+                                question = entities.getJSONObject(i).getString("qBody");
+                                optA = entities.getJSONObject(i).getString("A");
+                                optB = entities.getJSONObject(i).getString("B");
+                                optC = entities.getJSONObject(i).getString("C");
+                                optD = entities.getJSONObject(i).getString("D");
+                                ans = entities.getJSONObject(i).getString("qAnswer").getBytes()[0] - (byte)'A';
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            testViewModel.adapter.addTest(question, optA, optB, optC, optD, ans);
                         }
-                        testViewModel.adapter.addTest(question, optA, optB, optC, optD, ans);
+                    }
+                    catch(Exception e) {
+                        AlertDialog dialog = new MaterialAlertDialogBuilder(activity)
+                                .setTitle("服务器错误或习题不存在")
+                                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        activity.finish();
+                                    }
+                                })
+                                .show();
                     }
                 }
             }

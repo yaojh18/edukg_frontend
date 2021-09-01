@@ -1,7 +1,6 @@
 package app.edu_kg.pages.test;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

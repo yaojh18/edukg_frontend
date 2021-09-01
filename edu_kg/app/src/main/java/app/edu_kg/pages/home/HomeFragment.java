@@ -37,7 +37,6 @@ import app.edu_kg.utils.Functional;
 import app.edu_kg.utils.Request;
 import app.edu_kg.utils.adapter.ItemListAdapter;
 import app.edu_kg.utils.adapter.SubjectGridAdapter;
-import kotlin.Triple;
 
 public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClickListener, SubjectGridAdapter.OnSubjectClickListener {
     private DataApplication localData;
