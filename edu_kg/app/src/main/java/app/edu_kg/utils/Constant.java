@@ -30,6 +30,7 @@ public class Constant {
     public final static int HISTORY_PAGE = 3000;
     public final static int COLLECTION_PAGE = 3001;
     public final static int RECOMMENDATION_PAGE = 3002;
+    public final static int EXERCISE_LIST_PAGE = 3003;
     
     public enum SUBJECT_NAME
     {

@@ -71,7 +71,7 @@ public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSub
                     if (!text.equals("")){
                         helperViewModel.helperMessageAdapter.addUserMessage(text);
                         helperInput.setText("");
-                        messageRecycler.scrollToPosition(helperViewModel.helperMessageAdapter.getItemCount() - 1);
+                        messageRecycler.smoothScrollToPosition(helperViewModel.helperMessageAdapter.getItemCount() - 1);
                         String subject = null;
                         if (helperViewModel.helperSubjectSelected < helperViewModel.helperSubjectList.size())
                             subject = Functional.subjChe2Eng(helperViewModel.helperSubjectList.get(helperViewModel.helperSubjectSelected).name);
@@ -90,7 +90,7 @@ public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSub
                 if (!text.equals("")){
                     helperViewModel.helperMessageAdapter.addUserMessage(text);
                     helperInput.setText("");
-                    messageRecycler.scrollToPosition(helperViewModel.helperMessageAdapter.getItemCount() - 1);
+                    messageRecycler.smoothScrollToPosition(helperViewModel.helperMessageAdapter.getItemCount() - 1);
                     String subject = null;
                     if (helperViewModel.helperSubjectSelected < helperViewModel.helperSubjectList.size())
                         subject = Functional.subjChe2Eng(helperViewModel.helperSubjectList.get(helperViewModel.helperSubjectSelected).name);

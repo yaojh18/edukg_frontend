@@ -28,6 +28,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import app.edu_kg.MainActivity;
 import app.edu_kg.MainViewModel;
 import app.edu_kg.databinding.FragmentProfileBinding;
+import app.edu_kg.pages.test.TestActivity;
 import app.edu_kg.pages.user.HistoryActivity;
 import app.edu_kg.pages.user.LogActivity;
 import app.edu_kg.pages.user.ModifyActivity;
@@ -178,7 +179,7 @@ public class ProfileFragment extends Fragment {
                     launcher.launch(intent);
                 }
                 else{
-                    Intent intent = new Intent(context, HistoryActivity.class);
+                    Intent intent = new Intent(context, TestActivity.class);
                     intent.putExtra("token", profileViewModel.token);
                     intent.putExtra("page_type", Constant.RECOMMENDATION_PAGE);
                     startActivity(intent);

@@ -2,7 +2,6 @@ package app.edu_kg.pages.test;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,12 +9,10 @@ import android.os.Message;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RadioGroup;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +26,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import app.edu_kg.R;
-import app.edu_kg.pages.result.ResultViewModel;
 import app.edu_kg.utils.Constant;
 import app.edu_kg.utils.Functional;
 import app.edu_kg.utils.Request;
@@ -144,10 +140,16 @@ public class TestActivity extends AppCompatActivity {
                 testRecycler.smoothScrollToPosition(testViewModel.questionIdx);
             }
         });
-        String searchInput = intent.getStringExtra("searchInput");
-        String course = Functional.subjChe2Eng(intent.getStringExtra("course"));
-        testViewModel.adapter.clear();
-        Request.getQuestionList(searchInput, course, handler);
+        int pageType = intent.getIntExtra("page_type", Constant.EXERCISE_LIST_PAGE);
+        if (pageType == Constant.RECOMMENDATION_PAGE){
+            String token = Functional.subjChe2Eng(intent.getStringExtra("token"));
+            Request.getExerciseRecommendation(token, handler);
+        }
+        else if (pageType == Constant.EXERCISE_LIST_PAGE){
+            String searchInput = intent.getStringExtra("searchInput");
+            String course = Functional.subjChe2Eng(intent.getStringExtra("course"));
+            Request.getQuestionList(searchInput, course, handler);
+        }
         /*
         testViewModel.adapter.addTest("question 1", "opt1", "opt2", "opt3", "opt4", 0);
         testViewModel.adapter.addTest("question 2", "opt1","opt2", "opt3", "opt4", 0);

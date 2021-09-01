@@ -24,5 +24,7 @@
     <string name="subject_title">我的兴趣</string>
     <string name="subject_manager">管理</string>
     <string name="subject_manager_finish">完成</string>
+    <string name="detail_relation">相关实体</string>
+    <string name="detail_exercise">相关习题</string>
 
 </resources>

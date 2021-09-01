@@ -73,17 +73,19 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
                     ArrayList<Triple<String, String, String>> obj = (ArrayList<Triple<String, String, String>>) msg.obj;
                     homeViewModel.homeList.clear();
                     for (Triple<String, String, String> item : obj) {
-                        homeViewModel.homeList.add(new ItemListAdapter.ItemMessage(item.getFirst(), item.getSecond(), item.getThird(), null));
+                        homeViewModel.homeList.add(new ItemListAdapter.ItemMessage(item.getFirst(), item.getSecond(), item.getThird(), null, false));
                     }
+
                     homeViewModel.homeListAdapter.notifyDataSetChanged();
                 }
                 else if (msg.what == Constant.HOME_ENTITY_RESPONSE_FAIL){
-                    Snackbar.make(view, "取回数据错误", Snackbar.LENGTH_SHORT)
-                            .setAction("确认", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) { }
-                            })
-                            .show();
+                    if (view.isShown())
+                        Snackbar.make(view, "取回数据错误", Snackbar.LENGTH_SHORT)
+                                .setAction("确认", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) { }
+                                })
+                                .show();
                 }
             }
         };

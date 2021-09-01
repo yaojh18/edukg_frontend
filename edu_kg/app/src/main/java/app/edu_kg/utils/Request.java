@@ -11,12 +11,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import kotlin.Pair;
 import kotlin.Triple;
 import okhttp3.*;
 
 public class Request {
     final static OkHttpClient client = new OkHttpClient();
-    final static String ip = "192.168.0.101";
+    final static String ip = "183.173.104.249";
 
     public static void inputQuestion(String question, @Nullable String course, final Handler handler) {
         new Thread(new Runnable() {
@@ -130,7 +131,7 @@ public class Request {
         }).start();
     }
 
-    public static void userHistory(String token, Handler handler) {
+    public static void getUserHistory(String token, Handler handler) {
         new Thread(new Runnable() {
 
             @Override
@@ -164,7 +165,7 @@ public class Request {
         }).start();
     }
 
-    public static void userCollection(String token, Handler handler) {
+    public static void getUserCollection(String token, Handler handler) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -197,7 +198,7 @@ public class Request {
         }).start();
     }
 
-    public static void exerciseRecommendation(String token, Handler handler) {
+    public static void getExerciseRecommendation(String token, Handler handler) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -209,24 +210,13 @@ public class Request {
                                 .url(url)
                                 .post(requestBody)
                                 .build();
-//                try {
-//                    Response response = client.newCall(request).execute();
-//                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
-//                    if (!response.isSuccessful())
-//                        handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
-//                                new Pair<Boolean, String>(false, json.getString("msg"))));
-//                    else
-//                        handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
-//                                new Pair<Boolean, String>(true, json.getString("msg"))));
-//
-//                } catch (Exception e) {
-//                    handler.sendMessage(handler.obtainMessage(Constant.MODIFY_RESPONSE,
-//                            new Pair<Boolean, String>(false, "其他错误")));
-//                }
-                ArrayList<Triple<String, String, String>> result = new ArrayList<Triple<String, String, String>>();
-                result.add(new Triple<>("test1", "test1", "test1"));
-                result.add(new Triple<>("test2", "test2", "test2"));
-                handler.sendMessage(handler.obtainMessage(Constant.LIST_RESPONSE_SUCCESS, result));
+                try {
+                    Response response = client.newCall(request).execute();
+                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                    handler.sendMessage(handler.obtainMessage(Constant.QUESTION_LIST_RESPONSE, json));
+                } catch (Exception e) {
+                    handler.sendMessage(handler.obtainMessage(Constant.QUESTION_LIST_RESPONSE, "error"));
+                }
             }
         }).start();
     }
@@ -236,15 +226,14 @@ public class Request {
             @Override
             public void run() {
                 final String url = "http://" + ip + ":8080/API/homeList";
-                HttpUrl urlQuery =
-                        HttpUrl.parse(url).newBuilder().
-                                addQueryParameter("course", course)
+                HttpUrl urlQuery = HttpUrl.parse(url)
+                                .newBuilder()
+                                .addQueryParameter("course", course)
                                 .build();
-                okhttp3.Request request =
-                        new okhttp3.Request.Builder().
-                                url(urlQuery).
-                                get().
-                                build();
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                                .url(urlQuery)
+                                .get()
+                                .build();
 
                 try {
                     Response response = client.newCall(request).execute();
@@ -257,6 +246,50 @@ public class Request {
                             res.add(new Triple<>(item.getString("label"), item.getString("course"), item.getString("category")));
                         }
                         handler.sendMessage(handler.obtainMessage(Constant.HOME_ENTITY_RESPONSE_SUCCESS, res));
+                    }
+                    else throw new Exception();
+                } catch (Exception e) {
+                    handler.sendMessage(handler.obtainMessage(Constant.HOME_ENTITY_RESPONSE_FAIL, ""));
+                }
+            }
+        }).start();
+    }
+
+    public static void getInfoByInstanceName(String name, String course, String token, Handler handler) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = "http://" + ip + ":8080/API/infoByInstanceName";
+                HttpUrl.Builder urlQuery = HttpUrl.parse(url).newBuilder()
+                        .addQueryParameter("name", name)
+                        .addQueryParameter("course", course);
+
+                if (!token.equals(""))
+                    urlQuery.addQueryParameter("token", token);
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                        .url(urlQuery.build())
+                        .get()
+                        .build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                    if (response.isSuccessful()){
+                        JSONArray data = json.getJSONObject("data").getJSONArray("property");
+                        ArrayList<Pair<String, String>> property = new ArrayList<>();
+                        for (int i = 0; i < data.length(); i++){
+                            JSONObject item = data.getJSONObject(i);
+                            property.add(new Pair<>(item.getString("predicateLabel"), item.getString("object")));
+                        }
+
+                        data = json.getJSONObject("data").getJSONArray("relationship");
+                        ArrayList<Pair<String, String>> relationship = new ArrayList<>();
+                        for (int i = 0; i < data.length(); i++){
+                            JSONObject item = data.getJSONObject(i);
+                            relationship.add(new Pair<>(item.getString("predicate_label"), item.getString("object_label")));
+                        }
+
+                        handler.sendMessage(handler.obtainMessage(Constant.HOME_ENTITY_RESPONSE_SUCCESS, property));
                     }
                     else throw new Exception();
                 } catch (Exception e) {

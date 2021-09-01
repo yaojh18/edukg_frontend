@@ -33,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
+            android:textColor="@drawable/text_color_change"
             tools:text="First Line" />
 
         <TextView
@@ -41,6 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
+            android:textColor="@drawable/text_color_change"
             tools:text="Second Line" />
     </LinearLayout>
 

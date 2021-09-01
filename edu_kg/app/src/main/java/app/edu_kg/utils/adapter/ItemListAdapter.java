@@ -49,14 +49,16 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
         String category;
         Integer imageId;
         String course;
+        boolean isChecked;
         static final int IMAGE_VIEW = 0;
         static final int TEXT_VIEW = 1;
 
-        public ItemMessage(String label, String course, @Nullable String category, @Nullable Integer imageId){
+        public ItemMessage(String label, String course, @Nullable String category, @Nullable Integer imageId, boolean isChecked){
             this.label = label;
             this.category = category;
             this.course = course;
             this.imageId = imageId;
+            this.isChecked = isChecked;
         }
     }
 

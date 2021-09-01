@@ -64,7 +64,7 @@ public class HistoryActivity extends AppCompatActivity implements ItemListAdapte
                 if (msg.what == Constant.LIST_RESPONSE_SUCCESS) {
                     ArrayList<Triple<String, String, String>> obj = (ArrayList<Triple<String, String, String>>) msg.obj;
                     for (Triple<String, String, String> item : obj) {
-                        itemList.add(new ItemListAdapter.ItemMessage(item.getFirst(), item.getSecond(), item.getThird(), null));
+                        itemList.add(new ItemListAdapter.ItemMessage(item.getFirst(), item.getSecond(), item.getThird(), null, false));
                     }
                     adapter.notifyDataSetChanged();
                 }
@@ -85,17 +85,17 @@ public class HistoryActivity extends AppCompatActivity implements ItemListAdapte
         switch (type){
             case Constant.HISTORY_PAGE:
                 toolbar.setTitle("浏览历史");
-                Request.userHistory(token, handler);
+                Request.getUserHistory(token, handler);
                 break;
 
             case Constant.COLLECTION_PAGE:
                 toolbar.setTitle("用户收藏");
-                Request.userCollection(token, handler);
+                Request.getUserCollection(token, handler);
                 break;
 
             case Constant.RECOMMENDATION_PAGE:
                 toolbar.setTitle("试题推荐");
-                Request.exerciseRecommendation(token, handler);
+                Request.getExerciseRecommendation(token, handler);
                 break;
         }
 

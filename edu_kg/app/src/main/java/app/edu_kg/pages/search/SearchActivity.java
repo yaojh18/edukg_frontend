@@ -32,6 +32,7 @@ import app.edu_kg.R;
 import app.edu_kg.pages.result.ResultActivity;
 import app.edu_kg.pages.search.SearchViewModel;
 import app.edu_kg.pages.test.TestActivity;
+import app.edu_kg.utils.Constant;
 import app.edu_kg.utils.Request;
 
 import app.edu_kg.databinding.ActivitySearchBinding;
@@ -90,6 +91,7 @@ public class SearchActivity extends AppCompatActivity {
         Intent intent = null;
         if(type.equals("试题")) {
             intent = new Intent(SearchActivity.this, TestActivity.class);
+            intent.putExtra("page_type", Constant.EXERCISE_LIST_PAGE);
         }
         else if(type.equals("提纲")) {
             intent = new Intent(SearchActivity.this, ResultActivity.class);

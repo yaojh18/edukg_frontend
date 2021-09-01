@@ -34,10 +34,9 @@
 
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/log_menu"
-                    android:background="@android:color/transparent"
                     android:layout_height="?attr/actionBarSize"
                     android:layout_width="match_parent"
-                    app:menu="@menu/profile_actionbar"/>
+                    app:menu="@menu/profile_actionbar" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -60,10 +59,10 @@
 
             <ImageView
                 android:id="@+id/user_picture"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="-40dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="-30dp"
                 android:contentDescription="@string/user_profile"
                 android:scaleType="centerCrop"
                 android:background="@drawable/user_picture_outline"
@@ -73,200 +72,179 @@
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="-32dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="-25dp"
                 android:text="@string/not_logged_in"
-                android:textSize="20sp" />
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:textSize="16sp"/>
 
         </LinearLayout>
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true">
-
         <LinearLayout
+            android:layout_marginTop="40dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-                <LinearLayout
-                    android:id="@+id/change_profile"
-                    android:clickable="true"
-                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/change_profile"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/change_profile"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/change_profile" />
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:padding="15dp"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/change_profile"
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="16sp"/>
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_gravity="center"
-                        android:contentDescription="@string/change_profile"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/change_profile" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
-                        android:layout_marginStart="20dp"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="18sp"
-                        android:text="@string/change_profile" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        android:layout_height="20dp"
-                        android:layout_width="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_gravity="center"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/go" />
-
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/divider_line" />
-                <LinearLayout
-                    android:id="@+id/user_history"
-                    android:clickable="true"
-                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                    android:layout_width="match_parent"
+                <Space
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_weight="1" />
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_gravity="center"
-                        android:contentDescription="@string/user_history"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/user_history" />
+                <ImageView
+                    android:layout_height="20dp"
+                    android:layout_width="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/go" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
-                        android:layout_marginStart="20dp"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="18sp"
-                        android:text="@string/user_history"/>
+            </LinearLayout>
 
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+            <LinearLayout
+                android:id="@+id/user_history"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_height="20dp"
-                        android:layout_width="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_gravity="center"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/go" />
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/divider_line" />
-                <LinearLayout
-                    android:id="@+id/user_collection"
-                    android:clickable="true"
-                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/user_history"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/user_history" />
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:padding="15dp"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/user_history"
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="16sp"/>
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_gravity="center"
-                        android:contentDescription="@string/user_collection"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/user_collection" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
-                        android:layout_marginStart="20dp"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="18sp"
-                        android:text="@string/user_collection"/>
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        android:layout_height="20dp"
-                        android:layout_width="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_gravity="center"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/go" />
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/divider_line" />
-                <LinearLayout
-                    android:id="@+id/exercise_rec"
-                    android:clickable="true"
-                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                    android:layout_width="match_parent"
+                <Space
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_weight="1" />
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_gravity="center"
-                        android:contentDescription="@string/exercise_rec"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/exercise_rec" />
+                <ImageView
+                    android:layout_height="20dp"
+                    android:layout_width="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/go" />
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
-                        android:layout_marginStart="20dp"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="18sp"
-                        android:text="@string/exercise_rec"/>
+            <LinearLayout
+                android:id="@+id/user_collection"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/user_collection"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/user_collection" />
 
-                    <ImageView
-                        android:layout_height="20dp"
-                        android:layout_width="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_gravity="center"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/go" />
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/user_collection"
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="16sp"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_height="20dp"
+                    android:layout_width="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/go" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/exercise_rec"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/exercise_rec"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/exercise_rec" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/exercise_rec"
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="16sp"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_height="20dp"
+                    android:layout_width="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/go" />
+            </LinearLayout>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
     </LinearLayout>
 </LinearLayout>
