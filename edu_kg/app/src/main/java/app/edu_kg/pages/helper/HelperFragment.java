@@ -1,6 +1,6 @@
 package app.edu_kg.pages.helper;
+import app.edu_kg.DataApplication;
 import app.edu_kg.MainActivity;
-import app.edu_kg.MainViewModel;
 import app.edu_kg.utils.*;
 
 import android.annotation.SuppressLint;
@@ -30,7 +30,7 @@ import app.edu_kg.utils.adapter.SubjectGridAdapter;
 
 public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSubjectClickListener {
 
-    private MainViewModel helperViewModel;
+    private DataApplication localData;
     private FragmentHelperBinding binding;
     private SubjectGridAdapter adapter;
 
@@ -38,13 +38,13 @@ public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSub
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHelperBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        Context context = view.getContext();
-        helperViewModel = ((MainActivity) context).mainViewModel;
+        MainActivity context = (MainActivity) view.getContext();
+        localData = (DataApplication) context.getApplicationContext();
 
         RecyclerView messageRecycler = binding.messageBoard;
 
         messageRecycler.setLayoutManager(new LinearLayoutManager(context));
-        messageRecycler.setAdapter(helperViewModel.helperMessageAdapter);
+        messageRecycler.setAdapter(localData.helperMessageAdapter);
 
         EditText helperInput = binding.helperInput;
 
@@ -56,8 +56,8 @@ public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSub
                 int message_num = msg.what;
                 if (message_num == Constant.MESSAGE_LIST_RESPONSE){
                     String message = (String) msg.obj;
-                    helperViewModel.helperMessageAdapter.addRobotMessage(message);
-                    binding.messageBoard.scrollToPosition(helperViewModel.helperMessageAdapter.getItemCount() - 1);
+                    localData.helperMessageAdapter.addRobotMessage(message);
+                    binding.messageBoard.scrollToPosition(localData.helperMessageAdapter.getItemCount() - 1);
                 }
             }
         };
@@ -69,12 +69,12 @@ public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSub
                 if (i == KeyEvent.KEYCODE_ENTER) {
                     String text = helperInput.getText().toString();
                     if (!text.equals("")){
-                        helperViewModel.helperMessageAdapter.addUserMessage(text);
+                        localData.helperMessageAdapter.addUserMessage(text);
                         helperInput.setText("");
-                        messageRecycler.smoothScrollToPosition(helperViewModel.helperMessageAdapter.getItemCount() - 1);
+                        messageRecycler.smoothScrollToPosition(localData.helperMessageAdapter.getItemCount() - 1);
                         String subject = null;
-                        if (helperViewModel.helperSubjectSelected < helperViewModel.helperSubjectList.size())
-                            subject = Functional.subjChe2Eng(helperViewModel.helperSubjectList.get(helperViewModel.helperSubjectSelected).name);
+                        if (localData.helperSubjectSelected < localData.helperSubjectList.size())
+                            subject = Functional.subjChe2Eng(localData.helperSubjectList.get(localData.helperSubjectSelected).name);
                         Request.inputQuestion(text, subject, handler);
                     }
                 }
@@ -88,12 +88,12 @@ public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSub
             public void onClick(View view) {
                 String text = helperInput.getText().toString();
                 if (!text.equals("")){
-                    helperViewModel.helperMessageAdapter.addUserMessage(text);
+                    localData.helperMessageAdapter.addUserMessage(text);
                     helperInput.setText("");
-                    messageRecycler.smoothScrollToPosition(helperViewModel.helperMessageAdapter.getItemCount() - 1);
+                    messageRecycler.smoothScrollToPosition(localData.helperMessageAdapter.getItemCount() - 1);
                     String subject = null;
-                    if (helperViewModel.helperSubjectSelected < helperViewModel.helperSubjectList.size())
-                        subject = Functional.subjChe2Eng(helperViewModel.helperSubjectList.get(helperViewModel.helperSubjectSelected).name);
+                    if (localData.helperSubjectSelected < localData.helperSubjectList.size())
+                        subject = Functional.subjChe2Eng(localData.helperSubjectList.get(localData.helperSubjectSelected).name);
                     Request.inputQuestion(text, subject, handler);
                 }
             }
@@ -101,8 +101,8 @@ public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSub
 
         RecyclerView subjectRecycler = binding.helperToolbar;
         subjectRecycler.setLayoutManager(new GridLayoutManager(context, 5));
-        helperViewModel.helperSubjectAdapter = new SubjectGridAdapter(helperViewModel.helperSubjectList,this);
-        subjectRecycler.setAdapter(helperViewModel.helperSubjectAdapter);
+        localData.helperSubjectAdapter = new SubjectGridAdapter(localData.helperSubjectList,this);
+        subjectRecycler.setAdapter(localData.helperSubjectAdapter);
         return view;
     }
 
@@ -115,7 +115,7 @@ public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSub
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onSubjectClick(int position) {
-        List<SubjectGridAdapter.Subject> subjectList = helperViewModel.helperSubjectList;
+        List<SubjectGridAdapter.Subject> subjectList = localData.helperSubjectList;
         SubjectGridAdapter.Subject subject = subjectList.get(position);
 
         switch (subject.id){
@@ -138,19 +138,19 @@ public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSub
                 subjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.FOLD));
                 break;
             default:
-                if (helperViewModel.helperSubjectSelected == position){
+                if (localData.helperSubjectSelected == position){
                     subject.isSelected = false;
-                    helperViewModel.helperSubjectSelected = 100;
+                    localData.helperSubjectSelected = 100;
                 }
                 else{
-                    if (helperViewModel.helperSubjectSelected < subjectList.size()){
-                        SubjectGridAdapter.Subject oldSubject = subjectList.get(helperViewModel.helperSubjectSelected);
+                    if (localData.helperSubjectSelected < subjectList.size()){
+                        SubjectGridAdapter.Subject oldSubject = subjectList.get(localData.helperSubjectSelected);
                         oldSubject.isSelected = false;
                     }
                     subject.isSelected = true;
-                    helperViewModel.helperSubjectSelected = position;
+                    localData.helperSubjectSelected = position;
                 }
         }
-        helperViewModel.helperSubjectAdapter.notifyDataSetChanged();
+        localData.helperSubjectAdapter.notifyDataSetChanged();
     }
 }

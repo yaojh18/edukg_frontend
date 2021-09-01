@@ -63,9 +63,9 @@ public class LogActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (mode == LOGIN)
-                    Request.Login(username.getText().toString(), password.getText().toString(), handler);
+                    Request.login(username.getText().toString(), password.getText().toString(), handler);
                 else
-                    Request.Register(username.getText().toString(), password.getText().toString(), handler);
+                    Request.register(username.getText().toString(), password.getText().toString(), handler);
             }
         });
 

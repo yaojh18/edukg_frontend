@@ -14,13 +14,11 @@ import app.edu_kg.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    public MainViewModel mainViewModel;
     private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);

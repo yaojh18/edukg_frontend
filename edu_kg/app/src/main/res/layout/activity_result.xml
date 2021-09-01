@@ -7,21 +7,13 @@
     android:orientation="vertical"
     tools:context=".pages.result.ResultActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/back"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:background="@android:color/transparent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/back"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/back"
-            />
-
-    </com.google.android.material.appbar.AppBarLayout>
+        app:navigationIcon="@drawable/back"
+        />
 
     <TextView
         android:id="@+id/relation"

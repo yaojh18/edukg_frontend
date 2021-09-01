@@ -2,10 +2,10 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:drawable="@drawable/star_unfavor"
-        android:state_checked="false"
+        android:state_selected="false"
         />
     <item
         android:drawable="@drawable/star_favor"
-        android:state_checked="true"
+        android:state_selected="true"
         />
 </selector>

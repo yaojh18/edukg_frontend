@@ -6,20 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/detail_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/list_page"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/back"
-            />
-
-    </com.google.android.material.appbar.AppBarLayout>
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"
+        app:navigationIcon="@drawable/back"
+        />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -50,15 +43,19 @@
                         android:padding="16dp">
 
                         <TextView
+                            android:id="@+id/detail_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:autoSizeTextType="uniform"
                             android:textAppearance="?attr/textAppearanceHeadline6"
                             tools:text="实体名" />
 
                         <TextView
+                            android:id="@+id/detail_course"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_gravity="bottom|start"
                             android:textAppearance="?attr/textAppearanceBody2"
                             android:textColor="?android:attr/textColorSecondary"
                             tools:text="学科" />
@@ -66,6 +63,7 @@
                     </LinearLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/detail_property_recycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="16dp">
@@ -126,6 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
+                android:clickable="true"
                 app:cardBackgroundColor="#EEFDFF">
                 <LinearLayout
                     android:layout_width="match_parent"

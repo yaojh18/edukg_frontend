@@ -2,8 +2,6 @@ package app.edu_kg.pages.home;
 
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,10 +26,11 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.edu_kg.DataApplication;
 import app.edu_kg.MainActivity;
-import app.edu_kg.MainViewModel;
 import app.edu_kg.R;
 import app.edu_kg.databinding.FragmentHomeBinding;
+import app.edu_kg.pages.detail.DetailActivity;
 import app.edu_kg.pages.search.SearchActivity;
 import app.edu_kg.utils.Constant;
 import app.edu_kg.utils.Functional;
@@ -42,8 +40,9 @@ import app.edu_kg.utils.adapter.SubjectGridAdapter;
 import kotlin.Triple;
 
 public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClickListener, SubjectGridAdapter.OnSubjectClickListener {
-    private MainViewModel homeViewModel;
+    private DataApplication localData;
     private FragmentHomeBinding binding;
+    private MainActivity context;
 
     private Handler handler;
     private final boolean EDIT_SUBJECT = true;
@@ -54,8 +53,8 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        Context context = view.getContext();
-        homeViewModel = ((MainActivity) context).mainViewModel;
+        context = (MainActivity) view.getContext();
+        localData = (DataApplication) context.getApplicationContext();
 
         // init search button
         ImageView btn = binding.searchBar;
@@ -70,12 +69,10 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == Constant.HOME_ENTITY_RESPONSE_SUCCESS) {
-                    ArrayList<Triple<String, String, String>> obj = (ArrayList<Triple<String, String, String>>) msg.obj;
-                    homeViewModel.homeList.clear();
-                    for (Triple<String, String, String> item : obj) {
-                        homeViewModel.homeList.add(new ItemListAdapter.ItemMessage(item.getFirst(), item.getSecond(), item.getThird(), null, false));
-                    }
-                    homeViewModel.homeListAdapter.notifyDataSetChanged();
+                    ArrayList<ItemListAdapter.ItemMessage> obj = (ArrayList<ItemListAdapter.ItemMessage>) msg.obj;
+                    localData.homeList.clear();
+                    localData.homeList.addAll(obj);
+                    localData.homeListAdapter.notifyDataSetChanged();
                 }
                 else if (msg.what == Constant.HOME_ENTITY_RESPONSE_FAIL){
                     if (view.isShown())
@@ -88,20 +85,20 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
                 }
             }
         };
-        Request.getHomeList("chinese", handler);
+        Request.getHomeList(Functional.subjChe2Eng(localData.homeSubjectList.get(localData.homeSubjectSelected).name), handler);
 
         // init list recycler
         RecyclerView itemRecycler = binding.entityBoard;
-        homeViewModel.homeListAdapter = new ItemListAdapter(homeViewModel.homeList, this);
+        localData.homeListAdapter = new ItemListAdapter(localData.homeList, this);
         itemRecycler.setLayoutManager(new LinearLayoutManager(context));
-        itemRecycler.setAdapter(homeViewModel.homeListAdapter);
+        itemRecycler.setAdapter(localData.homeListAdapter);
 
         // init subject recycler
         RecyclerView subjectRecycler = binding.subjectSetting;
         subjectRecycler.setLayoutManager(new GridLayoutManager(context, 5));
-        homeViewModel.homeSubjectAdapter = new SubjectGridAdapter(homeViewModel.homeSubjectList,this);
-        homeViewModel.presentSubjectAdapter = new SubjectGridAdapter(homeViewModel.presentSubjectList, this);
-        subjectRecycler.setAdapter(homeViewModel.homeSubjectAdapter);
+        localData.homeSubjectAdapter = new SubjectGridAdapter(localData.homeSubjectList,this);
+        localData.presentSubjectAdapter = new SubjectGridAdapter(localData.presentSubjectList, this);
+        subjectRecycler.setAdapter(localData.homeSubjectAdapter);
 
         // init subject manager
         LinearLayout subjectManager = binding.subjectManager;
@@ -112,7 +109,7 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
                 TextView text = binding.subjectManagerText;
                 ImageView image = binding.subjectManagerImage;
                 if (mode == EDIT_SUBJECT){
-                    subjectRecycler.setAdapter(homeViewModel.presentSubjectAdapter);
+                    subjectRecycler.setAdapter(localData.presentSubjectAdapter);
                     text.setText(R.string.subject_manager_finish);
                     image.setImageResource(R.drawable.subject_manager_finish);
                 }
@@ -121,24 +118,24 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
                     Constant.homeSubjectMap.forEach((name, subject) -> {
                         subject.isSelected = false;
                     });
-                    homeViewModel.homeSubjectList.clear();
-                    homeViewModel.homeSubjectSelected = 0;
+                    localData.homeSubjectList.clear();
+                    localData.homeSubjectSelected = 0;
 
                     // update
-                    for (Constant.SUBJECT_NAME name : homeViewModel.presentSet){
-                        homeViewModel.homeSubjectList.add(Constant.homeSubjectMap.get(name));
-                        if (homeViewModel.homeSubjectList.size() >= 5) break;
+                    for (Constant.SUBJECT_NAME name : localData.presentSet){
+                        localData.homeSubjectList.add(Constant.homeSubjectMap.get(name));
+                        if (localData.homeSubjectList.size() >= 5) break;
                     }
-                    if (homeViewModel.presentSet.size() > 5){
-                        homeViewModel.homeSubjectList.remove(4);
-                        homeViewModel.homeSubjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.UNFOLD));
+                    if (localData.presentSet.size() > 5){
+                        localData.homeSubjectList.remove(4);
+                        localData.homeSubjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.UNFOLD));
                     }
-                    SubjectGridAdapter.Subject firstSubject = homeViewModel.homeSubjectList.get(0);
+                    SubjectGridAdapter.Subject firstSubject = localData.homeSubjectList.get(0);
                     firstSubject.isSelected = true;
                     Request.getHomeList(Functional.subjChe2Eng(firstSubject.name), handler);
 
                     // update adapter
-                    subjectRecycler.setAdapter(homeViewModel.homeSubjectAdapter);
+                    subjectRecycler.setAdapter(localData.homeSubjectAdapter);
                     text.setText(R.string.subject_manager);
                     image.setImageResource(R.drawable.subject_add);
                 }
@@ -151,14 +148,19 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
     // do your work here.
     @Override
     public void onItemClick(int position) {
-
+        Intent intent = new Intent(context, DetailActivity.class);
+        ItemListAdapter.ItemMessage item = localData.homeList.get(position);
+        intent.putExtra("course", item.course);
+        intent.putExtra("name", item.label);
+        intent.putExtra("token", localData.token);
+        startActivity(intent);
     }
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onSubjectClick(int position) {
         if (mode != EDIT_SUBJECT){
-            List<SubjectGridAdapter.Subject> subjectList = homeViewModel.homeSubjectList;
+            List<SubjectGridAdapter.Subject> subjectList = localData.homeSubjectList;
             SubjectGridAdapter.Subject subject = subjectList.get(position);
             switch (subject.id){
                 case FOLD:
@@ -169,31 +171,31 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
                     break;
                 case UNFOLD:
                     subjectList.clear();
-                    for (Constant.SUBJECT_NAME name : homeViewModel.presentSet){
+                    for (Constant.SUBJECT_NAME name : localData.presentSet){
                         subjectList.add(Constant.homeSubjectMap.get(name));
                     }
                     subjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.FOLD));
                     break;
                 default:
-                    if (homeViewModel.homeSubjectSelected < subjectList.size()){
-                        SubjectGridAdapter.Subject oldSubject = subjectList.get(homeViewModel.homeSubjectSelected);
+                    if (localData.homeSubjectSelected < subjectList.size()){
+                        SubjectGridAdapter.Subject oldSubject = subjectList.get(localData.homeSubjectSelected);
                         oldSubject.isSelected = false;
                     }
                     subject.isSelected = true;
-                    homeViewModel.homeSubjectSelected = position;
-                    Request.getHomeList(Functional.subjChe2Eng(subjectList.get(homeViewModel.homeSubjectSelected).name), handler);
+                    localData.homeSubjectSelected = position;
+                    Request.getHomeList(Functional.subjChe2Eng(subjectList.get(localData.homeSubjectSelected).name), handler);
             }
-            homeViewModel.homeSubjectAdapter.notifyDataSetChanged();
+            localData.homeSubjectAdapter.notifyDataSetChanged();
         }
         else{
-            SubjectGridAdapter.Subject subject = homeViewModel.presentSubjectList.get(position);
-            if (homeViewModel.presentSet.size() > 1 || !homeViewModel.presentSet.contains(subject.id)){
+            SubjectGridAdapter.Subject subject = localData.presentSubjectList.get(position);
+            if (localData.presentSet.size() > 1 || !localData.presentSet.contains(subject.id)){
                 subject.isOut = ! subject.isOut;
                 if (subject.isOut)
-                    homeViewModel.presentSet.remove(subject.id);
+                    localData.presentSet.remove(subject.id);
                 else
-                    homeViewModel.presentSet.add(subject.id);
-                homeViewModel.presentSubjectAdapter.notifyDataSetChanged();
+                    localData.presentSet.add(subject.id);
+                localData.presentSubjectAdapter.notifyDataSetChanged();
             }
         }
     }

@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.appbar.MaterialToolbar;
@@ -22,16 +21,17 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 
 import app.edu_kg.R;
+import app.edu_kg.pages.detail.DetailActivity;
 import app.edu_kg.utils.Constant;
 import app.edu_kg.utils.Request;
 import app.edu_kg.utils.adapter.ItemListAdapter;
-import kotlin.Triple;
 
 public class HistoryActivity extends AppCompatActivity implements ItemListAdapter.OnItemClickListener{
 
     private int type;
     private ArrayList<ItemListAdapter.ItemMessage> itemList;
     private ItemListAdapter adapter;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +40,13 @@ public class HistoryActivity extends AppCompatActivity implements ItemListAdapte
         Intent intent = getIntent();
         Activity activity = this;
 
+        // get data
         itemList = new ArrayList<ItemListAdapter.ItemMessage>();
         type = intent.getIntExtra("page_type", Constant.HISTORY_PAGE);
-        String token = intent.getStringExtra("token");
+        token = intent.getStringExtra("token");
 
-        MaterialToolbar toolbar = findViewById(R.id.list_page);
+        // init toolbar
+        MaterialToolbar toolbar = findViewById(R.id.list_page_toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,6 +54,7 @@ public class HistoryActivity extends AppCompatActivity implements ItemListAdapte
             }
         });
 
+        // init recycle
         RecyclerView itemRecycler = findViewById(R.id.list_page_recycler);
         adapter = new ItemListAdapter(itemList, this);
         itemRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -62,10 +65,8 @@ public class HistoryActivity extends AppCompatActivity implements ItemListAdapte
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == Constant.LIST_RESPONSE_SUCCESS) {
-                    ArrayList<Triple<String, String, String>> obj = (ArrayList<Triple<String, String, String>>) msg.obj;
-                    for (Triple<String, String, String> item : obj) {
-                        itemList.add(new ItemListAdapter.ItemMessage(item.getFirst(), item.getSecond(), item.getThird(), null, false));
-                    }
+                    ArrayList<ItemListAdapter.ItemMessage> obj = (ArrayList<ItemListAdapter.ItemMessage>) msg.obj;
+                    itemList.addAll(obj);
                     adapter.notifyDataSetChanged();
                 }
                 else if (msg.what == Constant.LIST_RESPONSE_FAIL){
@@ -85,17 +86,12 @@ public class HistoryActivity extends AppCompatActivity implements ItemListAdapte
         switch (type){
             case Constant.HISTORY_PAGE:
                 toolbar.setTitle("浏览历史");
-                Request.getUserHistory(token, handler);
+                Request.getUserHistoryList(token, handler);
                 break;
 
             case Constant.COLLECTION_PAGE:
                 toolbar.setTitle("用户收藏");
-                Request.getUserCollection(token, handler);
-                break;
-
-            case Constant.RECOMMENDATION_PAGE:
-                toolbar.setTitle("试题推荐");
-                Request.getExerciseRecommendation(token, handler);
+                Request.getFavoritesList(token, handler);
                 break;
         }
 
@@ -104,19 +100,10 @@ public class HistoryActivity extends AppCompatActivity implements ItemListAdapte
     @Override
     public void onItemClick(int position) {
         ItemListAdapter.ItemMessage item = itemList.get(position);
-        switch (type){
-            // start a new activity
-            case Constant.HISTORY_PAGE:
-                Log.v("Item selected: ", String.valueOf(position));
-                break;
-
-            case Constant.COLLECTION_PAGE:
-                Log.v("Item selected: ", String.valueOf(position));
-                break;
-
-            case Constant.RECOMMENDATION_PAGE:
-                Log.v("Item selected: ", String.valueOf(position));
-                break;
-        }
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra("course", item.course);
+        intent.putExtra("name", item.label);
+        intent.putExtra("token", token);
+        startActivity(intent);
     }
 }

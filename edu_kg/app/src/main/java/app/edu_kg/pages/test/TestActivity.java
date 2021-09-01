@@ -160,7 +160,7 @@ public class TestActivity extends AppCompatActivity {
 
 
     private void initBack() {
-        MaterialToolbar back = binding.back;
+        MaterialToolbar back = binding.backBar;
         back.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

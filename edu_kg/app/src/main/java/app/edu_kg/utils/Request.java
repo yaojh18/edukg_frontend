@@ -11,6 +11,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import app.edu_kg.utils.adapter.DetailPropertyTableAdapter;
+import app.edu_kg.utils.adapter.ItemListAdapter;
 import kotlin.Pair;
 import kotlin.Triple;
 import okhttp3.*;
@@ -45,7 +47,7 @@ public class Request {
         }).start();
     }
 
-    public static void Login(String username, String password, Handler handler) {
+    public static void login(String username, String password, Handler handler) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -73,7 +75,7 @@ public class Request {
         }).start();
     }
 
-    public static void Register(String username, String password, Handler handler) {
+    public static void register(String username, String password, Handler handler) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -131,7 +133,7 @@ public class Request {
         }).start();
     }
 
-    public static void getUserHistory(String token, Handler handler) {
+    public static void getUserHistoryList(String token, Handler handler) {
         new Thread(new Runnable() {
 
             @Override
@@ -149,10 +151,10 @@ public class Request {
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
                     if (response.isSuccessful()){
                         JSONArray data = json.getJSONArray("data");
-                        ArrayList<Triple<String, String, String>> res = new ArrayList<>();
+                        ArrayList<ItemListAdapter.ItemMessage> res = new ArrayList<>();
                         for (int i = 0; i < data.length(); i++){
                             JSONObject item = data.getJSONObject(i);
-                            res.add(new Triple<>(item.getString("instanceName"), item.getString("course"), null));
+                            res.add(new ItemListAdapter.ItemMessage(item.getString("instanceName"), item.getString("course"), null, null, false));
                         }
                         handler.sendMessage(handler.obtainMessage(Constant.LIST_RESPONSE_SUCCESS, res));
                     }
@@ -165,7 +167,7 @@ public class Request {
         }).start();
     }
 
-    public static void getUserCollection(String token, Handler handler) {
+    public static void getFavoritesList(String token, Handler handler) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -182,10 +184,10 @@ public class Request {
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
                     if (response.isSuccessful()){
                         JSONArray data = json.getJSONArray("data");
-                        ArrayList<Triple<String, String, String>> res = new ArrayList<>();
+                        ArrayList<ItemListAdapter.ItemMessage> res = new ArrayList<>();
                         for (int i = 0; i < data.length(); i++){
                             JSONObject item = data.getJSONObject(i);
-                            res.add(new Triple<>(item.getString("instanceName"), item.getString("course"), null));
+                            res.add(new ItemListAdapter.ItemMessage(item.getString("instanceName"), item.getString("course"), null, null, false));
                         }
                         handler.sendMessage(handler.obtainMessage(Constant.LIST_RESPONSE_SUCCESS, res));
                     }
@@ -202,13 +204,14 @@ public class Request {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final String url = "http://" + ip + ":8080/user/changePassword";
-                RequestBody requestBody = new FormBody.Builder()
-                                .add("token", token)
+                final String url = "http://" + ip + ":8080/user/recommendQuestion";
+                HttpUrl urlQuery = HttpUrl.parse(url)
+                                .newBuilder()
+                                .addQueryParameter("token", token)
                                 .build();
                 okhttp3.Request request = new okhttp3.Request.Builder()
-                                .url(url)
-                                .post(requestBody)
+                                .url(urlQuery)
+                                .get()
                                 .build();
                 try {
                     Response response = client.newCall(request).execute();
@@ -240,10 +243,10 @@ public class Request {
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
                     if (response.isSuccessful()){
                         JSONArray data = json.getJSONObject("data").getJSONArray("result");
-                        ArrayList<Triple<String, String, String>> res = new ArrayList<>();
+                        ArrayList<ItemListAdapter.ItemMessage> res = new ArrayList<>();
                         for (int i = 0; i < data.length(); i++){
                             JSONObject item = data.getJSONObject(i);
-                            res.add(new Triple<>(item.getString("label"), item.getString("course"), item.getString("category")));
+                            res.add(new ItemListAdapter.ItemMessage(item.getString("label"), item.getString("course"), item.getString("category"), null, false));
                         }
                         handler.sendMessage(handler.obtainMessage(Constant.HOME_ENTITY_RESPONSE_SUCCESS, res));
                     }
@@ -276,10 +279,10 @@ public class Request {
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
                     if (response.isSuccessful()){
                         JSONArray data = json.getJSONObject("data").getJSONArray("property");
-                        ArrayList<Pair<String, String>> property = new ArrayList<>();
+                        ArrayList<DetailPropertyTableAdapter.DetailMessage> property = new ArrayList<>();
                         for (int i = 0; i < data.length(); i++){
                             JSONObject item = data.getJSONObject(i);
-                            property.add(new Pair<>(item.getString("predicateLabel"), item.getString("object")));
+                            property.add(new DetailPropertyTableAdapter.DetailMessage(item.getString("predicateLabel"), item.getString("object")));
                         }
 
                         data = json.getJSONObject("data").getJSONArray("relationship");
@@ -289,11 +292,70 @@ public class Request {
                             relationship.add(new Pair<>(item.getString("predicate_label"), item.getString("object_label")));
                         }
 
-                        handler.sendMessage(handler.obtainMessage(Constant.HOME_ENTITY_RESPONSE_SUCCESS, property));
+                        handler.sendMessage(handler.obtainMessage(Constant.DETAIL_RESPONSE_SUCCESS,
+                                new Triple<>(property, relationship, json.getJSONObject("data").getBoolean("isFavorite"))));
                     }
                     else throw new Exception();
                 } catch (Exception e) {
                     handler.sendMessage(handler.obtainMessage(Constant.HOME_ENTITY_RESPONSE_FAIL, ""));
+                }
+            }
+        }).start();
+    }
+
+    public static void addFavorite(String token, String name, String course, Handler handler) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = "http://" + ip + ":8080/user/addFavorites";
+                RequestBody requestBody = new FormBody.Builder()
+                        .add("token", token)
+                        .add("name", name)
+                        .add("course", course)
+                        .build();
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                        .url(url)
+                        .post(requestBody)
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                    if (!response.isSuccessful())
+                        handler.sendMessage(handler.obtainMessage(Constant.ADD_FAVORITE_RESPONSE_FAIL, json.getString("msg")));
+                    else
+                        handler.sendMessage(handler.obtainMessage(Constant.ADD_FAVORITE_RESPONSE_SUCCESS, ""));
+
+                } catch (Exception e) {
+                    handler.sendMessage(handler.obtainMessage(Constant.ADD_FAVORITE_RESPONSE_FAIL, "未知错误"));
+                }
+            }
+        }).start();
+    }
+
+    public static void deleteFavorite(String token, String name, String course, Handler handler) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = "http://" + ip + ":8080/user/deleteFavorites";
+                RequestBody requestBody = new FormBody.Builder()
+                        .add("token", token)
+                        .add("name", name)
+                        .add("course", course)
+                        .build();
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                        .url(url)
+                        .post(requestBody)
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                    if (!response.isSuccessful())
+                        handler.sendMessage(handler.obtainMessage(Constant.ADD_FAVORITE_RESPONSE_FAIL, json.getString("msg")));
+                    else
+                        handler.sendMessage(handler.obtainMessage(Constant.ADD_FAVORITE_RESPONSE_SUCCESS, ""));
+
+                } catch (Exception e) {
+                    handler.sendMessage(handler.obtainMessage(Constant.ADD_FAVORITE_RESPONSE_FAIL, "未知错误"));
                 }
             }
         }).start();

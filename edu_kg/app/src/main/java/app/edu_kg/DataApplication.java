@@ -1,15 +1,18 @@
 package app.edu_kg;
 
-import androidx.lifecycle.ViewModel;
+import android.app.Application;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
 import app.edu_kg.utils.Constant;
-import app.edu_kg.utils.adapter.*;
+import app.edu_kg.utils.adapter.ItemListAdapter;
+import app.edu_kg.utils.adapter.MessageListAdapter;
+import app.edu_kg.utils.adapter.SubjectGridAdapter;
 
-public class MainViewModel extends ViewModel {
+public class DataApplication extends Application {
+
     public MessageListAdapter helperMessageAdapter;
     public SubjectGridAdapter helperSubjectAdapter;
     public List<SubjectGridAdapter.Subject> helperSubjectList;
@@ -27,8 +30,8 @@ public class MainViewModel extends ViewModel {
     public int helperSubjectSelected;
     public int homeSubjectSelected;
 
+    public DataApplication(){
 
-    public MainViewModel(){
         helperMessageAdapter = new MessageListAdapter();
         helperMessageAdapter.addRobotMessage("选择上方的学科，可以让我可以更有针对性地回答哦。");
 
@@ -60,6 +63,5 @@ public class MainViewModel extends ViewModel {
         presentSubjectList = new ArrayList<>();
         for (Constant.SUBJECT_NAME name : presentSet)
             presentSubjectList.add(Constant.manageSubjectMap.get(name));
-
     }
 }

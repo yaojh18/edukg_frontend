@@ -18,6 +18,10 @@ public class Constant {
     public final static int LIST_RESPONSE_FAIL = 1007;
     public final static int REGISTER_RESPONSE_SUCCESS = 1008;
     public final static int REGISTER_RESPONSE_FAIL = 1009;
+    public final static int DETAIL_RESPONSE_SUCCESS = 1010;
+    public final static int DETAIL_RESPONSE_FAIL = 1011;
+    public final static int ADD_FAVORITE_RESPONSE_FAIL = 1012;
+    public final static int ADD_FAVORITE_RESPONSE_SUCCESS = 1013;
 
 
     public final static int HOME_ENTITY_RESPONSE_SUCCESS = 2004;

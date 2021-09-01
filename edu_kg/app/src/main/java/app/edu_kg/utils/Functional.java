@@ -23,4 +23,26 @@ public class Functional {
                 return "chinese";
         }
     }
+    public static String subjEng2Che(String ch) {
+        switch(ch) {
+            case "english":
+                return "英语";
+            case "math":
+                return "数学";
+            case "physics":
+                return "物理";
+            case "chemistry":
+                return "化学";
+            case "biology":
+                return "生物";
+            case "geo":
+                return "地理";
+            case "history":
+                return "历史";
+            case "politics":
+                return "政治";
+            default:
+                return "语文";
+        }
+    }
 }

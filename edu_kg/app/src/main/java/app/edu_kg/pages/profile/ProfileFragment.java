@@ -1,5 +1,6 @@
 package app.edu_kg.pages.profile;
 
+import app.edu_kg.DataApplication;
 import app.edu_kg.R;
 
 import android.app.Activity;
@@ -26,7 +27,6 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import app.edu_kg.MainActivity;
-import app.edu_kg.MainViewModel;
 import app.edu_kg.databinding.FragmentProfileBinding;
 import app.edu_kg.pages.test.TestActivity;
 import app.edu_kg.pages.user.HistoryActivity;
@@ -36,7 +36,7 @@ import app.edu_kg.utils.Constant;
 
 public class ProfileFragment extends Fragment {
 
-    private MainViewModel profileViewModel;
+    private DataApplication localData;
     private FragmentProfileBinding binding;
     private ActivityResultLauncher<Intent> launcher;
 
@@ -59,10 +59,10 @@ public class ProfileFragment extends Fragment {
                             logIn.setVisible(false);
                             logOut.setVisible(true);
 
-                            profileViewModel.username = data.getStringExtra("username");
-                            profileViewModel.token = data.getStringExtra("token");
+                            localData.username = data.getStringExtra("username");
+                            localData.token = data.getStringExtra("token");
                             TextView username = binding.userName;
-                            username.setText(profileViewModel.username);
+                            username.setText(localData.username);
                         }
                     }
                 }
@@ -75,11 +75,23 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         MainActivity context = (MainActivity) view.getContext();
-        profileViewModel = context.mainViewModel;
+        localData = (DataApplication) context.getApplicationContext();
 
-        Toolbar logMenuToolbar = binding.logMenu;
         TextView username = binding.userName;
-        username.setText(profileViewModel.username);
+        username.setText(localData.username);
+
+        // set menu
+        Toolbar logMenuToolbar = binding.logMenu;
+        MenuItem logIn = logMenuToolbar.getMenu().getItem(0);
+        MenuItem logOut = logMenuToolbar.getMenu().getItem(1);
+        if (localData.token.equals("")){
+            logOut.setVisible(false);
+            logIn.setVisible(true);
+        }
+        else{
+            logOut.setVisible(true);
+            logIn.setVisible(false);
+        }
 
         logMenuToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -98,12 +110,11 @@ public class ProfileFragment extends Fragment {
                                 .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        item.setVisible(false);
-                                        MenuItem logIn = logMenuToolbar.getMenu().getItem(0);
+                                        logOut.setVisible(false);
                                         logIn.setVisible(true);
-                                        profileViewModel.username = "未登录";
-                                        profileViewModel.token = "";
-                                        username.setText(profileViewModel.username);
+                                        localData.username = "未登录";
+                                        localData.token = "";
+                                        username.setText(localData.username);
                                     }
                                 })
                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -116,11 +127,13 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
+
+        // set 4 redirect link
         LinearLayout changeProfile = binding.changeProfile;
         changeProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (profileViewModel.token.equals("")){
+                if (localData.token.equals("")){
                     Intent intent = new Intent(context, LogActivity.class);
                     intent.putExtra("func_type", "login");
                     launcher.launch(intent);
@@ -128,7 +141,7 @@ public class ProfileFragment extends Fragment {
                 else{
                     Intent intent = new Intent(context, ModifyActivity.class);
                     intent.putExtra("func_type", "modify");
-                    intent.putExtra("token", profileViewModel.token);
+                    intent.putExtra("token", localData.token);
                     launcher.launch(intent);
                 }
 
@@ -138,14 +151,14 @@ public class ProfileFragment extends Fragment {
         userHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (profileViewModel.token.equals("")){
+                if (localData.token.equals("")){
                     Intent intent = new Intent(context, LogActivity.class);
                     intent.putExtra("func_type", "login");
                     launcher.launch(intent);
                 }
                 else{
                     Intent intent = new Intent(context, HistoryActivity.class);
-                    intent.putExtra("token", profileViewModel.token);
+                    intent.putExtra("token", localData.token);
                     intent.putExtra("page_type", Constant.HISTORY_PAGE);
                     startActivity(intent);
                 }
@@ -155,14 +168,14 @@ public class ProfileFragment extends Fragment {
         userCollection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (profileViewModel.token.equals("")){
+                if (localData.token.equals("")){
                     Intent intent = new Intent(context, LogActivity.class);
                     intent.putExtra("func_type", "login");
                     launcher.launch(intent);
                 }
                 else{
                     Intent intent = new Intent(context, HistoryActivity.class);
-                    intent.putExtra("token", profileViewModel.token);
+                    intent.putExtra("token", localData.token);
                     intent.putExtra("page_type", Constant.COLLECTION_PAGE);
                     startActivity(intent);
                 }
@@ -173,14 +186,14 @@ public class ProfileFragment extends Fragment {
         exerciseRec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (profileViewModel.token.equals("")){
+                if (localData.token.equals("")){
                     Intent intent = new Intent(context, LogActivity.class);
                     intent.putExtra("func_type", "login");
                     launcher.launch(intent);
                 }
                 else{
                     Intent intent = new Intent(context, TestActivity.class);
-                    intent.putExtra("token", profileViewModel.token);
+                    intent.putExtra("token", localData.token);
                     intent.putExtra("page_type", Constant.RECOMMENDATION_PAGE);
                     startActivity(intent);
                 }
