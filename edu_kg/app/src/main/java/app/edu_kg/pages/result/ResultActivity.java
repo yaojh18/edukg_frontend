@@ -1,21 +1,19 @@
 package app.edu_kg.pages.result;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.Spannable;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
+
 
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.textfield.TextInputLayout;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,16 +24,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
-import app.edu_kg.R;
-import app.edu_kg.pages.result.ResultActivity;
-import app.edu_kg.pages.result.ResultViewModel;
-import app.edu_kg.pages.test.TestActivity;
 import app.edu_kg.utils.Constant;
 import app.edu_kg.utils.Functional;
 import app.edu_kg.utils.Request;
@@ -58,6 +46,7 @@ public class ResultActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
         Intent intent = getIntent();
+        initRelation(intent);
         initHandler();
         initResult(view, intent);
         initBack();
@@ -83,9 +72,9 @@ public class ResultActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                RecyclerView historyRecycler = binding.board;
-                historyRecycler.setLayoutManager(new LinearLayoutManager(binding.getRoot().getContext()));
-                historyRecycler.setAdapter(resultViewModel.adapter);
+                RecyclerView resultRecycler = binding.board;
+                resultRecycler.setLayoutManager(new LinearLayoutManager(binding.getRoot().getContext()));
+                resultRecycler.setAdapter(resultViewModel.adapter);
                 resultViewModel.adapter.clearResult();
                 if(entities != null) {
                     for(int i = 0; i < entities.length(); ++i) {
@@ -107,7 +96,6 @@ public class ResultActivity extends AppCompatActivity {
                             }
                         }
                         else if (message_num == Constant.LINK_INSTANCE_RESPONSE) {
-                            initRelation(getIntent());
                             String entity = null;
                             String entityType = null;
                             String course = null;
@@ -124,10 +112,14 @@ public class ResultActivity extends AppCompatActivity {
                             }
 
                             resultViewModel.adapter.addLinkInstance(ResultListAdapter.ResultType.LINK_INSTANCE, entity, entityType, course, start_index, end_index);
-                            //binding.relation.setText(ResultViewModel.relationStyle);
+
+                            int color = Constant.LINK_INSTANCE_COLOR[start_index % Constant.LINK_INSTANCE_COLOR.length];
+                            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(color);
+                            ResultViewModel.relationStyle.setSpan(foregroundColorSpan, start_index, end_index + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         }
                     }
                 }
+                binding.relation.setText(ResultViewModel.relationStyle);
             }
         };
     }
@@ -161,9 +153,6 @@ public class ResultActivity extends AppCompatActivity {
 
 
     private void initResult(View view, Intent intent) {
-        RecyclerView resultRecycler = binding.board;
-        resultRecycler.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        resultRecycler.setAdapter(resultViewModel.adapter);
         String searchInput = intent.getStringExtra("searchInput");
         String type = intent.getStringExtra("type");
         String course = Functional.subjChe2Eng(intent.getStringExtra("course"));
@@ -177,11 +166,8 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     private void initRelation(Intent intent) {
-        TextView relation = binding.relation;
-        relation.setVisibility(View.VISIBLE);
         ResultViewModel.relationStyle.clear();
         ResultViewModel.relationStyle.append(intent.getStringExtra("searchInput"));
-        relation.setText(ResultViewModel.relationStyle);
     }
 
     private void initBack() {

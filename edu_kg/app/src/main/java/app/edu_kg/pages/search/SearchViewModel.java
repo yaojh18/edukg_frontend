@@ -1,6 +1,7 @@
 package app.edu_kg.pages.search;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,7 @@ class HistoryListAdapter extends RecyclerView.Adapter {
                     intent.putExtra("type", setting[0]);
                     intent.putExtra("course", setting[1]);
                     intent.putExtra("order", setting[2]);
+                    Log.e("test", searchKey + setting[0] + setting[1] + setting[2]);
                     v.getContext().startActivity(intent);
                 }
             });
