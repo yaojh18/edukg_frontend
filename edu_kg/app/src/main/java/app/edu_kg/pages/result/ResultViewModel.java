@@ -67,10 +67,6 @@ class ResultListAdapter extends RecyclerView.Adapter {
                 int color = Constant.LINK_INSTANCE_COLOR[result.start_index % Constant.LINK_INSTANCE_COLOR.length];
                 firstText.setTextColor(color);
 
-                ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(color);
-                ResultViewModel.relationStyle.setSpan(foregroundColorSpan, result.start_index, result.end_index, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                
-
                 /*
                 ClickableSpan clickableSpan = new ClickableSpan() {
                     @Override

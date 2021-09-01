@@ -18,10 +18,8 @@
         android:id="@+id/relation"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:text="TextView"
         android:gravity="center"
-        style="@style/TextAppearance.AppCompat.Title"
-        android:visibility="gone"/>
+        style="@style/TextAppearance.AppCompat.Title" />
 
 
     <androidx.recyclerview.widget.RecyclerView
