@@ -31,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 import app.edu_kg.R;
 import app.edu_kg.pages.result.ResultActivity;
 import app.edu_kg.pages.search.SearchViewModel;
+import app.edu_kg.pages.test.TestActivity;
 import app.edu_kg.utils.Request;
 
 import app.edu_kg.databinding.ActivitySearchBinding;
@@ -88,7 +89,7 @@ public class SearchActivity extends AppCompatActivity {
         addHistory(searchInput, type, course, order);
         Intent intent = null;
         if(type.equals("试题")) {
-            intent = new Intent(SearchActivity.this, ResultActivity.class);
+            intent = new Intent(SearchActivity.this, TestActivity.class);
         }
         else if(type.equals("提纲")) {
             intent = new Intent(SearchActivity.this, ResultActivity.class);

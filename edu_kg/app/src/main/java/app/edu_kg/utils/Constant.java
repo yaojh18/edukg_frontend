@@ -1,6 +1,8 @@
 package app.edu_kg.utils;
 
 
+import android.graphics.Color;
+
 import java.util.EnumMap;
 import app.edu_kg.utils.adapter.SubjectGridAdapter.Subject;
 
@@ -74,5 +76,9 @@ public class Constant {
         put(SUBJECT_NAME.HISTORY, new Subject("历史", R.drawable.subject_remove, SUBJECT_NAME.HISTORY));
         put(SUBJECT_NAME.GEOGRAPHY, new Subject("地理", R.drawable.subject_remove, SUBJECT_NAME.GEOGRAPHY));
     }};
+
+    public final static int[] LINK_INSTANCE_COLOR = {
+            Color.RED, Color.YELLOW, Color.BLUE, Color.CYAN
+    };
 
 }
