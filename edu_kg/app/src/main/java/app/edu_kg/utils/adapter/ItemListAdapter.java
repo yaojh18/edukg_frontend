@@ -47,11 +47,11 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
     }
 
     public static class ItemMessage {
-        String label;
-        String category;
-        Integer imageId;
-        String course;
-        boolean isChecked;
+        public String label;
+        public String category;
+        public Integer imageId;
+        public String course;
+        public boolean isChecked;
         static final int IMAGE_VIEW = 0;
         static final int TEXT_VIEW = 1;
 
@@ -61,9 +61,6 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
             this.course = course;
             this.imageId = imageId;
             this.isChecked = isChecked;
-        }
-        public void setChecked(boolean checked){
-            isChecked = checked;
         }
     }
 
