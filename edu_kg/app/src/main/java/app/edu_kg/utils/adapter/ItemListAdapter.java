@@ -36,6 +36,8 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
                 content.setText(message.category);
             if (message.imageId != null)
                 image.setImageResource(message.imageId);
+            title.setSelected(message.isChecked);
+            content.setSelected(message.isChecked);
         }
 
         @Override
@@ -59,6 +61,9 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
             this.course = course;
             this.imageId = imageId;
             this.isChecked = isChecked;
+        }
+        public void setChecked(boolean checked){
+            isChecked = checked;
         }
     }
 

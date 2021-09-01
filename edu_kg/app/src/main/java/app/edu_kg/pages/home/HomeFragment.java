@@ -75,7 +75,6 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
                     for (Triple<String, String, String> item : obj) {
                         homeViewModel.homeList.add(new ItemListAdapter.ItemMessage(item.getFirst(), item.getSecond(), item.getThird(), null, false));
                     }
-
                     homeViewModel.homeListAdapter.notifyDataSetChanged();
                 }
                 else if (msg.what == Constant.HOME_ENTITY_RESPONSE_FAIL){
