@@ -25,12 +25,12 @@
                 android:layout_height="match_parent"
                 android:layout_width="match_parent">
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:fitsSystemWindows="true"
-                android:contentDescription="@string/user_profile" />
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:fitsSystemWindows="true"
+                    android:contentDescription="@string/user_profile" />
 
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/log_menu"

@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
 
         // get list message
         handler = new Handler(Looper.getMainLooper()) {
-            @SuppressLint("NotifyDataSetChanged")
+            @SuppressLint({"NotifyDataSetChanged", "ShowToast"})
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == Constant.HOME_ENTITY_RESPONSE_SUCCESS) {
@@ -78,11 +78,10 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
                     homeViewModel.homeListAdapter.notifyDataSetChanged();
                 }
                 else if (msg.what == Constant.HOME_ENTITY_RESPONSE_FAIL){
-                    AlertDialog dialog = new MaterialAlertDialogBuilder(context)
-                            .setTitle("取回数据错误")
-                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    Snackbar.make(view, "取回数据错误", Snackbar.LENGTH_SHORT)
+                            .setAction("确认", new View.OnClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialogInterface, int i) { }
+                                public void onClick(View view) { }
                             })
                             .show();
                 }
