@@ -18,6 +18,7 @@ import java.util.List;
 import app.edu_kg.R;
 import app.edu_kg.pages.result.ResultActivity;
 import app.edu_kg.pages.test.TestActivity;
+import app.edu_kg.utils.Functional;
 
 public class SearchViewModel extends ViewModel {
     HistoryListAdapter adapter;

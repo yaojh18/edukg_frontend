@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import app.edu_kg.utils.adapter.DetailPropertyTableAdapter;
 import app.edu_kg.utils.adapter.ItemListAdapter;
@@ -221,6 +222,7 @@ public class Request {
                     else
                         throw new Exception();
                 } catch (Exception e) {
+                    Log.e("testa", e.toString());
                     handler.sendMessage(handler.obtainMessage(Constant.QUESTION_LIST_RESPONSE, "error"));
                 }
             }
@@ -373,7 +375,7 @@ public class Request {
                         HttpUrl.parse(url).newBuilder().
                                 addQueryParameter("searchKey", searchKey).
                                 addQueryParameter("course", course).
-                                addQueryParameter("order", order)
+                                addQueryParameter("sortMethod", order)
                                 .build();
                 okhttp3.Request request =
                         new okhttp3.Request.Builder().

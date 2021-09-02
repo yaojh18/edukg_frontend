@@ -45,4 +45,17 @@ public class Functional {
                 return "语文";
         }
     }
+
+    public static String sortMethodChe2Eng(String ch) {
+        switch(ch) {
+            case "默认":
+                return "default";
+            case "拼音":
+                return "pinyin";
+            case "访问次数":
+                return "accessCount";
+            default:
+                return "error";
+        }
+    }
 }

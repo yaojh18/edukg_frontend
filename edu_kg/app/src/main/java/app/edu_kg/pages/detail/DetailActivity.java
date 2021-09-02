@@ -12,12 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -26,6 +28,13 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONArray;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +59,7 @@ public class DetailActivity extends AppCompatActivity {
     private DetailPropertyTableAdapter adapter;
     private List<Pair<String, String>> relationList;
     private boolean isFavorite;
-
+    private String instanceDir = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,5 +193,61 @@ public class DetailActivity extends AppCompatActivity {
 
         Request.getInfoByInstanceName(name, course, token, handler);
 
+    }
+
+    private void saveInstance(String entity, String jsonStr) {
+        try {
+            FileOutputStream out = openFileOutput(entity + ".json", Context.MODE_PRIVATE);
+            out.write((jsonStr).getBytes(StandardCharsets.UTF_8));
+            out.flush();
+            out.close();
+            Log.e("test", "save successfully");
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("test", e.toString());
+        }
+    }
+
+    private String loadInstance(String entity) {
+        FileInputStream in;
+        try {
+            in = getApplicationContext().openFileInput(entity+".json");
+            int length = in.available();//获取文件长度
+            byte[] buffer = new byte[length];//创建byte数组用于读入数据
+            in.read(buffer);
+            String result = new String(buffer);//将byte数组转换成指定格式的字符串
+            in.close();//关闭文件输入流
+            if(result.equals("")) {
+                return null;
+            }
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private boolean isVisited(String entity) {
+        String _type = ".json";
+        File f = new File(".");
+        if (!f.exists()) {//判断路径是否存在
+            return false;
+        }
+
+        File[] files = f.listFiles();
+
+        if(files==null){//判断权限
+            return false;
+        }
+
+        for (File _file : files) {//遍历目录
+            if(_file.isFile() && _file.getName().endsWith(_type)){
+                if(_file.getName().equals(entity + ".json")) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
