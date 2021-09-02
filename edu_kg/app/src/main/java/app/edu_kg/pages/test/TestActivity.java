@@ -74,25 +74,18 @@ public class TestActivity extends AppCompatActivity {
                 Log.e("test", msg.obj.toString());
                 int message_num = msg.what;
                 if (message_num == Constant.QUESTION_LIST_RESPONSE){
-                    JSONObject json = null;
                     try {
-                        json = (JSONObject) msg.obj;
+                        JSONObject json = (JSONObject) msg.obj;
                         JSONArray entities = json.getJSONArray("data");
                         if (entities.length() == 0)
                             throw new Exception();
                         for(int i = 0; i < entities.length(); ++i) {
-                            String question = null;
-                            String optA = null;
-                            String optB = null;
-                            String optC = null;
-                            String optD = null;
-                            int ans = 0;
-                            question = entities.getJSONObject(i).getString("qBody");
-                            optA = entities.getJSONObject(i).getString("A");
-                            optB = entities.getJSONObject(i).getString("B");
-                            optC = entities.getJSONObject(i).getString("C");
-                            optD = entities.getJSONObject(i).getString("D");
-                            ans = entities.getJSONObject(i).getString("qAnswer").getBytes()[0] - (byte)'A';
+                            String question = entities.getJSONObject(i).getString("qBody");
+                            String optA = entities.getJSONObject(i).getString("A");
+                            String optB = entities.getJSONObject(i).getString("B");
+                            String optC = entities.getJSONObject(i).getString("C");
+                            String optD = entities.getJSONObject(i).getString("D");
+                            int ans = entities.getJSONObject(i).getString("qAnswer").getBytes()[0] - (byte)'A';
                             testViewModel.adapter.addTest(question, optA, optB, optC, optD, ans);
                         }
                     }
