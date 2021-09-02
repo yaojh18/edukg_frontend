@@ -20,7 +20,7 @@ import okhttp3.*;
 
 public class Request {
     final static OkHttpClient client = new OkHttpClient();
-    final static String ip = "183.173.169.187";
+    final static String ip = "183.173.106.154";
 
     public static void inputQuestion(String question, @Nullable String course, final Handler handler) {
         new Thread(new Runnable() {
@@ -291,14 +291,17 @@ public class Request {
                         }
 
                         data = json.getJSONObject("data").getJSONArray("relationship");
-                        ArrayList<Pair<String, String>> relationship = new ArrayList<>();
+                        ArrayList<Triple<String, String, Boolean>> relationship = new ArrayList<>();
                         for (int i = 0; i < data.length(); i++){
                             JSONObject item = data.getJSONObject(i);
-                            relationship.add(new Pair<>(item.getString("predicate_label"), item.getString("object_label")));
+                            if (item.has("object_label"))
+                                relationship.add(new Triple<>(item.getString("predicate_label"), item.getString("object_label"), true));
+                            else
+                                relationship.add(new Triple<>(item.getString("predicate_label"), item.getString("subject_label"), false));
                         }
 
                         handler.sendMessage(handler.obtainMessage(Constant.DETAIL_RESPONSE_SUCCESS,
-                                new Triple<>(property, relationship, json.getJSONObject("data").getBoolean("isFavorite"))));
+                                new Triple<>(property, relationship, new Pair<>(json.getJSONObject("data").getBoolean("isFavorite"), json.getJSONObject("data").getBoolean("hasQuestion")))));
                     }
                     else throw new Exception();
                 } catch (Exception e) {

@@ -57,8 +57,9 @@ public class DetailActivity extends AppCompatActivity {
     private String token;
     private List<DetailPropertyTableAdapter.DetailMessage> propertyList;
     private DetailPropertyTableAdapter adapter;
-    private List<Pair<String, String>> relationList;
+    private List<Triple<String, String, Boolean>> relationList;
     private boolean isFavorite;
+    private boolean hasQuestion;
     private String instanceDir = "";
 
     @Override
@@ -72,6 +73,8 @@ public class DetailActivity extends AppCompatActivity {
         course = intent.getStringExtra("course");
         name = intent.getStringExtra("name");
         token = intent.getStringExtra("token");
+        hasQuestion = false;
+
         TextView nameView = findViewById(R.id.detail_name);
         nameView.setText(name);
         nameView.setMaxWidth(getWindowManager().getDefaultDisplay().getWidth() - 280);
@@ -88,6 +91,7 @@ public class DetailActivity extends AppCompatActivity {
         // set favorite and share
         ImageButton favorite = findViewById(R.id.detail_star);
         ImageButton share = findViewById(R.id.detail_share);
+        CardView exercise = findViewById(R.id.detail_exercise);
 
         // init handler and launcher
         ActivityResultLauncher<Intent> launcher = registerForActivityResult(
@@ -111,13 +115,17 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == Constant.DETAIL_RESPONSE_SUCCESS) {
-                    Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, ArrayList<Pair<String, String>>, Boolean> obj =
-                            (Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, ArrayList<Pair<String, String>>, Boolean>) msg.obj;
+                    Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, ArrayList<Triple<String, String, Boolean>>,  Pair<Boolean, Boolean>> obj =
+                            (Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, ArrayList<Triple<String, String, Boolean>>, Pair<Boolean, Boolean>>) msg.obj;
                     propertyList.addAll(obj.getFirst());
                     adapter.notifyDataSetChanged();
                     relationList.addAll(obj.getSecond());
-                    isFavorite = obj.getThird();
+                    isFavorite = obj.getThird().getFirst();
                     favorite.setSelected(isFavorite);
+
+                    hasQuestion = obj.getThird().getSecond();
+                    exercise.setVisibility(hasQuestion ? View.VISIBLE: View.GONE);
+
                 }
                 else if (msg.what == Constant.DETAIL_RESPONSE_FAIL){
                     AlertDialog dialog = new MaterialAlertDialogBuilder(activity)
@@ -171,7 +179,6 @@ public class DetailActivity extends AppCompatActivity {
         });
 
         // set exercise link
-        CardView exercise = findViewById(R.id.detail_exercise);
         exercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
