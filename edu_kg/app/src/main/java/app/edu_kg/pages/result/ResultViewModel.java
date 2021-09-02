@@ -20,10 +20,13 @@ import java.util.List;
 
 import javax.xml.transform.Result;
 
+import app.edu_kg.DataApplication;
+import app.edu_kg.MainActivity;
 import app.edu_kg.R;
 import app.edu_kg.pages.detail.DetailActivity;
 import app.edu_kg.pages.result.ResultActivity;
 import app.edu_kg.utils.Constant;
+import app.edu_kg.utils.Functional;
 
 public class ResultViewModel extends ViewModel {
     ResultListAdapter adapter;
@@ -47,13 +50,13 @@ class ResultListAdapter extends RecyclerView.Adapter {
             endIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String searchKey = firstText.getText().toString();
+                    Log.e("test", "click");
+                    String name = firstText.getText().toString();
                     String[] setting = secondText.getText().toString().split(" ");
                     Intent intent = new Intent(v.getContext(), DetailActivity.class);
-                    intent.putExtra("searchKey", searchKey);
-                    intent.putExtra("type", setting[0]);
-                    intent.putExtra("course", setting[1]);
-                    intent.putExtra("order", setting[2]);
+                    intent.putExtra("name", name);
+                    intent.putExtra("course", Functional.subjChe2Eng(setting[1]));
+                    intent.putExtra("token", ((DataApplication)v.getContext().getApplicationContext()).token);
                     v.getContext().startActivity(intent);
                 }
             });
@@ -62,7 +65,7 @@ class ResultListAdapter extends RecyclerView.Adapter {
 
         void bind(app.edu_kg.pages.result.ResultListAdapter.Result result) {
             firstText.setText(result.entity);
-            secondText.setText(result.category + " " + result.course);
+            secondText.setText(result.category + " " + Functional.subjEng2Che(result.course));
             if(result.type == ResultType.LINK_INSTANCE) {
                 int color = Constant.LINK_INSTANCE_COLOR[result.start_index % Constant.LINK_INSTANCE_COLOR.length];
                 firstText.setTextColor(color);

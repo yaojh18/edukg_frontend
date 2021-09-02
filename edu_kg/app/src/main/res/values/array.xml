@@ -21,7 +21,8 @@
 
     <string-array name="order">
         <item>默认</item>
-        <item>首字母</item>
+        <item>拼音</item>
+        <item>访问次数</item>
 
     </string-array>
 </resources>

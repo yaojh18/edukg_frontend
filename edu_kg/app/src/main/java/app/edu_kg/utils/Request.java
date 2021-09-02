@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import app.edu_kg.utils.adapter.DetailPropertyTableAdapter;
 import app.edu_kg.utils.adapter.ItemListAdapter;
@@ -18,8 +19,14 @@ import kotlin.Triple;
 import okhttp3.*;
 
 public class Request {
-    final static OkHttpClient client = new OkHttpClient();
-    final static String ip = "183.172.241.137";
+    //final static OkHttpClient client = new OkHttpClient();
+    final static OkHttpClient client = new OkHttpClient.Builder()
+            .retryOnConnectionFailure(true)
+            .connectTimeout(10, TimeUnit.SECONDS) //连接超时
+            .readTimeout(10, TimeUnit.SECONDS) //读取超时
+            .writeTimeout(10, TimeUnit.SECONDS) //写超时
+            .build();
+    final static String ip = "183.173.169.187";
 
     public static void inputQuestion(String question, @Nullable String course, final Handler handler) {
         new Thread(new Runnable() {
@@ -221,6 +228,7 @@ public class Request {
                     else
                         throw new Exception();
                 } catch (Exception e) {
+                    Log.e("testa", e.toString());
                     handler.sendMessage(handler.obtainMessage(Constant.QUESTION_LIST_RESPONSE, "error"));
                 }
             }
@@ -373,7 +381,7 @@ public class Request {
                         HttpUrl.parse(url).newBuilder().
                                 addQueryParameter("searchKey", searchKey).
                                 addQueryParameter("course", course).
-                                addQueryParameter("order", order)
+                                addQueryParameter("sortMethod", order)
                                 .build();
                 okhttp3.Request request =
                         new okhttp3.Request.Builder().
@@ -410,6 +418,7 @@ public class Request {
 
                 try {
                     Response response = client.newCall(request).execute();
+                    Log.e("test", Objects.requireNonNull(response.body()).string());
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
                     if (response.isSuccessful())
                         handler.sendMessage(handler.obtainMessage(Constant.QUESTION_LIST_RESPONSE, json));

@@ -66,13 +66,12 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void handleMessage(Message msg) {
                 Log.e("test", "in handler");
-
                 RecyclerView testRecycler = binding.question;
                 LinearLayoutManager ms = new LinearLayoutManager(binding.getRoot().getContext());
                 ms.setOrientation(LinearLayoutManager.HORIZONTAL);
                 testRecycler.setLayoutManager(ms);
                 testRecycler.setAdapter(testViewModel.adapter);
-
+                Log.e("test", msg.obj.toString());
                 int message_num = msg.what;
                 if (message_num == Constant.QUESTION_LIST_RESPONSE){
                     JSONObject json = null;
@@ -153,8 +152,9 @@ public class TestActivity extends AppCompatActivity {
         });
         int pageType = intent.getIntExtra("page_type", Constant.EXERCISE_LIST_PAGE);
         if (pageType == Constant.RECOMMENDATION_PAGE){
-            String token = Functional.subjChe2Eng(intent.getStringExtra("token"));
+            String token = intent.getStringExtra("token");
             Request.getExerciseRecommendation(token, handler);
+            Log.e("test", "recommendation");
         }
         else if (pageType == Constant.EXERCISE_LIST_PAGE){
             String searchInput = intent.getStringExtra("searchInput");

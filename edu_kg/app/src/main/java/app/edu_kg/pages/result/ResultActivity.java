@@ -24,18 +24,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import app.edu_kg.pages.detail.DetailActivity;
 import app.edu_kg.utils.Constant;
 import app.edu_kg.utils.Functional;
 import app.edu_kg.utils.Request;
 
 import app.edu_kg.databinding.ActivityResultBinding;
+import app.edu_kg.utils.adapter.ItemListAdapter;
 
 public class ResultActivity extends AppCompatActivity {
 
     private ResultViewModel resultViewModel;
     private ActivityResultBinding binding;
     private Handler handler;
-    private final String historyDir = "history.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class ResultActivity extends AppCompatActivity {
         Intent intent = getIntent();
         initRelation(intent);
         initHandler();
-        initResult(view, intent);
+        initResult(intent);
         initBack();
     }
 
@@ -124,39 +125,12 @@ public class ResultActivity extends AppCompatActivity {
         };
     }
 
-    /*
-    private void jumpToResult(View view) {
-        Log.e("test", "jump to result");
-        String type = typeList[ResultViewModel.select_type];
-        String searchInput = binding.searchInput.getText().toString();
-        String course = binding.subject.getSelectedItem().toString();
-        String order = binding.order.getSelectedItem().toString();
-        addHistory(searchInput, type, course, order);
-        Intent intent = null;
-        if(type.equals("试题")) {
-            intent = new Intent(ResultActivity.this, TestActivity.class);
-        }
-        else if(type.equals("提纲")) {
-            intent = new Intent(ResultActivity.this, ResultActivity.class);
-        }
-        else {
-            intent = new Intent(ResultActivity.this, ResultActivity.class);
-        }
-        intent.putExtra("searchInput", searchInput);
-        intent.putExtra("type", type);
-        intent.putExtra("course", course);
-        intent.putExtra("order", order);
-        initHistory(view);
-        startActivity(intent);
-    }
-    */
 
-
-    private void initResult(View view, Intent intent) {
+    private void initResult(Intent intent) {
         String searchInput = intent.getStringExtra("searchInput");
         String type = intent.getStringExtra("type");
         String course = Functional.subjChe2Eng(intent.getStringExtra("course"));
-        String order = intent.getStringExtra("order");
+        String order = Functional.sortMethodChe2Eng(intent.getStringExtra("order"));
         if(type.equals("实体")) {
             Request.getInstanceList(searchInput, course, order, handler);
         }
@@ -180,5 +154,4 @@ public class ResultActivity extends AppCompatActivity {
             }
         });
     }
-
 }
