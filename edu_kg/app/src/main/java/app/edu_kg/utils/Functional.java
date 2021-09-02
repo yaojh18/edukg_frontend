@@ -52,7 +52,7 @@ public class Functional {
                 return "default";
             case "拼音":
                 return "pinyin";
-            case "访问次数":
+            case "热度":
                 return "accessCount";
             default:
                 return "error";

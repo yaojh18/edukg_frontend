@@ -83,7 +83,7 @@ public class Constant {
     }};
 
     public final static int[] LINK_INSTANCE_COLOR = {
-            Color.RED, Color.YELLOW, Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.DKGRAY
+            Color.RED, Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.DKGRAY
     };
 
 }
