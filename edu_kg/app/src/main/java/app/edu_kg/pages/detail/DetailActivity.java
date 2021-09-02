@@ -28,13 +28,6 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.json.JSONArray;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,15 +123,19 @@ public class DetailActivity extends AppCompatActivity {
 
                 }
                 else if (msg.what == Constant.DETAIL_RESPONSE_FAIL){
-                    AlertDialog dialog = new MaterialAlertDialogBuilder(activity)
-                            .setTitle("不存在这个实体")
-                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    activity.finish();
-                                }
-                            })
-                            .show();
+                    if (loadFromFile)
+                        Request.getInfoByInstanceName(name, course, token, this);
+                    else {
+                        AlertDialog dialog = new MaterialAlertDialogBuilder(activity)
+                                .setTitle("不存在这个实体")
+                                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        activity.finish();
+                                    }
+                                })
+                                .show();
+                    }
                 }
                 else if (msg.what == Constant.ADD_FAVORITE_RESPONSE_SUCCESS) {
                     isFavorite = !isFavorite;

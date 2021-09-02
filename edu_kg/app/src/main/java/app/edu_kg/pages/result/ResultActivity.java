@@ -24,13 +24,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import app.edu_kg.pages.detail.DetailActivity;
 import app.edu_kg.utils.Constant;
 import app.edu_kg.utils.Functional;
 import app.edu_kg.utils.Request;
 
 import app.edu_kg.databinding.ActivityResultBinding;
-import app.edu_kg.utils.adapter.ItemListAdapter;
 
 public class ResultActivity extends AppCompatActivity {
 
