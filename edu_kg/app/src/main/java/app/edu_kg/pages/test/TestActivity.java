@@ -88,16 +88,12 @@ public class TestActivity extends AppCompatActivity {
                             String optC = null;
                             String optD = null;
                             int ans = 0;
-                            try {
-                                question = entities.getJSONObject(i).getString("qBody");
-                                optA = entities.getJSONObject(i).getString("A");
-                                optB = entities.getJSONObject(i).getString("B");
-                                optC = entities.getJSONObject(i).getString("C");
-                                optD = entities.getJSONObject(i).getString("D");
-                                ans = entities.getJSONObject(i).getString("qAnswer").getBytes()[0] - (byte)'A';
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            question = entities.getJSONObject(i).getString("qBody");
+                            optA = entities.getJSONObject(i).getString("A");
+                            optB = entities.getJSONObject(i).getString("B");
+                            optC = entities.getJSONObject(i).getString("C");
+                            optD = entities.getJSONObject(i).getString("D");
+                            ans = entities.getJSONObject(i).getString("qAnswer").getBytes()[0] - (byte)'A';
                             testViewModel.adapter.addTest(question, optA, optB, optC, optD, ans);
                         }
                     }
