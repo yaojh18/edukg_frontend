@@ -153,7 +153,7 @@ public class TestActivity extends AppCompatActivity {
         });
         int pageType = intent.getIntExtra("page_type", Constant.EXERCISE_LIST_PAGE);
         if (pageType == Constant.RECOMMENDATION_PAGE){
-            String token = Functional.subjChe2Eng(intent.getStringExtra("token"));
+            String token = intent.getStringExtra("token");
             Request.getExerciseRecommendation(token, handler);
         }
         else if (pageType == Constant.EXERCISE_LIST_PAGE){
