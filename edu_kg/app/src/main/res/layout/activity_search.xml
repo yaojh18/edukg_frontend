@@ -43,76 +43,109 @@
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/type_setting"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/search_tab"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white">
 
-        <TextView
-            android:id="@+id/entity"
+        <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="实体" />
+            android:layout_height="wrap_content"
+            android:text="@string/search_entity"
+            />
 
-        <TextView
-            android:id="@+id/text"
+        <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="文本" />
+            android:layout_height="wrap_content"
+            android:text="@string/search_text"
+            />
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_exercise"
+            />
 
-        <TextView
-            android:id="@+id/test"
+        <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="试题" />
+            android:layout_height="wrap_content"
+            android:text="@string/search_outlline"
+            />
+    </com.google.android.material.tabs.TabLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
-        <TextView
-            android:id="@+id/recommend"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="提纲" />
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:hint="@string/search_sort"
+            app:expandedHintEnabled="false"
+            app:boxBackgroundColor="@color/white"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+
+            <AutoCompleteTextView
+                android:id="@+id/order"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/search_order_default"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:hint="@string/search_subject"
+            app:expandedHintEnabled="false"
+            app:boxBackgroundColor="@color/white"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+
+            <AutoCompleteTextView
+                android:id="@+id/subject"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/search_subject_default"
+                android:inputType="none"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
 
+
     <LinearLayout
-        android:id="@+id/search_setting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
         android:orientation="horizontal">
 
-        <Spinner
-            android:id="@+id/order"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:entries="@array/order" />
-
-        <Spinner
-            android:id="@+id/subject"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:entries="@array/subject" />
+            android:gravity="center"
+            android:layout_margin="8dp"
+            android:text="@string/search_history"
+            style="@style/TextAppearance.AppCompat.Title" />
 
         <TextView
             android:id="@+id/clear_history"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_margin="10dp"
-            android:text="清除记录" />
+            android:gravity="center|bottom"
+            android:layout_margin="8dp"
+            android:clickable="true"
+            android:text="@string/search_history_clear"
+            style="@style/TextAppearance.AppCompat.Small"/>
 
     </LinearLayout>
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/board"

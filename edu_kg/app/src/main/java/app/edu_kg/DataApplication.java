@@ -40,28 +40,28 @@ public class DataApplication extends Application {
 
         helperSubjectSelected = 100;
         helperSubjectList = new ArrayList<>();
-        helperSubjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.CHINESE));
-        helperSubjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.MATH));
-        helperSubjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.ENGLISH));
-        helperSubjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.PHYSICS));
-        helperSubjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.UNFOLD));
+        helperSubjectList.add(Constant.HELPER_SUBJECT_MAP.get(Constant.SUBJECT_NAME.CHINESE));
+        helperSubjectList.add(Constant.HELPER_SUBJECT_MAP.get(Constant.SUBJECT_NAME.MATH));
+        helperSubjectList.add(Constant.HELPER_SUBJECT_MAP.get(Constant.SUBJECT_NAME.ENGLISH));
+        helperSubjectList.add(Constant.HELPER_SUBJECT_MAP.get(Constant.SUBJECT_NAME.PHYSICS));
+        helperSubjectList.add(Constant.HELPER_SUBJECT_MAP.get(Constant.SUBJECT_NAME.UNFOLD));
 
 
         homeList = new ArrayList<>();
         homeSubjectSelected = 0;
         homeSubjectList = new ArrayList<>();
-        homeSubjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.CHINESE));
+        homeSubjectList.add(Constant.HOME_SUBJECT_MAP.get(Constant.SUBJECT_NAME.CHINESE));
         homeSubjectList.get(0).isSelected = true;
-        homeSubjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.MATH));
-        homeSubjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.ENGLISH));
-        homeSubjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.PHYSICS));
-        homeSubjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.UNFOLD));
+        homeSubjectList.add(Constant.HOME_SUBJECT_MAP.get(Constant.SUBJECT_NAME.MATH));
+        homeSubjectList.add(Constant.HOME_SUBJECT_MAP.get(Constant.SUBJECT_NAME.ENGLISH));
+        homeSubjectList.add(Constant.HOME_SUBJECT_MAP.get(Constant.SUBJECT_NAME.PHYSICS));
+        homeSubjectList.add(Constant.HOME_SUBJECT_MAP.get(Constant.SUBJECT_NAME.UNFOLD));
 
         presentSet = EnumSet.allOf(Constant.SUBJECT_NAME.class);
         presentSet.remove(Constant.SUBJECT_NAME.FOLD);
         presentSet.remove(Constant.SUBJECT_NAME.UNFOLD);
         presentSubjectList = new ArrayList<>();
         for (Constant.SUBJECT_NAME name : presentSet)
-            presentSubjectList.add(Constant.manageSubjectMap.get(name));
+            presentSubjectList.add(Constant.MANAGE_SUBJECT_MAP.get(name));
     }
 }

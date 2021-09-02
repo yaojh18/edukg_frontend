@@ -127,8 +127,8 @@ public class ResultActivity extends AppCompatActivity {
     private void initResult(Intent intent) {
         String searchInput = intent.getStringExtra("searchInput");
         String type = intent.getStringExtra("type");
-        String course = Functional.subjChe2Eng(intent.getStringExtra("course"));
-        String order = Functional.sortMethodChe2Eng(intent.getStringExtra("order"));
+        String course = intent.getStringExtra("course");
+        String order = intent.getStringExtra("order");
         if(type.equals("实体")) {
             Request.getInstanceList(searchInput, course, order, handler);
         }

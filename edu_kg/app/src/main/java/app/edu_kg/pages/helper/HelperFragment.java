@@ -125,16 +125,16 @@ public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSub
                 subjectList.remove(position - 3);
                 subjectList.remove(position - 4);
                 subjectList.remove(position - 5);
-                subjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.UNFOLD));
+                subjectList.add(Constant.HELPER_SUBJECT_MAP.get(Constant.SUBJECT_NAME.UNFOLD));
                 break;
             case UNFOLD:
                 subjectList.remove(position);
-                subjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.CHEMISTRY));
-                subjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.BIOLOGY));
-                subjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.POLITICS));
-                subjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.HISTORY));
-                subjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.GEOGRAPHY));
-                subjectList.add(Constant.helperSubjectMap.get(Constant.SUBJECT_NAME.FOLD));
+                subjectList.add(Constant.HELPER_SUBJECT_MAP.get(Constant.SUBJECT_NAME.CHEMISTRY));
+                subjectList.add(Constant.HELPER_SUBJECT_MAP.get(Constant.SUBJECT_NAME.BIOLOGY));
+                subjectList.add(Constant.HELPER_SUBJECT_MAP.get(Constant.SUBJECT_NAME.POLITICS));
+                subjectList.add(Constant.HELPER_SUBJECT_MAP.get(Constant.SUBJECT_NAME.HISTORY));
+                subjectList.add(Constant.HELPER_SUBJECT_MAP.get(Constant.SUBJECT_NAME.GEOGRAPHY));
+                subjectList.add(Constant.HELPER_SUBJECT_MAP.get(Constant.SUBJECT_NAME.FOLD));
                 break;
             default:
                 if (localData.helperSubjectSelected == position){

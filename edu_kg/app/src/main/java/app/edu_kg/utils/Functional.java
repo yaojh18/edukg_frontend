@@ -58,4 +58,17 @@ public class Functional {
                 return "error";
         }
     }
+
+    public static String sortMethodEnd2Che(String ch) {
+        switch(ch) {
+            case "default":
+                return "默认";
+            case "pinyin":
+                return "拼音";
+            case "accessCount":
+                return "热度";
+            default:
+                return "错误";
+        }
+    }
 }

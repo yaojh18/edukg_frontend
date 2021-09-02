@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class InstanceIO {
     public static void saveInstance(Context context, Object json, String name) {
         try {
-            FileOutputStream out = context.openFileOutput(name + ".json", Context.MODE_PRIVATE);
+            FileOutputStream out = context.openFileOutput(name + ".dt", Context.MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(out);
             os.writeObject(json);
             os.close();
@@ -27,7 +27,7 @@ public class InstanceIO {
 
     public static void loadInstance(Context context, String name, Handler handler) {
         try {
-            FileInputStream in = context.openFileInput(name + ".json");
+            FileInputStream in = context.openFileInput(name + ".dt");
             ObjectInputStream is = new ObjectInputStream(in);
             Object res = is.readObject();
             is.close();
@@ -38,8 +38,21 @@ public class InstanceIO {
         }
     }
 
+    public static Object loadInstanceWithoutHandler(Context context, String name) {
+        try {
+            FileInputStream in = context.openFileInput(name + ".dt");
+            ObjectInputStream is = new ObjectInputStream(in);
+            Object res = is.readObject();
+            is.close();
+            in.close();
+            return res;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static boolean isInstanceExist(Context context, String name) {
         String[] fileList = context.fileList();
-        return Arrays.asList(fileList).contains(name + ".json");
+        return Arrays.asList(fileList).contains(name + ".dt");
     }
 }

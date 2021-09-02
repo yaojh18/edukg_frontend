@@ -119,7 +119,7 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
                 }
                 else{
                     // clear
-                    Constant.homeSubjectMap.forEach((name, subject) -> {
+                    Constant.HOME_SUBJECT_MAP.forEach((name, subject) -> {
                         subject.isSelected = false;
                     });
                     localData.homeSubjectList.clear();
@@ -127,12 +127,12 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
 
                     // update
                     for (Constant.SUBJECT_NAME name : localData.presentSet){
-                        localData.homeSubjectList.add(Constant.homeSubjectMap.get(name));
+                        localData.homeSubjectList.add(Constant.HOME_SUBJECT_MAP.get(name));
                         if (localData.homeSubjectList.size() >= 5) break;
                     }
                     if (localData.presentSet.size() > 5){
                         localData.homeSubjectList.remove(4);
-                        localData.homeSubjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.UNFOLD));
+                        localData.homeSubjectList.add(Constant.HOME_SUBJECT_MAP.get(Constant.SUBJECT_NAME.UNFOLD));
                     }
                     SubjectGridAdapter.Subject firstSubject = localData.homeSubjectList.get(0);
                     firstSubject.isSelected = true;
@@ -174,14 +174,14 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
                     while (subjectList.size() > 4){
                         subjectList.remove(subjectList.size() - 1);
                     }
-                    subjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.UNFOLD));
+                    subjectList.add(Constant.HOME_SUBJECT_MAP.get(Constant.SUBJECT_NAME.UNFOLD));
                     break;
                 case UNFOLD:
                     subjectList.clear();
                     for (Constant.SUBJECT_NAME name : localData.presentSet){
-                        subjectList.add(Constant.homeSubjectMap.get(name));
+                        subjectList.add(Constant.HOME_SUBJECT_MAP.get(name));
                     }
-                    subjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.FOLD));
+                    subjectList.add(Constant.HOME_SUBJECT_MAP.get(Constant.SUBJECT_NAME.FOLD));
                     break;
                 default:
                     if (localData.homeSubjectSelected < subjectList.size()){
