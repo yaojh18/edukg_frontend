@@ -44,6 +44,7 @@ import app.edu_kg.pages.test.TestActivity;
 import app.edu_kg.pages.user.LogActivity;
 import app.edu_kg.utils.Constant;
 import app.edu_kg.utils.Functional;
+import app.edu_kg.utils.InstanceIO;
 import app.edu_kg.utils.Request;
 import app.edu_kg.utils.adapter.DetailPropertyTableAdapter;
 import kotlin.Pair;
@@ -60,7 +61,6 @@ public class DetailActivity extends AppCompatActivity {
     private List<Triple<String, String, Boolean>> relationList;
     private boolean isFavorite;
     private boolean hasQuestion;
-    private String instanceDir = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +73,7 @@ public class DetailActivity extends AppCompatActivity {
         course = intent.getStringExtra("course");
         name = intent.getStringExtra("name");
         token = intent.getStringExtra("token");
+        boolean loadFromFile= intent.getBooleanExtra("load", false);
         hasQuestion = false;
 
         TextView nameView = findViewById(R.id.detail_name);
@@ -117,6 +118,7 @@ public class DetailActivity extends AppCompatActivity {
                 if (msg.what == Constant.DETAIL_RESPONSE_SUCCESS) {
                     Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, ArrayList<Triple<String, String, Boolean>>,  Pair<Boolean, Boolean>> obj =
                             (Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, ArrayList<Triple<String, String, Boolean>>, Pair<Boolean, Boolean>>) msg.obj;
+                    InstanceIO.saveInstance(activity, obj, name);
                     propertyList.addAll(obj.getFirst());
                     adapter.notifyDataSetChanged();
                     relationList.addAll(obj.getSecond());
@@ -197,64 +199,10 @@ public class DetailActivity extends AppCompatActivity {
         RecyclerView propertyRecycler = findViewById(R.id.detail_property_recycler);
         propertyRecycler.setLayoutManager(new LinearLayoutManager(this));
         propertyRecycler.setAdapter(adapter);
+        if (loadFromFile)
+            InstanceIO.loadInstance(this, name, handler);
+        else
+            Request.getInfoByInstanceName(name, course, token, handler);
 
-        Request.getInfoByInstanceName(name, course, token, handler);
-
-    }
-
-    private void saveInstance(String entity, String jsonStr) {
-        try {
-            FileOutputStream out = openFileOutput(entity + ".json", Context.MODE_PRIVATE);
-            out.write((jsonStr).getBytes(StandardCharsets.UTF_8));
-            out.flush();
-            out.close();
-            Log.e("test", "save successfully");
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("test", e.toString());
-        }
-    }
-
-    private String loadInstance(String entity) {
-        FileInputStream in;
-        try {
-            in = getApplicationContext().openFileInput(entity+".json");
-            int length = in.available();//获取文件长度
-            byte[] buffer = new byte[length];//创建byte数组用于读入数据
-            in.read(buffer);
-            String result = new String(buffer);//将byte数组转换成指定格式的字符串
-            in.close();//关闭文件输入流
-            if(result.equals("")) {
-                return null;
-            }
-            return result;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private boolean isVisited(String entity) {
-        String _type = ".json";
-        File f = new File(".");
-        if (!f.exists()) {//判断路径是否存在
-            return false;
-        }
-
-        File[] files = f.listFiles();
-
-        if(files==null){//判断权限
-            return false;
-        }
-
-        for (File _file : files) {//遍历目录
-            if(_file.isFile() && _file.getName().endsWith(_type)){
-                if(_file.getName().equals(entity + ".json")) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }

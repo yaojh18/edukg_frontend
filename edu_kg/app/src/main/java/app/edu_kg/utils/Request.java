@@ -305,7 +305,7 @@ public class Request {
                     }
                     else throw new Exception();
                 } catch (Exception e) {
-                    handler.sendMessage(handler.obtainMessage(Constant.HOME_ENTITY_RESPONSE_FAIL, ""));
+                    handler.sendMessage(handler.obtainMessage(Constant.DETAIL_RESPONSE_FAIL, ""));
                 }
             }
         }).start();

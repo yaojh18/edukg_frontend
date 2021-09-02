@@ -2,7 +2,9 @@ package app.edu_kg.pages.home;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -34,6 +36,7 @@ import app.edu_kg.pages.detail.DetailActivity;
 import app.edu_kg.pages.search.SearchActivity;
 import app.edu_kg.utils.Constant;
 import app.edu_kg.utils.Functional;
+import app.edu_kg.utils.InstanceIO;
 import app.edu_kg.utils.Request;
 import app.edu_kg.utils.adapter.ItemListAdapter;
 import app.edu_kg.utils.adapter.SubjectGridAdapter;
@@ -71,6 +74,10 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
                     ArrayList<ItemListAdapter.ItemMessage> obj = (ArrayList<ItemListAdapter.ItemMessage>) msg.obj;
                     localData.homeList.clear();
                     localData.homeList.addAll(obj);
+                    for (ItemListAdapter.ItemMessage item : localData.homeList){
+                        if (InstanceIO.isInstanceExist(context, item.label))
+                            item.isChecked = true;
+                    }
                     localData.homeListAdapter.notifyDataSetChanged();
                 }
                 else if (msg.what == Constant.HOME_ENTITY_RESPONSE_FAIL){
@@ -149,9 +156,12 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
     public void onItemClick(int position) {
         Intent intent = new Intent(context, DetailActivity.class);
         ItemListAdapter.ItemMessage item = localData.homeList.get(position);
+        item.isChecked = true;
+        localData.homeListAdapter.notifyItemChanged(position);
         intent.putExtra("course", item.course);
         intent.putExtra("name", item.label);
         intent.putExtra("token", localData.token);
+        intent.putExtra("load", InstanceIO.isInstanceExist(context, item.label));
         startActivity(intent);
     }
 
@@ -194,7 +204,7 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
                     localData.presentSet.remove(subject.id);
                 else
                     localData.presentSet.add(subject.id);
-                localData.presentSubjectAdapter.notifyDataSetChanged();
+                localData.presentSubjectAdapter.notifyItemChanged(position);
             }
         }
     }
