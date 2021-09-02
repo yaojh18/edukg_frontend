@@ -19,13 +19,7 @@ import kotlin.Triple;
 import okhttp3.*;
 
 public class Request {
-    //final static OkHttpClient client = new OkHttpClient();
-    final static OkHttpClient client = new OkHttpClient.Builder()
-            .retryOnConnectionFailure(true)
-            .connectTimeout(10, TimeUnit.SECONDS) //连接超时
-            .readTimeout(10, TimeUnit.SECONDS) //读取超时
-            .writeTimeout(10, TimeUnit.SECONDS) //写超时
-            .build();
+    final static OkHttpClient client = new OkHttpClient();
     final static String ip = "183.173.169.187";
 
     public static void inputQuestion(String question, @Nullable String course, final Handler handler) {
@@ -418,7 +412,6 @@ public class Request {
 
                 try {
                     Response response = client.newCall(request).execute();
-                    Log.e("test", Objects.requireNonNull(response.body()).string());
                     JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
                     if (response.isSuccessful())
                         handler.sendMessage(handler.obtainMessage(Constant.QUESTION_LIST_RESPONSE, json));
