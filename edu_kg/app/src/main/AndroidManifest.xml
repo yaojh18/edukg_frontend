@@ -43,6 +43,7 @@
         <activity android:name=".pages.search.SearchActivity" />
         <activity android:name=".pages.result.ResultActivity" />
         <activity android:name=".pages.test.TestActivity" />
+        <activity android:name=".pages.link.LinkActivity"/>
     </application>
 
 </manifest>

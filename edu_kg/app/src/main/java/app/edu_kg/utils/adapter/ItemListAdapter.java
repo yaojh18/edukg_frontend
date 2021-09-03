@@ -37,6 +37,9 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
                 content.setText(message.category);
             if (message.imageId != null)
                 image.setImageResource(message.imageId);
+            if (message.titleColor != null) {
+                title.setTextColor(message.titleColor);
+            }
             title.setSelected(message.isChecked);
             content.setSelected(message.isChecked);
         }
@@ -53,6 +56,7 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
         public Integer imageId;
         public String course;
         public boolean isChecked;
+        public Integer titleColor = null;
         static final int IMAGE_VIEW = 0;
         static final int TEXT_VIEW = 1;
 
@@ -62,6 +66,15 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
             this.course = course;
             this.imageId = imageId;
             this.isChecked = isChecked;
+        }
+
+        public ItemMessage(String label, String course, @Nullable String category, @Nullable Integer imageId, boolean isChecked, int titleColor){
+            this.label = label;
+            this.category = category;
+            this.course = course;
+            this.imageId = imageId;
+            this.isChecked = isChecked;
+            this.titleColor = titleColor;
         }
     }
 

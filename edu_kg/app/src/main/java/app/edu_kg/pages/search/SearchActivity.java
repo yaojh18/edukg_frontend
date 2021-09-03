@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.edu_kg.R;
+import app.edu_kg.pages.link.LinkActivity;
 import app.edu_kg.pages.result.ResultActivity;
 import app.edu_kg.pages.test.TestActivity;
 import app.edu_kg.pages.user.HistoryActivity;
@@ -166,8 +167,12 @@ public class SearchActivity extends AppCompatActivity implements ItemListAdapter
 
     private void jumpToResult(String type, String searchInput, String order, String course) {
         Intent intent = null;
-        if(type.equals("实体") || type.equals("文本")) {
+        if(type.equals("实体")) {
             intent = new Intent(this, ResultActivity.class);
+            intent.putExtra("type", type);
+        }
+        else if(type.equals("文本")) {
+            intent = new Intent(this, LinkActivity.class);
             intent.putExtra("type", type);
         }
         else if(type.equals("试题")) {

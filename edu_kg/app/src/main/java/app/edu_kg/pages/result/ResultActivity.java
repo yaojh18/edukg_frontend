@@ -9,10 +9,17 @@ import android.os.Message;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textfield.TextInputLayout;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,101 +31,83 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import app.edu_kg.DataApplication;
+import app.edu_kg.R;
+import app.edu_kg.pages.detail.DetailActivity;
+import app.edu_kg.pages.link.LinkActivity;
+import app.edu_kg.pages.test.TestActivity;
 import app.edu_kg.utils.Constant;
 import app.edu_kg.utils.Functional;
+import app.edu_kg.utils.InstanceIO;
 import app.edu_kg.utils.Request;
 
 import app.edu_kg.databinding.ActivityResultBinding;
+import app.edu_kg.utils.adapter.ItemListAdapter;
 
-public class ResultActivity extends AppCompatActivity {
+public class ResultActivity extends AppCompatActivity implements ItemListAdapter.OnItemClickListener {
 
-    private ResultViewModel resultViewModel;
     private ActivityResultBinding binding;
     private Handler handler;
+    private List<ItemListAdapter.ItemMessage> resultList = new ArrayList<>();;
+    private ItemListAdapter adapter = new ItemListAdapter(resultList, this);
+    private ArrayAdapter<String> subjectAdapter;
+    private ArrayAdapter<String> entityFilterAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.e("test", "jump into ResultActivity");
         super.onCreate(savedInstanceState);
-        resultViewModel = new ViewModelProvider(this).get(ResultViewModel.class);
         binding = ActivityResultBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
         Intent intent = getIntent();
-        initRelation(intent);
         initHandler();
         initResult(intent);
-        initBack();
+        initSearchBar(intent);
+        initTab();
     }
 
     private void initHandler() {
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
-                Log.e("test", "in handler");
                 int message_num = msg.what;
                 JSONObject json = null;
                 try {
                     json = (JSONObject) msg.obj;
                 } catch(Exception e) {
-                    Log.e("test", "loading error");
                     return;
                 }
-                Log.e("test", json.toString());
                 JSONArray entities = null;
                 try {
                     entities = json.getJSONObject("data").getJSONArray("result");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                RecyclerView resultRecycler = binding.board;
-                resultRecycler.setLayoutManager(new LinearLayoutManager(binding.getRoot().getContext()));
-                resultRecycler.setAdapter(resultViewModel.adapter);
-                resultViewModel.adapter.clearResult();
+                resultList.clear();
                 if(entities != null) {
                     for(int i = 0; i < entities.length(); ++i) {
-                        if (message_num == Constant.INSTANCE_LIST_RESPONSE) {
-                            String label = null;
-                            String category = null;
-                            String course = null;
-                            try {
-                                label = entities.getJSONObject(i).getString("label");
-                                category = entities.getJSONObject(i).getString("category");
-                                course = entities.getJSONObject(i).getString("course");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                resultViewModel.adapter.addEntity(ResultListAdapter.ResultType.ENTITY, label, category, course);
-                            } catch(Exception e) {
-                                Log.e("test", e.toString());
-                            }
+                        String label = null;
+                        String category = null;
+                        String course = null;
+                        try {
+                            label = entities.getJSONObject(i).getString("label");
+                            category = entities.getJSONObject(i).getString("category");
+                            course = entities.getJSONObject(i).getString("course");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        else if (message_num == Constant.LINK_INSTANCE_RESPONSE) {
-                            String entity = null;
-                            String entityType = null;
-                            String course = null;
-                            int start_index = 0;
-                            int end_index = 0;
-                            try {
-                                entity = entities.getJSONObject(i).getString("entity");
-                                entityType = entities.getJSONObject(i).getString("entity_type");
-                                course = entities.getJSONObject(i).getString("course");
-                                start_index = Integer.parseInt(entities.getJSONObject(i).getString("start_index"));
-                                end_index = Integer.parseInt(entities.getJSONObject(i).getString("end_index"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                            resultViewModel.adapter.addLinkInstance(ResultListAdapter.ResultType.LINK_INSTANCE, entity, entityType, course, start_index, end_index);
-
-                            int color = Constant.LINK_INSTANCE_COLOR[start_index % Constant.LINK_INSTANCE_COLOR.length];
-                            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(color);
-                            ResultViewModel.relationStyle.setSpan(foregroundColorSpan, start_index, end_index + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        try {
+                            assert course != null;
+                            resultList.add(new ItemListAdapter.ItemMessage(label, Functional.subjEng2Che(course), category, null, false));
+                        } catch(Exception e) {
+                            Log.e("test", e.toString());
                         }
                     }
                 }
-                binding.relation.setText(ResultViewModel.relationStyle);
+                adapter.notifyItemChanged(resultList.size() - 1);
             }
         };
     }
@@ -129,27 +118,102 @@ public class ResultActivity extends AppCompatActivity {
         String type = intent.getStringExtra("type");
         String course = intent.getStringExtra("course");
         String order = intent.getStringExtra("order");
-        if(type.equals("实体")) {
-            Request.getInstanceList(searchInput, course, order, handler);
-        }
-        else {
-            Request.getLinkInstance(searchInput, course, handler);
-        }
+
+        RecyclerView resultRecycler = binding.board;
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        resultRecycler.setLayoutManager(linearLayoutManager);
+        resultRecycler.setAdapter(adapter);
+        Request.getInstanceList(searchInput, course, order, handler);
     }
 
-    private void initRelation(Intent intent) {
-        ResultViewModel.relationStyle.clear();
-        ResultViewModel.relationStyle.append(intent.getStringExtra("searchInput"));
+    private void jumpToDetail(String name, String course, String token) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra("name", name);
+        intent.putExtra("course", course);
+        intent.putExtra("token", token);
+        startActivity(intent);
     }
 
-    private void initBack() {
-        MaterialToolbar back = binding.back;
+    @Override
+    public void onItemClick(int position) {
+        ItemListAdapter.ItemMessage item = resultList.get(position);
+        String name = item.label;
+        String course = Functional.subjChe2Eng(item.course);
+        String token = ((DataApplication)getApplicationContext()).token;
+        jumpToDetail(name, course, token);
+    }
+
+    private void initSearchBar(Intent intent) {
+        ImageView back = findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("test", "finish");
                 finish();
             }
         });
+
+        TextInputLayout SearchInputLayout = findViewById(R.id.search_input_layout);
+        EditText searchInputView = findViewById(R.id.search_input);
+        searchInputView.setText(intent.getStringExtra("searchInput"));
+        AutoCompleteTextView orderView = findViewById(R.id.order);
+        orderView.setText(Functional.sortMethodEnd2Che(intent.getStringExtra("order")));
+        AutoCompleteTextView courseView = findViewById(R.id.subject);
+        courseView.setText(Functional.subjEng2Che(intent.getStringExtra("course")));
+
+        searchInputView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent event) {
+                if (i == KeyEvent.KEYCODE_ENTER){
+                    String searchInput = searchInputView.getText().toString();
+                    String order = Functional.sortMethodChe2Eng(orderView.getText().toString());
+                    String course = Functional.subjChe2Eng(courseView.getText().toString());
+                    String type = "实体";
+                    jumpToResult(type, searchInput, order, course);
+                }
+                return false;
+            }
+        });
+        SearchInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String searchInput = searchInputView.getText().toString();
+                String order = Functional.sortMethodChe2Eng(orderView.getText().toString());
+                String course = Functional.subjChe2Eng(courseView.getText().toString());
+                String type = "实体";
+                jumpToResult(type, searchInput, order, course);
+            }
+        });
+    }
+
+    private void initTab() {
+        subjectAdapter = new ArrayAdapter<>(this, R.layout.selector_item, Constant.SUBJECT_LIST);
+        entityFilterAdapter = new ArrayAdapter<>(this, R.layout.selector_item, Constant.ENTITY_FILTER_LIST);
+        binding.order.setAdapter(entityFilterAdapter);
+        binding.subject.setAdapter(subjectAdapter);
+    }
+
+    private void jumpToResult(String type, String searchInput, String order, String course) {
+        Intent intent = null;
+        if(type.equals("实体")) {
+            intent = new Intent(this, ResultActivity.class);
+            intent.putExtra("type", type);
+        }
+        else if(type.equals("文本")) {
+            intent = new Intent(this, LinkActivity.class);
+            intent.putExtra("type", type);
+        }
+        else if(type.equals("试题")) {
+            intent = new Intent(this, TestActivity.class);
+            intent.putExtra("page_type", Constant.EXERCISE_LIST_PAGE);
+        }
+        else{
+            // TODO
+            intent = new Intent(this, TestActivity.class);
+            intent.putExtra("page_type", Constant.EXERCISE_LIST_PAGE);
+        }
+        intent.putExtra("searchInput", searchInput);
+        intent.putExtra("course", course);
+        intent.putExtra("order", order);
+        startActivity(intent);
     }
 }
