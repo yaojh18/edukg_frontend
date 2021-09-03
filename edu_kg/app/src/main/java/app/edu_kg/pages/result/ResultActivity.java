@@ -24,13 +24,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import app.edu_kg.pages.detail.DetailActivity;
 import app.edu_kg.utils.Constant;
 import app.edu_kg.utils.Functional;
 import app.edu_kg.utils.Request;
 
 import app.edu_kg.databinding.ActivityResultBinding;
-import app.edu_kg.utils.adapter.ItemListAdapter;
 
 public class ResultActivity extends AppCompatActivity {
 
@@ -129,8 +127,8 @@ public class ResultActivity extends AppCompatActivity {
     private void initResult(Intent intent) {
         String searchInput = intent.getStringExtra("searchInput");
         String type = intent.getStringExtra("type");
-        String course = Functional.subjChe2Eng(intent.getStringExtra("course"));
-        String order = Functional.sortMethodChe2Eng(intent.getStringExtra("order"));
+        String course = intent.getStringExtra("course");
+        String order = intent.getStringExtra("order");
         if(type.equals("实体")) {
             Request.getInstanceList(searchInput, course, order, handler);
         }

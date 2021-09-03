@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 import app.edu_kg.R;
@@ -29,7 +30,7 @@ public class DetailPropertyTableAdapter extends Adapter<ViewHolder> {
         }
     }
 
-    public static class DetailMessage {
+    public static class DetailMessage implements Serializable {
         String attribute;
         String value;
 

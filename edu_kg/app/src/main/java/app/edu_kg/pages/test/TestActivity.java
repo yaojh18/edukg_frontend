@@ -147,7 +147,7 @@ public class TestActivity extends AppCompatActivity {
         }
         else if (pageType == Constant.EXERCISE_LIST_PAGE){
             String searchInput = intent.getStringExtra("searchInput");
-            String course = Functional.subjChe2Eng(intent.getStringExtra("course"));
+            String course = intent.getStringExtra("course");
             Request.getQuestionList(searchInput, course, handler);
         }
         /*

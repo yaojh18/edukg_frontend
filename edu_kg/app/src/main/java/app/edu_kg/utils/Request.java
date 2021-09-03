@@ -10,7 +10,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import app.edu_kg.utils.adapter.DetailPropertyTableAdapter;
 import app.edu_kg.utils.adapter.ItemListAdapter;
@@ -305,7 +304,7 @@ public class Request {
                     }
                     else throw new Exception();
                 } catch (Exception e) {
-                    handler.sendMessage(handler.obtainMessage(Constant.HOME_ENTITY_RESPONSE_FAIL, ""));
+                    handler.sendMessage(handler.obtainMessage(Constant.DETAIL_RESPONSE_FAIL, ""));
                 }
             }
         }).start();

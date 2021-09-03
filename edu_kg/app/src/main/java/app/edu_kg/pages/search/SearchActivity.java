@@ -1,20 +1,25 @@
 package app.edu_kg.pages.search;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.tabs.TabItem;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,44 +27,74 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
+import app.edu_kg.R;
 import app.edu_kg.pages.result.ResultActivity;
 import app.edu_kg.pages.test.TestActivity;
+import app.edu_kg.pages.user.HistoryActivity;
 import app.edu_kg.utils.Constant;
 
-import app.edu_kg.databinding.ActivitySearchBinding;
+import app.edu_kg.utils.Functional;
+import app.edu_kg.utils.InstanceIO;
+import app.edu_kg.utils.adapter.ItemListAdapter;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements ItemListAdapter.OnItemClickListener {
 
-    private SearchViewModel searchViewModel;
-    private ActivitySearchBinding binding;
-    private final String[] typeList = {"实体", "文本", "试题", "提纲"};
-    private final String historyDir = "history.txt";
+    private final String historyDir = "search_history";
+    private int selectType = 0;
+
+    private List<ItemListAdapter.ItemMessage> searchHistoryList;
+    private ItemListAdapter adapter;
+    private ArrayAdapter<String> subjectAdapter;
+    private ArrayAdapter<String> entityFilterAdapter;
+    private ArrayAdapter<String> otherFilterAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.e("test", "jump into SearchActivity");
         super.onCreate(savedInstanceState);
-        searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
-        binding = ActivitySearchBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
-        setContentView(view);
-        initSearch();
-        initHistory(view);
-        clearHistory();
-        initTypeSetting();
-        initBack();
-    }
+        setContentView(R.layout.activity_search);
+        Activity activity = this;
 
-    private void initSearch() {
-        TextInputLayout SearchInputLayout = binding.searchInputLayout;
-        EditText searchInput = binding.searchInput;
-        searchInput.setOnKeyListener(new View.OnKeyListener() {
+        try {
+            searchHistoryList = (List<ItemListAdapter.ItemMessage>) InstanceIO.loadInstanceWithoutHandler(this, historyDir);
+            if (searchHistoryList == null)
+                throw new Exception();
+        }catch (Exception e){
+            searchHistoryList = new ArrayList<>();
+        }
+        adapter = new ItemListAdapter(searchHistoryList, this);
+
+        // init search bar
+        ImageView back = findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        TextInputLayout SearchInputLayout = findViewById(R.id.search_input_layout);
+        EditText searchInputView = findViewById(R.id.search_input);
+        AutoCompleteTextView orderView = findViewById(R.id.order);
+        AutoCompleteTextView courseView = findViewById(R.id.subject);
+
+        searchInputView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent event) {
-                Log.e("test", "get key");
-                if (i == KeyEvent.KEYCODE_ENTER) {
-                    jumpToResult(view);
+                if (i == KeyEvent.KEYCODE_ENTER){
+                    String searchInput = searchInputView.getText().toString();
+                    String order = Functional.sortMethodChe2Eng(orderView.getText().toString());
+                    String course = Functional.subjChe2Eng(courseView.getText().toString());
+                    String type = Constant.SEARCH_TYPE_LIST[selectType];
+
+                    searchHistoryList.add(new ItemListAdapter.ItemMessage(searchInput, course,
+                            Functional.subjEng2Che(course) + "\t" + type + "\t" + Functional.sortMethodEnd2Che(order),
+                            null, false));
+                    adapter.notifyItemChanged(searchHistoryList.size() - 1);
+                    InstanceIO.saveInstance(activity, searchHistoryList, historyDir);
+                    jumpToResult(type, searchInput, order, course);
                 }
                 return false;
             }
@@ -67,140 +102,93 @@ public class SearchActivity extends AppCompatActivity {
         SearchInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                jumpToResult(view);
+                String searchInput = searchInputView.getText().toString();
+                String order = Functional.sortMethodChe2Eng(orderView.getText().toString());
+                String course = Functional.subjChe2Eng(courseView.getText().toString());
+                String type = Constant.SEARCH_TYPE_LIST[selectType];
+
+                searchHistoryList.add(new ItemListAdapter.ItemMessage(searchInput, course,
+                        Functional.subjEng2Che(course) + "\t" + type + "\t" + Functional.sortMethodEnd2Che(order),
+                        null, false));
+                adapter.notifyItemChanged(searchHistoryList.size() - 1);
+                InstanceIO.saveInstance(activity, searchHistoryList, historyDir);
+                jumpToResult(type, searchInput, order, course);
             }
         });
 
+        // init history list
+        RecyclerView historyRecycler = findViewById(R.id.board);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        historyRecycler.setLayoutManager(linearLayoutManager);
+        historyRecycler.setAdapter(adapter);
+
+        // init clear history
+        TextView clearHistory = findViewById(R.id.clear_history);
+        clearHistory.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onClick(View view) {
+                searchHistoryList.clear();
+                adapter.notifyDataSetChanged();
+                InstanceIO.saveInstance(activity, searchHistoryList, historyDir);
+            }
+        });
+
+        // init tab
+        subjectAdapter = new ArrayAdapter<>(activity, R.layout.selector_item, Constant.SUBJECT_LIST);
+        entityFilterAdapter = new ArrayAdapter<>(activity, R.layout.selector_item, Constant.ENTITY_FILTER_LIST);
+        otherFilterAdapter = new ArrayAdapter<>(activity, R.layout.selector_item, Constant.OTHER_FILTER_LIST);
+        orderView.setAdapter(entityFilterAdapter);
+        courseView.setAdapter(subjectAdapter);
+
+        TabLayout tabLayout = findViewById(R.id.search_tab);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                selectType = tab.getPosition();
+                if (selectType == 0)
+                    orderView.setAdapter(entityFilterAdapter);
+                else{
+                    orderView.setText("默认", false);
+                    orderView.setAdapter(otherFilterAdapter);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) { }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) { }
+        });
     }
 
-    private void jumpToResult(View view) {
-        Log.e("test", "jump to result");
-        String type = typeList[searchViewModel.select_type];
-        String searchInput = binding.searchInput.getText().toString();
-        String course = binding.subject.getSelectedItem().toString();
-        String order = binding.order.getSelectedItem().toString();
-        addHistory(searchInput, type, course, order);
+    private void jumpToResult(String type, String searchInput, String order, String course) {
         Intent intent = null;
-        if(type.equals("试题")) {
-            intent = new Intent(SearchActivity.this, TestActivity.class);
+        if(type.equals("实体") || type.equals("文本")) {
+            intent = new Intent(this, ResultActivity.class);
+            intent.putExtra("type", type);
+        }
+        else if(type.equals("试题")) {
+            intent = new Intent(this, TestActivity.class);
             intent.putExtra("page_type", Constant.EXERCISE_LIST_PAGE);
         }
-        else if(type.equals("提纲")) {
-            intent = new Intent(SearchActivity.this, ResultActivity.class);
-        }
-        else {
-            intent = new Intent(SearchActivity.this, ResultActivity.class);
+        else{
+            // TODO
+            intent = new Intent(this, TestActivity.class);
+            intent.putExtra("page_type", Constant.EXERCISE_LIST_PAGE);
         }
         intent.putExtra("searchInput", searchInput);
-        intent.putExtra("type", type);
         intent.putExtra("course", course);
         intent.putExtra("order", order);
-        initHistory(view);
         startActivity(intent);
     }
 
-    private void initHistory(View view) {
-        RecyclerView historyRecycler = binding.board;
-        historyRecycler.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        historyRecycler.setAdapter(searchViewModel.adapter);
-        String[] histories = loadHistory();
-        searchViewModel.adapter.clearHistory();
-        if(histories != null) {
-            for(int i = histories.length - 1; i >= 0 ; --i) {
-                String[] history = histories[i].split(" ");
-                try {
-                    searchViewModel.adapter.addHistory(history[0], history[1], history[2], history[3]);
-                } catch(Exception e) {
-                    Log.e("history error", e.toString());
-                }
-            }
-        }
+    @Override
+    public void onItemClick(int position) {
+        ItemListAdapter.ItemMessage item = searchHistoryList.get(position);
+        String[] tmp = item.category.split("\t");
+        jumpToResult(tmp[1], item.label, Functional.sortMethodChe2Eng(tmp[2]), item.course);
     }
-
-    private String[] loadHistory() {
-        FileInputStream in;
-        try {
-            in = getApplicationContext().openFileInput(historyDir);
-            int length = in.available();//获取文件长度
-            byte[] buffer = new byte[length];//创建byte数组用于读入数据
-            in.read(buffer);
-            String result = new String(buffer);//将byte数组转换成指定格式的字符串
-            if(result.equals("")) {
-                return null;
-            }
-            in.close();//关闭文件输入流
-            String[] history = result.split("\n");
-            return history;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private void addHistory(String searchInput, String type, String subject, String order) {
-        try {
-            FileOutputStream out = openFileOutput(historyDir, Context.MODE_APPEND);
-            out.write((searchInput + " " + type + " " + subject + " " + order + "\n").getBytes(StandardCharsets.UTF_8));
-            out.flush();
-            out.close();
-            Log.e("test", "add successfully");
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("test", e.toString());
-        }
-    }
-
-    private void clearHistory() {
-        binding.clearHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    FileOutputStream out = openFileOutput(historyDir, Context.MODE_PRIVATE);
-                    out.close();
-                    initHistory(view);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e("test", e.toString());
-                }
-            }
-        });
-    }
-
-    private void initTypeSetting() {
-        for(int i = 0; i < 4; ++i) {
-            TextView textView = (TextView)binding.typeSetting.getChildAt(i);
-            textView.setId(i);
-            if(searchViewModel.select_type == i) {
-                textView.setBackgroundColor(Color.GRAY);
-            }
-            textView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    binding.typeSetting.getChildAt(searchViewModel.select_type).setBackgroundColor(Color.WHITE);
-                    searchViewModel.select_type = v.getId();
-                    v.setBackgroundColor(Color.GRAY);
-
-                    if(v.getId() != 0) {
-                        binding.order.setVisibility(View.GONE);
-                    }
-                    else {
-                        binding.order.setVisibility(View.VISIBLE);
-                    }
-
-                }
-            });
-        }
-    }
-
-    private void initBack() {
-        ImageView back = binding.back;
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e("test", "finish");
-                finish();
-            }
-        });
-    }
-
 }

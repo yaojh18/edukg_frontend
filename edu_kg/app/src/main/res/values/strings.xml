@@ -26,5 +26,15 @@
     <string name="subject_manager_finish">完成</string>
     <string name="detail_relation">相关实体</string>
     <string name="detail_exercise">相关习题</string>
+    <string name="search_entity">实体</string>
+    <string name="search_text">文本</string>
+    <string name="search_exercise">试卷</string>
+    <string name="search_outlline">提纲</string>
+    <string name="search_history">搜索历史</string>
+    <string name="search_history_clear">清除记录</string>
+    <string name="search_sort">排序</string>
+    <string name="search_subject">学科</string>
+    <string name="search_order_default">默认</string>
+    <string name="search_subject_default">语文</string>
 
 </resources>

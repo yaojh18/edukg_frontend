@@ -34,6 +34,7 @@ import app.edu_kg.pages.detail.DetailActivity;
 import app.edu_kg.pages.search.SearchActivity;
 import app.edu_kg.utils.Constant;
 import app.edu_kg.utils.Functional;
+import app.edu_kg.utils.InstanceIO;
 import app.edu_kg.utils.Request;
 import app.edu_kg.utils.adapter.ItemListAdapter;
 import app.edu_kg.utils.adapter.SubjectGridAdapter;
@@ -71,6 +72,10 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
                     ArrayList<ItemListAdapter.ItemMessage> obj = (ArrayList<ItemListAdapter.ItemMessage>) msg.obj;
                     localData.homeList.clear();
                     localData.homeList.addAll(obj);
+                    for (ItemListAdapter.ItemMessage item : localData.homeList){
+                        if (InstanceIO.isInstanceExist(context, item.label))
+                            item.isChecked = true;
+                    }
                     localData.homeListAdapter.notifyDataSetChanged();
                 }
                 else if (msg.what == Constant.HOME_ENTITY_RESPONSE_FAIL){
@@ -114,7 +119,7 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
                 }
                 else{
                     // clear
-                    Constant.homeSubjectMap.forEach((name, subject) -> {
+                    Constant.HOME_SUBJECT_MAP.forEach((name, subject) -> {
                         subject.isSelected = false;
                     });
                     localData.homeSubjectList.clear();
@@ -122,12 +127,12 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
 
                     // update
                     for (Constant.SUBJECT_NAME name : localData.presentSet){
-                        localData.homeSubjectList.add(Constant.homeSubjectMap.get(name));
+                        localData.homeSubjectList.add(Constant.HOME_SUBJECT_MAP.get(name));
                         if (localData.homeSubjectList.size() >= 5) break;
                     }
                     if (localData.presentSet.size() > 5){
                         localData.homeSubjectList.remove(4);
-                        localData.homeSubjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.UNFOLD));
+                        localData.homeSubjectList.add(Constant.HOME_SUBJECT_MAP.get(Constant.SUBJECT_NAME.UNFOLD));
                     }
                     SubjectGridAdapter.Subject firstSubject = localData.homeSubjectList.get(0);
                     firstSubject.isSelected = true;
@@ -149,9 +154,12 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
     public void onItemClick(int position) {
         Intent intent = new Intent(context, DetailActivity.class);
         ItemListAdapter.ItemMessage item = localData.homeList.get(position);
+        item.isChecked = true;
+        localData.homeListAdapter.notifyItemChanged(position);
         intent.putExtra("course", item.course);
         intent.putExtra("name", item.label);
         intent.putExtra("token", localData.token);
+        intent.putExtra("load", InstanceIO.isInstanceExist(context, item.label));
         startActivity(intent);
     }
 
@@ -166,14 +174,14 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
                     while (subjectList.size() > 4){
                         subjectList.remove(subjectList.size() - 1);
                     }
-                    subjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.UNFOLD));
+                    subjectList.add(Constant.HOME_SUBJECT_MAP.get(Constant.SUBJECT_NAME.UNFOLD));
                     break;
                 case UNFOLD:
                     subjectList.clear();
                     for (Constant.SUBJECT_NAME name : localData.presentSet){
-                        subjectList.add(Constant.homeSubjectMap.get(name));
+                        subjectList.add(Constant.HOME_SUBJECT_MAP.get(name));
                     }
-                    subjectList.add(Constant.homeSubjectMap.get(Constant.SUBJECT_NAME.FOLD));
+                    subjectList.add(Constant.HOME_SUBJECT_MAP.get(Constant.SUBJECT_NAME.FOLD));
                     break;
                 default:
                     if (localData.homeSubjectSelected < subjectList.size()){
@@ -194,7 +202,7 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
                     localData.presentSet.remove(subject.id);
                 else
                     localData.presentSet.add(subject.id);
-                localData.presentSubjectAdapter.notifyDataSetChanged();
+                localData.presentSubjectAdapter.notifyItemChanged(position);
             }
         }
     }

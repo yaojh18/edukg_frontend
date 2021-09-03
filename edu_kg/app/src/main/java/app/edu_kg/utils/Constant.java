@@ -42,7 +42,7 @@ public class Constant {
         BIOLOGY, POLITICS, HISTORY, GEOGRAPHY, FOLD, UNFOLD;
     }
 
-    public final static EnumMap<SUBJECT_NAME, Subject> helperSubjectMap = new EnumMap<SUBJECT_NAME, Subject>(SUBJECT_NAME.class){{
+    public final static EnumMap<SUBJECT_NAME, Subject> HELPER_SUBJECT_MAP = new EnumMap<SUBJECT_NAME, Subject>(SUBJECT_NAME.class){{
        put(SUBJECT_NAME.CHINESE, new Subject("语文", R.drawable.subject_chinese, SUBJECT_NAME.CHINESE));
        put(SUBJECT_NAME.MATH, new Subject("数学", R.drawable.subject_math, SUBJECT_NAME.MATH));
        put(SUBJECT_NAME.ENGLISH, new Subject("英语", R.drawable.subject_english, SUBJECT_NAME.ENGLISH));
@@ -56,7 +56,7 @@ public class Constant {
        put(SUBJECT_NAME.UNFOLD, new Subject("展开", R.drawable.subject_unfold, SUBJECT_NAME.UNFOLD));
     }};
 
-    public final static EnumMap<SUBJECT_NAME, Subject> homeSubjectMap = new EnumMap<SUBJECT_NAME, Subject>(SUBJECT_NAME.class){{
+    public final static EnumMap<SUBJECT_NAME, Subject> HOME_SUBJECT_MAP = new EnumMap<SUBJECT_NAME, Subject>(SUBJECT_NAME.class){{
         put(SUBJECT_NAME.CHINESE, new Subject("语文", R.drawable.subject_chinese, SUBJECT_NAME.CHINESE));
         put(SUBJECT_NAME.MATH, new Subject("数学", R.drawable.subject_math, SUBJECT_NAME.MATH));
         put(SUBJECT_NAME.ENGLISH, new Subject("英语", R.drawable.subject_english, SUBJECT_NAME.ENGLISH));
@@ -70,7 +70,7 @@ public class Constant {
         put(SUBJECT_NAME.UNFOLD, new Subject("展开", R.drawable.subject_unfold, SUBJECT_NAME.UNFOLD));
     }};
 
-    public final static EnumMap<SUBJECT_NAME, Subject> manageSubjectMap = new EnumMap<SUBJECT_NAME, Subject>(SUBJECT_NAME.class){{
+    public final static EnumMap<SUBJECT_NAME, Subject> MANAGE_SUBJECT_MAP = new EnumMap<SUBJECT_NAME, Subject>(SUBJECT_NAME.class){{
         put(SUBJECT_NAME.CHINESE, new Subject("语文", R.drawable.subject_remove, SUBJECT_NAME.CHINESE));
         put(SUBJECT_NAME.MATH, new Subject("数学", R.drawable.subject_remove, SUBJECT_NAME.MATH));
         put(SUBJECT_NAME.ENGLISH, new Subject("英语", R.drawable.subject_remove, SUBJECT_NAME.ENGLISH));
@@ -85,5 +85,10 @@ public class Constant {
     public final static int[] LINK_INSTANCE_COLOR = {
             Color.RED, Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.DKGRAY
     };
+
+    public final static String[] SEARCH_TYPE_LIST = {"实体", "文本", "试题", "提纲"};
+    public final static String[] ENTITY_FILTER_LIST = {"默认", "拼音", "热度"};
+    public final static String[] OTHER_FILTER_LIST = {"默认"};
+    public final static String[] SUBJECT_LIST = {"语文", "数学", "英语", "物理", "化学", "生物", "政治", "历史", "地理"};
 
 }

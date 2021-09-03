@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 import app.edu_kg.R;
@@ -46,7 +47,7 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
         }
     }
 
-    public static class ItemMessage {
+    public static class ItemMessage implements Serializable {
         public String label;
         public String category;
         public Integer imageId;
