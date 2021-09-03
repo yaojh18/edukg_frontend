@@ -35,6 +35,9 @@ public class Constant {
     public final static int COLLECTION_PAGE = 3001;
     public final static int RECOMMENDATION_PAGE = 3002;
     public final static int EXERCISE_LIST_PAGE = 3003;
+
+    public final static int INSTANCE_LOAD_SUCCESS = 4000;
+    public final static int INSTANCE_LOAD_FAIL = 4001;
     
     public enum SUBJECT_NAME
     {
@@ -90,5 +93,9 @@ public class Constant {
     public final static String[] ENTITY_FILTER_LIST = {"默认", "拼音", "热度"};
     public final static String[] OTHER_FILTER_LIST = {"默认"};
     public final static String[] SUBJECT_LIST = {"语文", "数学", "英语", "物理", "化学", "生物", "政治", "历史", "地理"};
+
+    public static final String APP_KEY = "2045436852";
+    public static final String REDIRECT_URL = "https://api.weibo.com/oauth2/default.html";
+    public static final String SCOPE = "";
 
 }

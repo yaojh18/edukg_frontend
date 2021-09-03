@@ -1,17 +1,16 @@
 <resources>
-    <string name="app_name">edu_kg</string>
+    <string name="app_name">快乐学习</string>
     <string name="title_home">首页</string>
     <string name="title_helper">问答</string>
     <string name="title_profile">我的</string>
-    <string name="not_logged_in">未登录</string>
-    <string name="logged_in">已登录</string>
     <string name="login">登录</string>
+    <string name="logout">登出</string>
     <string name="register">注册</string>
     <string name="user_profile">用户头像</string>
     <string name="user_history">浏览历史</string>
     <string name="user_collection">用户收藏</string>
     <string name="exercise_rec">试题推荐</string>
-    <string name="change_profile">更改信息</string>
+    <string name="change_profile">更改密码</string>
     <string name="to_register">没有账号？点此注册</string>
     <string name="password">密码</string>
     <string name="username">用户名</string>
@@ -36,5 +35,8 @@
     <string name="search_subject">学科</string>
     <string name="search_order_default">默认</string>
     <string name="search_subject_default">语文</string>
+    <string name="change_user_profile">更改头像</string>
+    <string name="change_user_background">更改背景</string>
+    <string name="not_logged_in">未登录</string>
 
 </resources>

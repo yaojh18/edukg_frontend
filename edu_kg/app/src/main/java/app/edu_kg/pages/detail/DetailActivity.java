@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -27,9 +28,19 @@ import android.widget.TextView;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.sina.weibo.sdk.api.TextObject;
+import com.sina.weibo.sdk.api.WeiboMultiMessage;
+import com.sina.weibo.sdk.auth.AuthInfo;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+import com.sina.weibo.sdk.auth.WbAuthListener;
+import com.sina.weibo.sdk.common.UiError;
+import com.sina.weibo.sdk.openapi.IWBAPI;
+import com.sina.weibo.sdk.openapi.WBAPIFactory;
+import com.sina.weibo.sdk.share.WbShareCallback;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import app.edu_kg.DataApplication;
 import app.edu_kg.R;
@@ -44,7 +55,7 @@ import kotlin.Pair;
 import kotlin.Triple;
 
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements WbShareCallback {
 
     private String course;
     private String name;
@@ -54,6 +65,9 @@ public class DetailActivity extends AppCompatActivity {
     private List<Triple<String, String, Boolean>> relationList;
     private boolean isFavorite;
     private boolean hasQuestion;
+
+    private AuthInfo weiboAuthInfo;
+    private IWBAPI weiboAPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,14 +107,13 @@ public class DetailActivity extends AppCompatActivity {
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
-                        Intent data = result.getData();
                         if (result.getResultCode() == Activity.RESULT_OK){
-                            if (data.getStringExtra("func_type").equals("login")){
-                                DataApplication localData = (DataApplication) getApplicationContext();
-                                localData.username = data.getStringExtra("username");
-                                localData.token = data.getStringExtra("token");
-                                token = localData.token;
-                            }
+                            Intent data = Objects.requireNonNull(result.getData());
+                            DataApplication localData = (DataApplication) getApplicationContext();
+                            localData.username = data.getStringExtra("username");
+                            localData.token = data.getStringExtra("token");
+                            localData.userStateChanged = true;
+                            token = localData.token;
                         }
                     }
                 });
@@ -108,10 +121,11 @@ public class DetailActivity extends AppCompatActivity {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void handleMessage(Message msg) {
-                if (msg.what == Constant.DETAIL_RESPONSE_SUCCESS) {
+                if (msg.what == Constant.DETAIL_RESPONSE_SUCCESS || msg.what == Constant.INSTANCE_LOAD_SUCCESS) {
                     Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, ArrayList<Triple<String, String, Boolean>>,  Pair<Boolean, Boolean>> obj =
                             (Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, ArrayList<Triple<String, String, Boolean>>, Pair<Boolean, Boolean>>) msg.obj;
-                    InstanceIO.saveInstance(activity, obj, name);
+                    if (msg.what == Constant.DETAIL_RESPONSE_SUCCESS)
+                        InstanceIO.saveInstance(activity, obj, name);
                     propertyList.addAll(obj.getFirst());
                     adapter.notifyDataSetChanged();
                     relationList.addAll(obj.getSecond());
@@ -122,7 +136,7 @@ public class DetailActivity extends AppCompatActivity {
                     exercise.setVisibility(hasQuestion ? View.VISIBLE: View.GONE);
 
                 }
-                else if (msg.what == Constant.DETAIL_RESPONSE_FAIL){
+                else if (msg.what == Constant.DETAIL_RESPONSE_FAIL || msg.what == Constant.INSTANCE_LOAD_FAIL){
                     if (loadFromFile)
                         Request.getInfoByInstanceName(name, course, token, this);
                     else {
@@ -153,13 +167,12 @@ public class DetailActivity extends AppCompatActivity {
             }
         };
 
-        // init favorite and share onclick
+        // init favorite onclick
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (token.equals("")){
                     Intent intent = new Intent(activity, LogActivity.class);
-                    intent.putExtra("func_type", "login");
                     launcher.launch(intent);
                 }
                 else{
@@ -170,10 +183,30 @@ public class DetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // init share onclick
+        weiboAuthInfo = new AuthInfo(this, Constant.APP_KEY, Constant.REDIRECT_URL, Constant.SCOPE);
+        weiboAPI = WBAPIFactory.createWBAPI(this);
+
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO
+                if (weiboAPI.isWBAppInstalled()){
+                    WeiboMultiMessage message = new WeiboMultiMessage();
+                    TextObject textObject = new TextObject();
+                    textObject.text = Functional.getShareText();
+                    message.textObject = textObject;
+                    weiboAPI.shareMessage(message, false);
+
+                }
+                else{
+                    Snackbar.make(view, "我们的微博SDK申请还没有通过（悲伤）", Snackbar.LENGTH_SHORT)
+                            .setAction("确认", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) { }
+                            })
+                            .show();
+                }
             }
         });
 
@@ -201,5 +234,36 @@ public class DetailActivity extends AppCompatActivity {
         else
             Request.getInfoByInstanceName(name, course, token, handler);
 
+    }
+
+    @Override
+    public void onComplete() {
+        Snackbar.make(this.getWindow().getDecorView().getRootView(), "分享成功！", Snackbar.LENGTH_SHORT)
+                .setAction("确认", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) { }
+                })
+                .show();
+    }
+
+    @Override
+    public void onError(UiError uiError) {
+        Snackbar.make(this.getWindow().getDecorView().getRootView(), "错误：" + uiError.errorMessage, Snackbar.LENGTH_SHORT)
+                .setAction("确认", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) { }
+                })
+                .show();
+    }
+
+    @Override
+    public void onCancel() { }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (weiboAPI != null) {
+            weiboAPI.doResultIntent(data, this);
+        }
     }
 }

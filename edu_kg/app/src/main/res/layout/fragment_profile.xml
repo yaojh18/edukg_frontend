@@ -16,8 +16,8 @@
         <com.google.android.material.appbar.AppBarLayout
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            android:background="?attr/colorSecondary"
-            android:alpha="0.5"
+            android:background="@color/white"
+            android:alpha="0.8"
             android:layout_width="match_parent">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -26,9 +26,11 @@
                 android:layout_width="match_parent">
 
                 <ImageView
+                    android:id="@+id/user_background"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
+                    android:src="@drawable/login_background"
                     android:fitsSystemWindows="true"
                     android:contentDescription="@string/user_profile" />
 
@@ -58,7 +60,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/user_picture"
+                android:id="@+id/user_profile"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginStart="30dp"
@@ -72,10 +74,16 @@
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="-28dp"
                 android:text="@string/not_logged_in"
-                style="@style/TextAppearance.AppCompat.Body1"
+                android:textStyle="bold"
+                android:shadowColor="@color/black"
+                android:shadowDx="1.0"
+                android:shadowDy="1.0"
+                android:shadowRadius="2.0"
+                android:textColor="@color/white"
+
                 android:textSize="18sp"/>
 
         </LinearLayout>

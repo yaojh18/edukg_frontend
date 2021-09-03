@@ -90,8 +90,7 @@ public class SearchActivity extends AppCompatActivity implements ItemListAdapter
                     String type = Constant.SEARCH_TYPE_LIST[selectType];
 
                     searchHistoryList.add(new ItemListAdapter.ItemMessage(searchInput, course,
-                            Functional.subjEng2Che(course) + "\t" + type + "\t" + Functional.sortMethodEnd2Che(order),
-                            null, false));
+                            Functional.subjEng2Che(course) + "\t" + type + "\t" + Functional.sortMethodEnd2Che(order)));
                     adapter.notifyItemChanged(searchHistoryList.size() - 1);
                     InstanceIO.saveInstance(activity, searchHistoryList, historyDir);
                     jumpToResult(type, searchInput, order, course);
@@ -108,8 +107,7 @@ public class SearchActivity extends AppCompatActivity implements ItemListAdapter
                 String type = Constant.SEARCH_TYPE_LIST[selectType];
 
                 searchHistoryList.add(new ItemListAdapter.ItemMessage(searchInput, course,
-                        Functional.subjEng2Che(course) + "\t" + type + "\t" + Functional.sortMethodEnd2Che(order),
-                        null, false));
+                        Functional.subjEng2Che(course) + "\t" + type + "\t" + Functional.sortMethodEnd2Che(order)));
                 adapter.notifyItemChanged(searchHistoryList.size() - 1);
                 InstanceIO.saveInstance(activity, searchHistoryList, historyDir);
                 jumpToResult(type, searchInput, order, course);

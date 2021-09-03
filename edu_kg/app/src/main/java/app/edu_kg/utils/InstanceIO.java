@@ -1,8 +1,10 @@
 package app.edu_kg.utils;
 
 import android.content.Context;
-import android.util.Log;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
+import android.util.Log;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,10 +22,11 @@ public class InstanceIO {
             os.writeObject(json);
             os.close();
             out.close();
-        } catch (IOException e) {
-            Log.v("储存失败","储存失败");
+        } catch (Exception e) {
+            Log.v("Error", e.toString());
         }
     }
+
 
     public static void loadInstance(Context context, String name, Handler handler) {
         try {
@@ -32,9 +35,9 @@ public class InstanceIO {
             Object res = is.readObject();
             is.close();
             in.close();
-            handler.sendMessage(handler.obtainMessage(Constant.DETAIL_RESPONSE_SUCCESS, res));
+            handler.sendMessage(handler.obtainMessage(Constant.INSTANCE_LOAD_SUCCESS, res));
         } catch (Exception e) {
-            handler.sendMessage(handler.obtainMessage(Constant.DETAIL_RESPONSE_FAIL, ""));
+            handler.sendMessage(handler.obtainMessage(Constant.INSTANCE_LOAD_FAIL, ""));
         }
     }
 
@@ -54,5 +57,27 @@ public class InstanceIO {
     public static boolean isInstanceExist(Context context, String name) {
         String[] fileList = context.fileList();
         return Arrays.asList(fileList).contains(name + ".dt");
+    }
+
+    public static void saveBitmap(Context context, Bitmap bitmap, String name) {
+        try {
+            FileOutputStream out = context.openFileOutput(name + ".dt", Context.MODE_PRIVATE);
+            bitmap.compress(Bitmap.CompressFormat.WEBP_LOSSY, 0, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            Log.v("Error", e.toString());
+        }
+    }
+
+    public static Bitmap loadBitmap(Context context, String name) {
+        try {
+            FileInputStream in = context.openFileInput(name + ".dt");
+            Bitmap bitmap = BitmapFactory.decodeStream(in);
+            in.close();
+            return bitmap;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

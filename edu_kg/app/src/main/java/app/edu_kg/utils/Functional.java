@@ -1,5 +1,13 @@
 package app.edu_kg.utils;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 public class Functional {
     public static String subjChe2Eng(String ch) {
         switch(ch) {
@@ -69,6 +77,18 @@ public class Functional {
                 return "热度";
             default:
                 return "错误";
+        }
+    }
+
+    public static String getShareText(){
+        return "test";
+    }
+    public static Bitmap getContactBitmapFromURI(Context context, Uri uri) {
+        try {
+            InputStream input = context.getContentResolver().openInputStream(uri);
+            return BitmapFactory.decodeStream(input);
+        } catch (Exception e) {
+            return null;
         }
     }
 }

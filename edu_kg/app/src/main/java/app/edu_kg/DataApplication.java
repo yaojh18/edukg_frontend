@@ -1,6 +1,11 @@
 package app.edu_kg;
 
 import android.app.Application;
+import android.graphics.Bitmap;
+
+import com.sina.weibo.sdk.auth.AuthInfo;
+import com.sina.weibo.sdk.openapi.IWBAPI;
+import com.sina.weibo.sdk.openapi.WBAPIFactory;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -29,6 +34,9 @@ public class DataApplication extends Application {
     public String token;
     public int helperSubjectSelected;
     public int homeSubjectSelected;
+    public boolean userStateChanged;
+    public Bitmap profile = null;
+    public Bitmap background = null;
 
     public DataApplication(){
 
@@ -37,6 +45,7 @@ public class DataApplication extends Application {
 
         username = "未登录";
         token = "";
+        userStateChanged = false;
 
         helperSubjectSelected = 100;
         helperSubjectList = new ArrayList<>();
@@ -63,5 +72,6 @@ public class DataApplication extends Application {
         presentSubjectList = new ArrayList<>();
         for (Constant.SUBJECT_NAME name : presentSet)
             presentSubjectList.add(Constant.MANAGE_SUBJECT_MAP.get(name));
+
     }
 }

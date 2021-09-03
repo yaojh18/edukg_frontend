@@ -4,13 +4,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/log_in"
-        android:icon="@drawable/log_in"
-        app:showAsAction="always"
-        android:title="@string/not_logged_in" />
+        android:title="@string/login" />
     <item
         android:id="@+id/log_out"
-        android:icon="@drawable/log_out"
-        app:showAsAction="always"
         android:visible="false"
-        android:title="@string/logged_in" />
+        android:title="@string/logout" />
+    <item
+        android:id="@+id/change_user_profile"
+        android:visible="false"
+        android:title="@string/change_user_profile" />
+    <item
+        android:id="@+id/change_user_background"
+        android:visible="false"
+        android:title="@string/change_user_background" />
 </menu>

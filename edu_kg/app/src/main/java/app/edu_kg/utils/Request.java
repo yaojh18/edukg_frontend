@@ -19,7 +19,7 @@ import okhttp3.*;
 
 public class Request {
     final static OkHttpClient client = new OkHttpClient();
-    final static String ip = "183.172.138.58";
+    final static String ip = "183.172.244.198";
 
     public static void inputQuestion(String question, @Nullable String course, final Handler handler) {
         new Thread(new Runnable() {
@@ -154,7 +154,7 @@ public class Request {
                         ArrayList<ItemListAdapter.ItemMessage> res = new ArrayList<>();
                         for (int i = 0; i < data.length(); i++){
                             JSONObject item = data.getJSONObject(i);
-                            res.add(new ItemListAdapter.ItemMessage(item.getString("instanceName"), item.getString("course"), null, null, false));
+                            res.add(new ItemListAdapter.ItemMessage(item.getString("instanceName"), item.getString("course"), null));
                         }
                         handler.sendMessage(handler.obtainMessage(Constant.LIST_RESPONSE_SUCCESS, res));
                     }
@@ -187,7 +187,7 @@ public class Request {
                         ArrayList<ItemListAdapter.ItemMessage> res = new ArrayList<>();
                         for (int i = 0; i < data.length(); i++){
                             JSONObject item = data.getJSONObject(i);
-                            res.add(new ItemListAdapter.ItemMessage(item.getString("instanceName"), item.getString("course"), null, null, false));
+                            res.add(new ItemListAdapter.ItemMessage(item.getString("instanceName"), item.getString("course"), null));
                         }
                         handler.sendMessage(handler.obtainMessage(Constant.LIST_RESPONSE_SUCCESS, res));
                     }
@@ -250,7 +250,7 @@ public class Request {
                         ArrayList<ItemListAdapter.ItemMessage> res = new ArrayList<>();
                         for (int i = 0; i < data.length(); i++){
                             JSONObject item = data.getJSONObject(i);
-                            res.add(new ItemListAdapter.ItemMessage(item.getString("label"), item.getString("course"), item.getString("category"), null, false));
+                            res.add(new ItemListAdapter.ItemMessage(item.getString("label"), item.getString("course"), item.getString("category")));
                         }
                         handler.sendMessage(handler.obtainMessage(Constant.HOME_ENTITY_RESPONSE_SUCCESS, res));
                     }

@@ -56,6 +56,14 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
         static final int IMAGE_VIEW = 0;
         static final int TEXT_VIEW = 1;
 
+        public ItemMessage(String label, String course, @Nullable String category){
+            this.label = label;
+            this.category = category;
+            this.course = course;
+            this.imageId = null;
+            this.isChecked = false;
+        }
+
         public ItemMessage(String label, String course, @Nullable String category, @Nullable Integer imageId, boolean isChecked){
             this.label = label;
             this.category = category;
