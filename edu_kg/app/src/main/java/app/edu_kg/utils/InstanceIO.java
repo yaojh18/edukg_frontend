@@ -62,7 +62,7 @@ public class InstanceIO {
     public static void saveBitmap(Context context, Bitmap bitmap, String name) {
         try {
             FileOutputStream out = context.openFileOutput(name + ".dt", Context.MODE_PRIVATE);
-            bitmap.compress(Bitmap.CompressFormat.WEBP_LOSSY, 0, out);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.flush();
             out.close();
         } catch (Exception e) {
