@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -292,6 +293,15 @@ public class Request {
                             JSONObject item = data.getJSONObject(i);
                             property.add(new DetailPropertyTableAdapter.DetailMessage(item.getString("predicateLabel"), item.getString("object")));
                         }
+                        property.sort(new Comparator<DetailPropertyTableAdapter.DetailMessage>() {
+                            @Override
+                            public int compare(DetailPropertyTableAdapter.DetailMessage t1, DetailPropertyTableAdapter.DetailMessage t2) {
+                                if (t1.value.length() != t2.value.length())
+                                    return t1.value.length() - t2.value.length();
+                                else
+                                    return t1.attribute.hashCode() - t2.attribute.hashCode();
+                            }
+                        });
                         JSONObject relation = new JSONObject();
                         JSONArray nodes = new JSONArray();
                         JSONObject self = new JSONObject();

@@ -7,7 +7,7 @@
 </head>
 
 <body>
-<div id="main" style="width:300px; height:400px;"></div>
+<div id="main" style="width:320px; height:400px;"></div>
 <script type="text/javascript">
     let myChart = echarts.init(document.getElementById('main'));
     let relationData = window.Android.getRelationData();
@@ -18,8 +18,8 @@
             type: 'graph',
             layout: 'force',
             force: {
-                repulsion: 1000, // 要改
-                edgeLength: 60
+                repulsion: 300, // 要改
+                edgeLength: 120
             },
             edgeSymbol: ['circle', 'arrow'],
             edgeSymbolSize: [2, 10],
@@ -43,8 +43,13 @@
                         var str = ''
                         for(var i = 0, s; s = oldStr[i++];) {
                             str += s;
-                            if (!(i % 5) && (i != s.length - 1)) str += '\n';
+                            if (!(i % 5)) str += '\n';
                         }
+                        var re = /[^\u4E00-\u9FA5]/;
+                        if (str[str.length - 1] === '\n')
+                            str = str.slice(0, str.length - 1);
+                        if (re.test(str[str.length - 1]) && str[str.length - 2] === '\n')
+                            str = str.slice(0, str.length - 2) + str[str.length - 1];
                         return str;
                     },
                     textStyle: {

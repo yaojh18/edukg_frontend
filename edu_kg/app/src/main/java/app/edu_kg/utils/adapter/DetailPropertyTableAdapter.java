@@ -31,8 +31,8 @@ public class DetailPropertyTableAdapter extends Adapter<ViewHolder> {
     }
 
     public static class DetailMessage implements Serializable {
-        String attribute;
-        String value;
+        public String attribute;
+        public String value;
 
         public DetailMessage(String attribute, String value){
             this.attribute = attribute;
