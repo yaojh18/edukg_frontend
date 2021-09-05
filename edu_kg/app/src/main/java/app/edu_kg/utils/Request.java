@@ -455,6 +455,33 @@ public class Request {
         }).start();
     }
 
+    public static void getOutline(String searchKey, String course, Handler handler) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = "http://" + ip + ":8080/API/getOutline";
+                HttpUrl urlQuery =
+                        HttpUrl.parse(url).newBuilder().
+                                addQueryParameter("searchKey", searchKey).
+                                addQueryParameter("course", course)
+                                .build();
+                okhttp3.Request request =
+                        new okhttp3.Request.Builder().
+                                url(urlQuery).
+                                get().
+                                build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                    handler.sendMessage(handler.obtainMessage(Constant.OUTLINE_RESPONSE, json));
+                } catch (Exception e) {
+                    handler.sendMessage(handler.obtainMessage(Constant.OUTLINE_RESPONSE, "error"));
+                }
+            }
+        }).start();
+    }
+
 
 }
 

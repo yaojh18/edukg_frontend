@@ -44,6 +44,7 @@
         <activity android:name=".pages.result.ResultActivity" />
         <activity android:name=".pages.test.TestActivity" />
         <activity android:name=".pages.link.LinkActivity"/>
+        <activity android:name=".pages.outline.OutlineActivity"/>
     </application>
 
 </manifest>
