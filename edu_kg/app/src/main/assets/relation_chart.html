@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <script src="./echarts.min.js"></script>
+    <title>relation_chart</title>
+</head>
+
+<body>
+<div id="main" style="width:320px; height:400px;"></div>
+<script type="text/javascript">
+    let myChart = echarts.init(document.getElementById('main'));
+    let relationData = window.Android.getRelationData();
+    relationData = eval('(' + relationData + ')');
+
+    option = {
+        series: [{
+            type: 'graph',
+            layout: 'force',
+            force: {
+                repulsion: 300,
+                edgeLength: 120
+            },
+            edgeSymbol: ['circle', 'arrow'],
+            edgeSymbolSize: [2, 10],
+            edgeLabel: {
+                normal: {
+                    show: true,
+                    formatter: function (x) {
+                        return x.data.name;
+                    },
+                    textStyle: {
+                        fontSize: 10,
+                    }
+                }
+            },
+            label: {
+                normal: {
+                    show: true,
+                    formatter: function(val) {
+                        var oldStr = val.data.name.split('');
+                        var str = ''
+                        for(var i = 0, s; s = oldStr[i++];) {
+                            str += s;
+                            if (!(i % 5)) str += '\n';
+                        }
+                        var re = /[^\u4E00-\u9FA5]/;
+                        if (str[str.length - 1] === '\n')
+                            str = str.slice(0, str.length - 1);
+                        if (re.test(str[str.length - 1]) && str[str.length - 2] === '\n')
+                            str = str.slice(0, str.length - 2) + str[str.length - 1];
+                        return str;
+                    },
+                    textStyle: {
+                        fontSize: 10,
+                    }
+
+                }
+            },
+            lineStyle: {
+                normal: {
+                    width: 2,
+                    color: '#4b565b',
+                }
+            },
+            categories: [{
+                symbolSize: 60
+            },{
+                symbolSize: 50
+            }],
+
+            data: relationData.data,
+            links: relationData.links
+        }]
+    };
+    if (relationData.data.length > 10) {
+        option.series[0].force = {
+            repulsion: 200,
+            edgeLength: 90
+        }
+    }
+    myChart.setOption(option);
+    myChart.on('click', function (params){
+        if (params.dataType === 'node')
+            window.Android.startNewActivity(params.name);
+    })
+</script>
+</body>
+</html>

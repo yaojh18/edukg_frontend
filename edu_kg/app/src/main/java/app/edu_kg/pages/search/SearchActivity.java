@@ -32,6 +32,8 @@ import java.util.List;
 
 import app.edu_kg.DataApplication;
 import app.edu_kg.R;
+import app.edu_kg.pages.link.LinkActivity;
+import app.edu_kg.pages.outline.OutlineActivity;
 import app.edu_kg.pages.result.ResultActivity;
 import app.edu_kg.pages.test.TestActivity;
 import app.edu_kg.pages.user.HistoryActivity;
@@ -165,8 +167,12 @@ public class SearchActivity extends AppCompatActivity implements ItemListAdapter
 
     private void jumpToResult(String type, String searchInput, String order, String course) {
         Intent intent = null;
-        if(type.equals("实体") || type.equals("文本")) {
+        if(type.equals("实体")) {
             intent = new Intent(this, ResultActivity.class);
+            intent.putExtra("type", type);
+        }
+        else if(type.equals("文本")) {
+            intent = new Intent(this, LinkActivity.class);
             intent.putExtra("type", type);
         }
         else if(type.equals("试题")) {
@@ -174,9 +180,7 @@ public class SearchActivity extends AppCompatActivity implements ItemListAdapter
             intent.putExtra("page_type", Constant.EXERCISE_LIST_PAGE);
         }
         else{
-            // TODO
-            intent = new Intent(this, TestActivity.class);
-            intent.putExtra("page_type", Constant.EXERCISE_LIST_PAGE);
+            intent = new Intent(this, OutlineActivity.class);
         }
         intent.putExtra("searchInput", searchInput);
         intent.putExtra("course", course);

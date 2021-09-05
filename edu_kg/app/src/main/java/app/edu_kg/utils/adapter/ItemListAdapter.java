@@ -21,6 +21,7 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
         TextView title;
         TextView content;
         ImageView image;
+        TextView secondTitle;
         OnItemClickListener onItemClickListener;
 
         ItemHolder(View itemView, OnItemClickListener listener) {
@@ -30,6 +31,7 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
             title = (TextView) itemView.findViewById(R.id.first_text_view);
             content = (TextView) itemView.findViewById(R.id.second_text_view);
             image = (ImageView) itemView.findViewById(R.id.item_image_start);
+            secondTitle = (TextView) itemView.findViewById(R.id.second_title);
         }
         void bind(ItemMessage message) {
             title.setText(message.label);
@@ -37,6 +39,19 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
                 content.setText(message.category);
             if (message.imageId != null)
                 image.setImageResource(message.imageId);
+            if (message.titleColor != null) {
+                title.setTextColor(message.titleColor);
+            }
+            if (message.secondTitle != null) {
+                secondTitle.setText(message.secondTitle);
+
+                if (message.showSecondTitle) {
+                    secondTitle.setVisibility(View.VISIBLE);
+                }
+                else {
+                    secondTitle.setVisibility(View.GONE);
+                }
+            }
             title.setSelected(message.isChecked);
             content.setSelected(message.isChecked);
         }
@@ -53,8 +68,12 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
         public Integer imageId;
         public String course;
         public boolean isChecked;
+        public Integer titleColor = null;
+        public String secondTitle = null;
+        public boolean showSecondTitle = false;
         static final int IMAGE_VIEW = 0;
         static final int TEXT_VIEW = 1;
+        static final int OUTLINE_VIEW = 2;
 
         public ItemMessage(String label, String course, @Nullable String category){
             this.label = label;
@@ -70,6 +89,24 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
             this.course = course;
             this.imageId = imageId;
             this.isChecked = isChecked;
+        }
+
+        public ItemMessage(String label, String course, @Nullable String category, @Nullable Integer imageId, boolean isChecked, int titleColor){
+            this.label = label;
+            this.category = category;
+            this.course = course;
+            this.imageId = imageId;
+            this.isChecked = isChecked;
+            this.titleColor = titleColor;
+        }
+
+        public ItemMessage(String label, String course, @Nullable String category, @Nullable Integer imageId, boolean isChecked, String secondTitle) {
+            this.label = label;
+            this.category = category;
+            this.course = course;
+            this.imageId = imageId;
+            this.isChecked = isChecked;
+            this.secondTitle = secondTitle;
         }
     }
 
@@ -92,6 +129,9 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
         ItemMessage message = itemList.get(position);
         if (message.imageId != null)
             return ItemMessage.IMAGE_VIEW;
+        else if(message.secondTitle != null) {
+            return ItemMessage.OUTLINE_VIEW;
+        }
         else
             return ItemMessage.TEXT_VIEW;
     }
@@ -103,6 +143,10 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
         if (viewType == ItemMessage.IMAGE_VIEW)
             view = LayoutInflater.from(parent.getContext()).
                     inflate(R.layout.list_item_with_image, parent, false);
+        else if (viewType == ItemMessage.OUTLINE_VIEW) {
+            view = LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.outline_item, parent, false);
+        }
         else
             view = LayoutInflater.from(parent.getContext()).
                     inflate(R.layout.list_item, parent, false);
@@ -115,7 +159,7 @@ public class ItemListAdapter extends Adapter<ViewHolder> {
         ((ItemHolder) holder).bind(message);
     }
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         void onItemClick(int position);
     }
 }

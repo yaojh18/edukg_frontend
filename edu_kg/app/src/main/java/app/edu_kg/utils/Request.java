@@ -9,7 +9,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import app.edu_kg.utils.adapter.DetailPropertyTableAdapter;
 import app.edu_kg.utils.adapter.ItemListAdapter;
@@ -288,19 +293,76 @@ public class Request {
                             JSONObject item = data.getJSONObject(i);
                             property.add(new DetailPropertyTableAdapter.DetailMessage(item.getString("predicateLabel"), item.getString("object")));
                         }
+                        property.sort(new Comparator<DetailPropertyTableAdapter.DetailMessage>() {
+                            @Override
+                            public int compare(DetailPropertyTableAdapter.DetailMessage t1, DetailPropertyTableAdapter.DetailMessage t2) {
+                                if (t1.value.length() != t2.value.length())
+                                    return t1.value.length() - t2.value.length();
+                                else
+                                    return t1.attribute.hashCode() - t2.attribute.hashCode();
+                            }
+                        });
+                        JSONObject relation = new JSONObject();
+                        JSONArray nodes = new JSONArray();
+                        JSONObject self = new JSONObject();
+                        self.put("name", name);
+                        self.put("category", 0);
+                        nodes.put(self);
+                        JSONArray links = new JSONArray();
 
+                        Map<String, Integer> unique = new HashMap<>();
                         data = json.getJSONObject("data").getJSONArray("relationship");
-                        ArrayList<Triple<String, String, Boolean>> relationship = new ArrayList<>();
                         for (int i = 0; i < data.length(); i++){
                             JSONObject item = data.getJSONObject(i);
-                            if (item.has("object_label"))
-                                relationship.add(new Triple<>(item.getString("predicate_label"), item.getString("object_label"), true));
-                            else
-                                relationship.add(new Triple<>(item.getString("predicate_label"), item.getString("subject_label"), false));
+                            if (item.has("object_label")){
+                                JSONObject link = new JSONObject();
+                                link.put("source", name);
+                                link.put("target", item.getString("object_label"));
+                                link.put("name", item.getString("predicate_label"));
+
+                                if (!unique.containsKey(item.getString("object_label"))){
+                                    JSONObject node = new JSONObject();
+                                    node.put("name", item.getString("object_label"));
+                                    node.put("category", 1);
+                                    nodes.put(node);
+                                    unique.put(item.getString("object_label"), 1);
+                                }
+                                else {
+                                    int cnt = unique.get(item.getString("object_label"));
+                                    JSONObject style = new JSONObject("{normal:{curveness:" + String.valueOf(cnt * 0.2) + "}}");
+                                    link.put("lineStyle", style);
+                                    unique.put(item.getString("object_label"), cnt + 1);
+                                }
+                                links.put(link);
+                            }
+                            else {
+                                JSONObject link = new JSONObject();
+                                link.put("source", item.getString("subject_label"));
+                                link.put("target", name);
+                                link.put("name", item.getString("predicate_label"));
+
+                                if (!unique.containsKey(item.getString("subject_label"))){
+                                    JSONObject node = new JSONObject();
+                                    node.put("name", item.getString("subject_label"));
+                                    node.put("category", 1);
+                                    nodes.put(node);
+                                    unique.put(item.getString("subject_label"), 1);
+                                }
+                                else {
+                                    int cnt = unique.get(item.getString("subject_label"));
+                                    JSONObject style = new JSONObject("{normal:{curveness:" + String.valueOf(cnt * 0.4) + "}}");
+                                    link.put("lineStyle", style);
+                                    unique.put(item.getString("subject_label"), cnt + 1);
+                                }
+                                links.put(link);
+                            }
                         }
 
+                        relation.put("data", nodes);
+                        relation.put("links", links);
+
                         handler.sendMessage(handler.obtainMessage(Constant.DETAIL_RESPONSE_SUCCESS,
-                                new Triple<>(property, relationship, new Pair<>(json.getJSONObject("data").getBoolean("isFavorite"), json.getJSONObject("data").getBoolean("hasQuestion")))));
+                                new Triple<>(property, relation.toString(), new Pair<>(json.getJSONObject("data").getBoolean("isFavorite"), json.getJSONObject("data").getBoolean("hasQuestion")))));
                     }
                     else throw new Exception();
                 } catch (Exception e) {
@@ -450,6 +512,33 @@ public class Request {
                 } catch (Exception e) {
                     handler.sendMessage(handler.obtainMessage(Constant.LINK_INSTANCE_RESPONSE, "error"));
                     Log.e("test", "getLinkInstance fail");
+                }
+            }
+        }).start();
+    }
+
+    public static void getOutline(String searchKey, String course, Handler handler) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = "http://" + ip + ":8080/API/getOutline";
+                HttpUrl urlQuery =
+                        HttpUrl.parse(url).newBuilder().
+                                addQueryParameter("searchKey", searchKey).
+                                addQueryParameter("course", course)
+                                .build();
+                okhttp3.Request request =
+                        new okhttp3.Request.Builder().
+                                url(urlQuery).
+                                get().
+                                build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                    handler.sendMessage(handler.obtainMessage(Constant.OUTLINE_RESPONSE, json));
+                } catch (Exception e) {
+                    handler.sendMessage(handler.obtainMessage(Constant.OUTLINE_RESPONSE, "error"));
                 }
             }
         }).start();

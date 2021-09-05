@@ -22,6 +22,10 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -38,6 +42,9 @@ import com.sina.weibo.sdk.openapi.IWBAPI;
 import com.sina.weibo.sdk.openapi.WBAPIFactory;
 import com.sina.weibo.sdk.share.WbShareCallback;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -51,6 +58,7 @@ import app.edu_kg.utils.Functional;
 import app.edu_kg.utils.InstanceIO;
 import app.edu_kg.utils.Request;
 import app.edu_kg.utils.adapter.DetailPropertyTableAdapter;
+import app.edu_kg.utils.adapter.ItemListAdapter;
 import kotlin.Pair;
 import kotlin.Triple;
 
@@ -62,7 +70,7 @@ public class DetailActivity extends AppCompatActivity implements WbShareCallback
     private String token;
     private List<DetailPropertyTableAdapter.DetailMessage> propertyList;
     private DetailPropertyTableAdapter adapter;
-    private List<Triple<String, String, Boolean>> relationList;
+    private String relationList;
     private boolean isFavorite;
     private boolean hasQuestion;
 
@@ -122,18 +130,27 @@ public class DetailActivity extends AppCompatActivity implements WbShareCallback
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == Constant.DETAIL_RESPONSE_SUCCESS || msg.what == Constant.INSTANCE_LOAD_SUCCESS) {
-                    Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, ArrayList<Triple<String, String, Boolean>>,  Pair<Boolean, Boolean>> obj =
-                            (Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, ArrayList<Triple<String, String, Boolean>>, Pair<Boolean, Boolean>>) msg.obj;
+                    Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, String,  Pair<Boolean, Boolean>> obj =
+                            (Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, String, Pair<Boolean, Boolean>>) msg.obj;
                     if (msg.what == Constant.DETAIL_RESPONSE_SUCCESS)
                         InstanceIO.saveInstance(activity, obj, name);
                     propertyList.addAll(obj.getFirst());
                     adapter.notifyDataSetChanged();
-                    relationList.addAll(obj.getSecond());
+                    relationList = obj.getSecond();
                     isFavorite = obj.getThird().getFirst();
                     favorite.setSelected(isFavorite);
 
                     hasQuestion = obj.getThird().getSecond();
                     exercise.setVisibility(hasQuestion ? View.VISIBLE: View.GONE);
+
+                    // init chart webview
+                    WebView relation = findViewById(R.id.detail_relation_chart);
+                    WebSettings settings = relation.getSettings();
+                    settings.setJavaScriptEnabled(true);
+
+                    relation.setWebViewClient(new WebViewClient());
+                    relation.loadUrl("file:///android_asset/relation_chart.html");
+                    relation.addJavascriptInterface(activity, "Android");
 
                 }
                 else if (msg.what == Constant.DETAIL_RESPONSE_FAIL || msg.what == Constant.INSTANCE_LOAD_FAIL){
@@ -224,7 +241,6 @@ public class DetailActivity extends AppCompatActivity implements WbShareCallback
 
         // set data
         propertyList = new ArrayList<>();
-        relationList = new ArrayList<>();
         adapter = new DetailPropertyTableAdapter(propertyList);
         RecyclerView propertyRecycler = findViewById(R.id.detail_property_recycler);
         propertyRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -234,6 +250,22 @@ public class DetailActivity extends AppCompatActivity implements WbShareCallback
         else
             Request.getInfoByInstanceName(name, course, token, handler);
 
+    }
+    @JavascriptInterface
+    public String getRelationData(){
+        return relationList;
+    }
+
+    @JavascriptInterface
+    public void startNewActivity(String name){
+        if (!name.equals(this.name)) {
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtra("course", course);
+            intent.putExtra("name", name);
+            intent.putExtra("token", ((DataApplication) getApplicationContext()).token);
+            intent.putExtra("load", InstanceIO.isInstanceExist(this, name));
+            startActivity(intent);
+        }
     }
 
     @Override

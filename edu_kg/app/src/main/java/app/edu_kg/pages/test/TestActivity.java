@@ -47,7 +47,6 @@ public class TestActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.e("test", "jump into TestActivity");
         super.onCreate(savedInstanceState);
         testViewModel = new ViewModelProvider(this).get(TestViewModel.class);
         binding = ActivityTestBinding.inflate(getLayoutInflater());
@@ -65,7 +64,6 @@ public class TestActivity extends AppCompatActivity {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void handleMessage(Message msg) {
-                Log.e("test", "in handler");
                 RecyclerView testRecycler = binding.question;
                 LinearLayoutManager ms = new LinearLayoutManager(binding.getRoot().getContext());
                 ms.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -150,12 +148,6 @@ public class TestActivity extends AppCompatActivity {
             String course = intent.getStringExtra("course");
             Request.getQuestionList(searchInput, course, handler);
         }
-        /*
-        testViewModel.adapter.addTest("question 1", "opt1", "opt2", "opt3", "opt4", 0);
-        testViewModel.adapter.addTest("question 2", "opt1","opt2", "opt3", "opt4", 0);
-        testViewModel.adapter.addTest("question 1", "opt1", "opt2", "opt3", "opt4", 0);
-        testViewModel.adapter.addTest("question 3", "opt1", "opt2", "opt3", "opt4", 0);
-         */
         testViewModel.adapter.clear();
     }
 
