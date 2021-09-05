@@ -59,8 +59,6 @@ public class SearchActivity extends AppCompatActivity implements ItemListAdapter
         setContentView(R.layout.activity_search);
         Activity activity = this;
 
-        searchHistoryList = ((DataApplication)getApplicationContext()).searchHistoryList;
-
         try {
             searchHistoryList = (List<ItemListAdapter.ItemMessage>) InstanceIO.loadInstanceWithoutHandler(this, historyDir);
             if (searchHistoryList == null)

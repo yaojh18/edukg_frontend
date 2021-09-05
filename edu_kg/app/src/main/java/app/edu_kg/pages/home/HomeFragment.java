@@ -171,7 +171,13 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
             switch (subject.id){
                 case FOLD:
                     while (subjectList.size() > 4){
-                        subjectList.remove(subjectList.size() - 1);
+                        SubjectGridAdapter.Subject sub = subjectList.remove(subjectList.size() - 1);
+                        sub.isSelected = false;
+                    }
+                    if (localData.homeSubjectSelected >= 4){
+                        localData.homeSubjectSelected = 0;
+                        subjectList.get(0).isSelected = true;
+                        Request.getHomeList(Functional.subjChe2Eng(subjectList.get(0).name), handler);
                     }
                     subjectList.add(Constant.HOME_SUBJECT_MAP.get(Constant.SUBJECT_NAME.UNFOLD));
                     break;

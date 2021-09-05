@@ -119,13 +119,14 @@ public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSub
 
         switch (subject.id){
             case FOLD:
-                subjectList.remove(position);
-                subjectList.remove(position - 1);
-                subjectList.remove(position - 2);
-                subjectList.remove(position - 3);
-                subjectList.remove(position - 4);
-                subjectList.remove(position - 5);
+                for (int i = 9; i >= 4; i--){
+                    SubjectGridAdapter.Subject remove = subjectList.remove(i);
+                    remove.isSelected = false;
+                }
                 subjectList.add(Constant.HELPER_SUBJECT_MAP.get(Constant.SUBJECT_NAME.UNFOLD));
+                if (localData.helperSubjectSelected > 4){
+                    localData.helperSubjectSelected = 100;
+                }
                 break;
             case UNFOLD:
                 subjectList.remove(position);
