@@ -27,16 +27,15 @@
 
     <TextView
         android:id="@+id/score"
-        style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="40dp"
+        android:layout_margin="36dp"
         android:gravity="center"
-        android:text="score"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/back_bar"
-        android:textSize="50dp"
-        android:visibility="gone"/>
+        style="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"

@@ -135,15 +135,15 @@ public class ResultActivity extends AppCompatActivity implements ItemListAdapter
 
     private void initResult(Intent intent) {
         String searchInput = intent.getStringExtra("searchInput");
-        String type = intent.getStringExtra("type");
         String course = intent.getStringExtra("course");
         String order = intent.getStringExtra("order");
+        String filter = intent.getStringExtra("filter");
 
         RecyclerView resultRecycler = binding.board;
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         resultRecycler.setLayoutManager(linearLayoutManager);
         resultRecycler.setAdapter(adapter);
-        Request.getInstanceList(searchInput, course, order, handler);
+        Request.getInstanceList(searchInput, course, order, filter, handler);
     }
 
     private void jumpToDetail(String name, String course, String token) {

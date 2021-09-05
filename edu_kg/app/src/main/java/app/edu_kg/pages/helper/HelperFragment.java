@@ -53,7 +53,7 @@ public class HelperFragment extends Fragment implements SubjectGridAdapter.OnSub
             @Override
             public void handleMessage(Message msg) {
                 int message_num = msg.what;
-                if (message_num == Constant.MESSAGE_LIST_RESPONSE){
+                if (message_num == Constant.MESSAGE_LIST_RESPONSE && view.isShown()){
                     String message = (String) msg.obj;
                     localData.helperMessageAdapter.addRobotMessage(message);
                     binding.messageBoard.scrollToPosition(localData.helperMessageAdapter.getItemCount() - 1);

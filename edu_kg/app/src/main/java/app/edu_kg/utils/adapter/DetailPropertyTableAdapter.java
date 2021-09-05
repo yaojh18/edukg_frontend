@@ -40,7 +40,7 @@ public class DetailPropertyTableAdapter extends Adapter<ViewHolder> {
         }
     }
 
-    private List<DetailMessage> itemList;
+    public List<DetailMessage> itemList;
 
     public DetailPropertyTableAdapter(List<DetailMessage> itemList) {
         this.itemList = itemList;

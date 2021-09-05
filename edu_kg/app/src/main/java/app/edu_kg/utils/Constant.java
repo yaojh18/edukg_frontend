@@ -94,6 +94,7 @@ public class Constant {
     public final static String[] ENTITY_FILTER_LIST = {"默认", "拼音", "热度"};
     public final static String[] OTHER_FILTER_LIST = {"默认"};
     public final static String[] SUBJECT_LIST = {"语文", "数学", "英语", "物理", "化学", "生物", "政治", "历史", "地理"};
+    public final static String[] FILTER_LIST = {"默认"};
 
     public static final String APP_KEY = "2045436852";
     public static final String REDIRECT_URL = "https://api.weibo.com/oauth2/default.html";

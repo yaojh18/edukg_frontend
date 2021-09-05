@@ -13,19 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -35,15 +34,10 @@ import com.google.android.material.snackbar.Snackbar;
 import com.sina.weibo.sdk.api.TextObject;
 import com.sina.weibo.sdk.api.WeiboMultiMessage;
 import com.sina.weibo.sdk.auth.AuthInfo;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-import com.sina.weibo.sdk.auth.WbAuthListener;
 import com.sina.weibo.sdk.common.UiError;
 import com.sina.weibo.sdk.openapi.IWBAPI;
 import com.sina.weibo.sdk.openapi.WBAPIFactory;
 import com.sina.weibo.sdk.share.WbShareCallback;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +52,6 @@ import app.edu_kg.utils.Functional;
 import app.edu_kg.utils.InstanceIO;
 import app.edu_kg.utils.Request;
 import app.edu_kg.utils.adapter.DetailPropertyTableAdapter;
-import app.edu_kg.utils.adapter.ItemListAdapter;
-import kotlin.Pair;
 import kotlin.Triple;
 
 
@@ -71,8 +63,10 @@ public class DetailActivity extends AppCompatActivity implements WbShareCallback
     private List<DetailPropertyTableAdapter.DetailMessage> propertyList;
     private DetailPropertyTableAdapter adapter;
     private String relationList;
+    private String description;
     private boolean isFavorite;
     private boolean hasQuestion;
+
 
     private AuthInfo weiboAuthInfo;
     private IWBAPI weiboAPI;
@@ -130,17 +124,48 @@ public class DetailActivity extends AppCompatActivity implements WbShareCallback
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == Constant.DETAIL_RESPONSE_SUCCESS || msg.what == Constant.INSTANCE_LOAD_SUCCESS) {
-                    Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, String,  Pair<Boolean, Boolean>> obj =
-                            (Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, String, Pair<Boolean, Boolean>>) msg.obj;
+                    Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, String,  Triple<String, Boolean, Boolean>> obj =
+                            (Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, String, Triple<String, Boolean, Boolean>>) msg.obj;
                     if (msg.what == Constant.DETAIL_RESPONSE_SUCCESS)
                         InstanceIO.saveInstance(activity, obj, name);
-                    propertyList.addAll(obj.getFirst());
+                    propertyList = obj.getFirst();
+                    if (propertyList.size() > 10){
+                        Button showMore = activity.findViewById(R.id.detail_show_more);
+                        showMore.setVisibility(View.VISIBLE);
+                        adapter.itemList = propertyList.subList(0, 10);
+                        adapter.notifyDataSetChanged();
+                        showMore.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (showMore.getText().equals("点击展开更多")){
+                                    showMore.setText("点击收起");
+                                    adapter.itemList = propertyList;
+                                    adapter.notifyDataSetChanged();
+                                }
+                                else {
+                                    showMore.setText("点击展开更多");
+                                    adapter.itemList = propertyList.subList(0, 10);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
+                        });
+                    }
+                    else{
+                        adapter.itemList = propertyList;
+                    }
+
                     adapter.notifyDataSetChanged();
                     relationList = obj.getSecond();
-                    isFavorite = obj.getThird().getFirst();
+                    description = obj.getThird().getFirst();
+                    if (!description.equals("")){
+                        TextView text = activity.findViewById(R.id.detail_text);
+                        text.setVisibility(View.VISIBLE);
+                        text.setText(description);
+                    }
+                    isFavorite = obj.getThird().getSecond();
                     favorite.setSelected(isFavorite);
 
-                    hasQuestion = obj.getThird().getSecond();
+                    hasQuestion = obj.getThird().getThird();
                     exercise.setVisibility(hasQuestion ? View.VISIBLE: View.GONE);
 
                     // init chart webview
@@ -240,10 +265,14 @@ public class DetailActivity extends AppCompatActivity implements WbShareCallback
         });
 
         // set data
-        propertyList = new ArrayList<>();
-        adapter = new DetailPropertyTableAdapter(propertyList);
+        adapter = new DetailPropertyTableAdapter(new ArrayList<>());
         RecyclerView propertyRecycler = findViewById(R.id.detail_property_recycler);
-        propertyRecycler.setLayoutManager(new LinearLayoutManager(this));
+        propertyRecycler.setLayoutManager(new LinearLayoutManager(this){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
         propertyRecycler.setAdapter(adapter);
         if (loadFromFile)
             InstanceIO.loadInstance(this, name, handler);

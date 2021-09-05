@@ -24,7 +24,7 @@ import okhttp3.*;
 
 public class Request {
     final static OkHttpClient client = new OkHttpClient();
-    final static String ip = "192.168.43.205";
+    final static String ip = "183.172.240.128";
 
     public static void inputQuestion(String question, @Nullable String course, final Handler handler) {
         new Thread(new Runnable() {
@@ -302,15 +302,21 @@ public class Request {
                                     return t1.attribute.hashCode() - t2.attribute.hashCode();
                             }
                         });
+
+                        String description = json.getJSONObject("data").getString("description");
+                        Boolean isFavorite = json.getJSONObject("data").getBoolean("isFavorite");
+                        Boolean hasQuestion = json.getJSONObject("data").getBoolean("hasQuestion");
+
+                        Map<String, Integer> unique = new HashMap<>();
                         JSONObject relation = new JSONObject();
                         JSONArray nodes = new JSONArray();
                         JSONObject self = new JSONObject();
                         self.put("name", name);
                         self.put("category", 0);
                         nodes.put(self);
+                        unique.put(name, 1);
                         JSONArray links = new JSONArray();
 
-                        Map<String, Integer> unique = new HashMap<>();
                         data = json.getJSONObject("data").getJSONArray("relationship");
                         for (int i = 0; i < data.length(); i++){
                             JSONObject item = data.getJSONObject(i);
@@ -329,7 +335,7 @@ public class Request {
                                 }
                                 else {
                                     int cnt = unique.get(item.getString("object_label"));
-                                    JSONObject style = new JSONObject("{normal:{curveness:" + String.valueOf(cnt * 0.2) + "}}");
+                                    JSONObject style = new JSONObject("{normal:{curveness:" + String.valueOf(cnt * 0.4) + "}}");
                                     link.put("lineStyle", style);
                                     unique.put(item.getString("object_label"), cnt + 1);
                                 }
@@ -362,7 +368,7 @@ public class Request {
                         relation.put("links", links);
 
                         handler.sendMessage(handler.obtainMessage(Constant.DETAIL_RESPONSE_SUCCESS,
-                                new Triple<>(property, relation.toString(), new Pair<>(json.getJSONObject("data").getBoolean("isFavorite"), json.getJSONObject("data").getBoolean("hasQuestion")))));
+                                new Triple<>(property, relation.toString(), new Triple<>(description, isFavorite, hasQuestion))));
                     }
                     else throw new Exception();
                 } catch (Exception e) {
@@ -430,7 +436,7 @@ public class Request {
         }).start();
     }
 
-    public static void getInstanceList(String searchKey, String course, String order, Handler handler) {
+    public static void getInstanceList(String searchKey, String course, String order, String filter, Handler handler) {
         new Thread(new Runnable() {
             @Override
             public void run() {

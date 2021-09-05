@@ -62,12 +62,39 @@
 
                     </LinearLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/detail_property_recycler"
+                    <TextView
+                        android:id="@+id/detail_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:visibility="gone"
+                        tools:text="正文"
+                        />
+
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="16dp">
-                    </androidx.recyclerview.widget.RecyclerView>
+                        android:descendantFocusability="blocksDescendants">
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/detail_property_recycler"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="16dp">
+                        </androidx.recyclerview.widget.RecyclerView>
+                    </RelativeLayout>
+
+                    <Button
+                        android:id="@+id/detail_show_more"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:visibility="gone"
+                        android:text="@string/show_more"
+                        app:icon="@drawable/subject_add"
+                        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                     />
 
                     <LinearLayout
                         android:layout_width="wrap_content"

@@ -38,5 +38,7 @@
     <string name="change_user_profile">更改头像</string>
     <string name="change_user_background">更改背景</string>
     <string name="not_logged_in">未登录</string>
+    <string name="show_more">点击展开更多</string>
+    <string name="search_filter">筛选</string>
 
 </resources>
