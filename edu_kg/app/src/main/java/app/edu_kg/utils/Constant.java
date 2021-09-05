@@ -98,4 +98,6 @@ public class Constant {
     public static final String REDIRECT_URL = "https://api.weibo.com/oauth2/default.html";
     public static final String SCOPE = "";
 
+    public static final String historyDir = "search_history";
+
 }

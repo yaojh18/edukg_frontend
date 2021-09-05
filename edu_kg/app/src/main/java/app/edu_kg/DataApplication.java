@@ -1,5 +1,6 @@
 package app.edu_kg;
 
+
 import android.app.Application;
 import android.graphics.Bitmap;
 
@@ -12,6 +13,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 import app.edu_kg.utils.Constant;
+import app.edu_kg.utils.InstanceIO;
 import app.edu_kg.utils.adapter.ItemListAdapter;
 import app.edu_kg.utils.adapter.MessageListAdapter;
 import app.edu_kg.utils.adapter.SubjectGridAdapter;
@@ -37,6 +39,8 @@ public class DataApplication extends Application {
     public boolean userStateChanged;
     public Bitmap profile = null;
     public Bitmap background = null;
+
+    public List<ItemListAdapter.ItemMessage> searchHistoryList;
 
     public DataApplication(){
 

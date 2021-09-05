@@ -30,6 +30,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.edu_kg.DataApplication;
 import app.edu_kg.R;
 import app.edu_kg.pages.result.ResultActivity;
 import app.edu_kg.pages.test.TestActivity;
@@ -47,7 +48,6 @@ public class SearchActivity extends AppCompatActivity implements ItemListAdapter
 
     private List<ItemListAdapter.ItemMessage> searchHistoryList;
     private ItemListAdapter adapter;
-    private ArrayAdapter<String> subjectAdapter;
     private ArrayAdapter<String> entityFilterAdapter;
     private ArrayAdapter<String> otherFilterAdapter;
 
@@ -56,6 +56,8 @@ public class SearchActivity extends AppCompatActivity implements ItemListAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         Activity activity = this;
+
+        searchHistoryList = ((DataApplication)getApplicationContext()).searchHistoryList;
 
         try {
             searchHistoryList = (List<ItemListAdapter.ItemMessage>) InstanceIO.loadInstanceWithoutHandler(this, historyDir);
@@ -135,11 +137,10 @@ public class SearchActivity extends AppCompatActivity implements ItemListAdapter
         });
 
         // init tab
-        subjectAdapter = new ArrayAdapter<>(activity, R.layout.selector_item, Constant.SUBJECT_LIST);
         entityFilterAdapter = new ArrayAdapter<>(activity, R.layout.selector_item, Constant.ENTITY_FILTER_LIST);
         otherFilterAdapter = new ArrayAdapter<>(activity, R.layout.selector_item, Constant.OTHER_FILTER_LIST);
         orderView.setAdapter(entityFilterAdapter);
-        courseView.setAdapter(subjectAdapter);
+        courseView.setAdapter(new ArrayAdapter<>(activity, R.layout.selector_item, Constant.SUBJECT_LIST));
 
         TabLayout tabLayout = findViewById(R.id.search_tab);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

@@ -159,7 +159,6 @@ public class HomeFragment extends Fragment implements ItemListAdapter.OnItemClic
         intent.putExtra("course", item.course);
         intent.putExtra("name", item.label);
         intent.putExtra("token", localData.token);
-        intent.putExtra("load", InstanceIO.isInstanceExist(context, item.label));
         startActivity(intent);
     }
 

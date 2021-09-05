@@ -19,7 +19,7 @@ import okhttp3.*;
 
 public class Request {
     final static OkHttpClient client = new OkHttpClient();
-    final static String ip = "183.172.244.198";
+    final static String ip = "183.172.240.128";
 
     public static void inputQuestion(String question, @Nullable String course, final Handler handler) {
         new Thread(new Runnable() {

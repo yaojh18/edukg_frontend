@@ -80,7 +80,7 @@ public class DetailActivity extends AppCompatActivity implements WbShareCallback
         course = intent.getStringExtra("course");
         name = intent.getStringExtra("name");
         token = intent.getStringExtra("token");
-        boolean loadFromFile= intent.getBooleanExtra("load", false);
+        boolean loadFromFile= InstanceIO.isInstanceExist(this, name);
         hasQuestion = false;
 
         TextView nameView = findViewById(R.id.detail_name);
