@@ -112,6 +112,7 @@ public class SearchActivity extends AppCompatActivity implements ItemListAdapter
                         Functional.subjEng2Che(course) + "\t" + type + "\t" + Functional.sortMethodEnd2Che(order)));
                 adapter.notifyItemChanged(searchHistoryList.size() - 1);
                 InstanceIO.saveInstance(activity, searchHistoryList, historyDir);
+
                 jumpToResult(type, searchInput, order, course);
             }
         });
@@ -162,6 +163,7 @@ public class SearchActivity extends AppCompatActivity implements ItemListAdapter
             public void onTabReselected(TabLayout.Tab tab) { }
         });
     }
+
 
     private void jumpToResult(String type, String searchInput, String order, String course) {
         Intent intent = null;

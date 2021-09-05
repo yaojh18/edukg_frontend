@@ -1,5 +1,6 @@
 package app.edu_kg.pages.result;
 
+import android.app.Activity;
 import android.content.Intent;
 
 import android.os.Bundle;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.edu_kg.DataApplication;
+import app.edu_kg.MainActivity;
 import app.edu_kg.R;
 import app.edu_kg.pages.detail.DetailActivity;
 import app.edu_kg.pages.link.LinkActivity;
@@ -49,12 +51,15 @@ import app.edu_kg.utils.adapter.ItemListAdapter;
 
 public class ResultActivity extends AppCompatActivity implements ItemListAdapter.OnItemClickListener {
 
+    private final String historyDir = "search_history";
     private ActivityResultBinding binding;
     private Handler handler;
     private List<ItemListAdapter.ItemMessage> resultList = new ArrayList<>();;
     private ItemListAdapter adapter = new ItemListAdapter(resultList, this);
     private ArrayAdapter<String> subjectAdapter;
     private ArrayAdapter<String> entityFilterAdapter;
+    private List<ItemListAdapter.ItemMessage> searchHistoryList;
+    private Activity activity = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +68,21 @@ public class ResultActivity extends AppCompatActivity implements ItemListAdapter
         View view = binding.getRoot();
         setContentView(view);
         Intent intent = getIntent();
+        initHistory();
         initHandler();
         initResult(intent);
         initSearchBar(intent);
         initTab();
+    }
+
+    private void initHistory() {
+        try {
+            searchHistoryList = (List<ItemListAdapter.ItemMessage>) InstanceIO.loadInstanceWithoutHandler(this, historyDir);
+            if (searchHistoryList == null)
+                throw new Exception();
+        }catch (Exception e){
+            searchHistoryList = new ArrayList<>();
+        }
     }
 
     private void initHandler() {
@@ -105,6 +121,10 @@ public class ResultActivity extends AppCompatActivity implements ItemListAdapter
                         } catch(Exception e) {
                             Log.e("test", e.toString());
                         }
+                    }
+                    for (ItemListAdapter.ItemMessage item : resultList) {
+                        if (InstanceIO.isInstanceExist(activity, item.label))
+                            item.isChecked = true;
                     }
                 }
                 adapter.notifyItemChanged(resultList.size() - 1);
@@ -168,6 +188,8 @@ public class ResultActivity extends AppCompatActivity implements ItemListAdapter
                     String order = Functional.sortMethodChe2Eng(orderView.getText().toString());
                     String course = Functional.subjChe2Eng(courseView.getText().toString());
                     String type = "实体";
+                    searchHistoryList.add(new ItemListAdapter.ItemMessage(searchInput, course, Functional.subjEng2Che(course) + "\t" + type + "\t" + Functional.sortMethodEnd2Che(order)));
+                    InstanceIO.saveInstance(activity, searchHistoryList, historyDir);
                     jumpToResult(type, searchInput, order, course);
                 }
                 return false;
@@ -180,6 +202,8 @@ public class ResultActivity extends AppCompatActivity implements ItemListAdapter
                 String order = Functional.sortMethodChe2Eng(orderView.getText().toString());
                 String course = Functional.subjChe2Eng(courseView.getText().toString());
                 String type = "实体";
+                searchHistoryList.add(new ItemListAdapter.ItemMessage(searchInput, course, Functional.subjEng2Che(course) + "\t" + type + "\t" + Functional.sortMethodEnd2Che(order)));
+                InstanceIO.saveInstance(activity, searchHistoryList, historyDir);
                 jumpToResult(type, searchInput, order, course);
             }
         });

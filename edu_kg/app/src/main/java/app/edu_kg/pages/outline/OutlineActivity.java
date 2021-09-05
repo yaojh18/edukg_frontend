@@ -39,7 +39,7 @@ public class OutlineActivity extends AppCompatActivity implements ItemListAdapte
 
     private ActivityOutlineBinding binding;
     private Handler handler;
-    private List<ItemListAdapter.ItemMessage> outlineList = new ArrayList<>();;
+    private List<ItemListAdapter.ItemMessage> outlineList = new ArrayList<>();
     private ItemListAdapter adapter = new ItemListAdapter(outlineList, this);
     private Intent intent;
 
