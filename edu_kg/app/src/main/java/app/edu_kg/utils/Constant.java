@@ -29,6 +29,7 @@ public class Constant {
     public final static int LINK_INSTANCE_RESPONSE = 2006;
     public final static int INSTANCE_LIST_RESPONSE = 2007;
     public final static int QUESTION_LIST_RESPONSE = 2008;
+    public final static int OUTLINE_RESPONSE = 2009;
 
 
     public final static int HISTORY_PAGE = 3000;

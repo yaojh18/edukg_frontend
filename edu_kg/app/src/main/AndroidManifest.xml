@@ -37,6 +37,12 @@
             android:name=".pages.user.LogActivity"
             android:exported="true" />
         <activity
+            android:name=".pages.link.LinkActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".pages.outline.OutlineActivity"
+            android:exported="true"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name">
