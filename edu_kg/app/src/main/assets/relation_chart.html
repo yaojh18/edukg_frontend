@@ -18,7 +18,7 @@
             type: 'graph',
             layout: 'force',
             force: {
-                repulsion: 300, // 要改
+                repulsion: 300,
                 edgeLength: 120
             },
             edgeSymbol: ['circle', 'arrow'],
@@ -32,7 +32,6 @@
                     textStyle: {
                         fontSize: 10,
                     }
-
                 }
             },
             label: {
@@ -74,6 +73,12 @@
             links: relationData.links
         }]
     };
+    if (relationData.data.length > 10) {
+        option.series[0].force = {
+            repulsion: 200,
+            edgeLength: 90
+        }
+    }
     myChart.setOption(option);
     myChart.on('click', function (params){
         if (params.dataType === 'node')
