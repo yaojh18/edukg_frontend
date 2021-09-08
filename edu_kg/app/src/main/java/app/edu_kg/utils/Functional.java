@@ -80,8 +80,10 @@ public class Functional {
         }
     }
 
-    public static String getShareText(){
-        return "test";
+    public static String getShareText(String name, String description){
+        if (description.length() > 50)
+            description = description.substring(0, 50) + "...";
+        return "#快乐学习APP#\n#" + name + "#\n" + description + "\n\n我在快乐学习APP学单词，今天又学到了新知识，快来下载看看吧！";
     }
     public static Bitmap getContactBitmapFromURI(Context context, Uri uri) {
         try {

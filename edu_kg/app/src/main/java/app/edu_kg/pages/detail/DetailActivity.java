@@ -15,6 +15,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -26,11 +28,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.sina.weibo.sdk.api.ImageObject;
 import com.sina.weibo.sdk.api.TextObject;
 import com.sina.weibo.sdk.api.WeiboMultiMessage;
 import com.sina.weibo.sdk.auth.AuthInfo;
@@ -52,6 +56,7 @@ import app.edu_kg.utils.Functional;
 import app.edu_kg.utils.InstanceIO;
 import app.edu_kg.utils.Request;
 import app.edu_kg.utils.adapter.DetailPropertyTableAdapter;
+import kotlin.Pair;
 import kotlin.Triple;
 
 
@@ -64,6 +69,7 @@ public class DetailActivity extends AppCompatActivity implements WbShareCallback
     private DetailPropertyTableAdapter adapter;
     private String relationList;
     private String description;
+    private Bitmap image;
     private boolean isFavorite;
     private boolean hasQuestion;
 
@@ -124,10 +130,18 @@ public class DetailActivity extends AppCompatActivity implements WbShareCallback
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == Constant.DETAIL_RESPONSE_SUCCESS || msg.what == Constant.INSTANCE_LOAD_SUCCESS) {
-                    Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, String,  Triple<String, Boolean, Boolean>> obj =
-                            (Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, String, Triple<String, Boolean, Boolean>>) msg.obj;
-                    if (msg.what == Constant.DETAIL_RESPONSE_SUCCESS)
+                    Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, String, Triple<Boolean, Boolean, String>> obj;
+                    if (msg.what == Constant.DETAIL_RESPONSE_SUCCESS) {
+                        Pair<Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, String, Triple<Boolean, Boolean, String>>, Bitmap> rawObj =
+                                (Pair<Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, String, Triple<Boolean, Boolean, String>>, Bitmap>) msg.obj;
+                        obj = rawObj.getFirst();
+                        image = rawObj.getSecond();
                         InstanceIO.saveInstance(activity, obj, name);
+                        InstanceIO.saveBitmap(activity, image, name + "+image");
+                    }else{
+                        obj = (Triple<ArrayList<DetailPropertyTableAdapter.DetailMessage>, String, Triple<Boolean, Boolean, String>>) msg.obj;
+                        image = InstanceIO.loadBitmap(activity, name + "+image");
+                    }
                     propertyList = obj.getFirst();
                     if (propertyList.size() > 10){
                         Button showMore = activity.findViewById(R.id.detail_show_more);
@@ -153,19 +167,25 @@ public class DetailActivity extends AppCompatActivity implements WbShareCallback
                     else{
                         adapter.itemList = propertyList;
                     }
-
                     adapter.notifyDataSetChanged();
+
                     relationList = obj.getSecond();
-                    description = obj.getThird().getFirst();
+                    description = obj.getThird().getThird();
                     if (!description.equals("")){
                         TextView text = activity.findViewById(R.id.detail_text);
                         text.setVisibility(View.VISIBLE);
                         text.setText(description);
                     }
-                    isFavorite = obj.getThird().getSecond();
+                    if (image != null){
+                        ImageView imageView = activity.findViewById(R.id.detail_image);
+                        imageView.setVisibility(View.VISIBLE);
+                        imageView.setImageBitmap(image);
+                    }
+
+                    isFavorite = obj.getThird().getFirst();
                     favorite.setSelected(isFavorite);
 
-                    hasQuestion = obj.getThird().getThird();
+                    hasQuestion = obj.getThird().getSecond();
                     exercise.setVisibility(hasQuestion ? View.VISIBLE: View.GONE);
 
                     // init chart webview
@@ -229,26 +249,21 @@ public class DetailActivity extends AppCompatActivity implements WbShareCallback
         // init share onclick
         weiboAuthInfo = new AuthInfo(this, Constant.APP_KEY, Constant.REDIRECT_URL, Constant.SCOPE);
         weiboAPI = WBAPIFactory.createWBAPI(this);
+        weiboAPI.registerApp(this, weiboAuthInfo);
 
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (weiboAPI.isWBAppInstalled()){
-                    WeiboMultiMessage message = new WeiboMultiMessage();
-                    TextObject textObject = new TextObject();
-                    textObject.text = Functional.getShareText();
-                    message.textObject = textObject;
-                    weiboAPI.shareMessage(message, false);
-
+                WeiboMultiMessage message = new WeiboMultiMessage();
+                TextObject textObject = new TextObject();
+                textObject.text = Functional.getShareText(name, description);
+                message.textObject = textObject;
+                if (image != null){
+                    ImageObject imageObject = new ImageObject();
+                    imageObject.setImageData(image);
+                    message.imageObject = imageObject;
                 }
-                else{
-                    Snackbar.make(view, "我们的微博SDK申请还没有通过（悲伤）", Snackbar.LENGTH_SHORT)
-                            .setAction("确认", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) { }
-                            })
-                            .show();
-                }
+                weiboAPI.shareMessage(message, false);
             }
         });
 

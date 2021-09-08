@@ -1,5 +1,7 @@
 package app.edu_kg.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.util.Log;
 
@@ -8,6 +10,9 @@ import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -24,7 +29,7 @@ import okhttp3.*;
 
 public class Request {
     final static OkHttpClient client = new OkHttpClient();
-    final static String ip = "183.172.240.128";
+    final static String ip = "183.172.246.211";
 
     public static void inputQuestion(String question, @Nullable String course, final Handler handler) {
         new Thread(new Runnable() {
@@ -289,25 +294,43 @@ public class Request {
                     if (response.isSuccessful()){
                         JSONArray data = json.getJSONObject("data").getJSONArray("property");
                         ArrayList<DetailPropertyTableAdapter.DetailMessage> property = new ArrayList<>();
+                        Set<String> nameUnique = new HashSet<>();
                         for (int i = 0; i < data.length(); i++){
                             JSONObject item = data.getJSONObject(i);
-                            property.add(new DetailPropertyTableAdapter.DetailMessage(item.getString("predicateLabel"), item.getString("object")));
+                            String label = item.getString("predicateLabel");
+                            String attribute = item.getString("object");
+                            if (!nameUnique.contains(label + attribute)){
+                                property.add(new DetailPropertyTableAdapter.DetailMessage(label, attribute));
+                                nameUnique.add(label + attribute);
+                            }
                         }
                         property.sort(new Comparator<DetailPropertyTableAdapter.DetailMessage>() {
                             @Override
                             public int compare(DetailPropertyTableAdapter.DetailMessage t1, DetailPropertyTableAdapter.DetailMessage t2) {
-                                if (t1.value.length() != t2.value.length())
-                                    return t1.value.length() - t2.value.length();
-                                else
+                                if (t1.attribute.hashCode() != t2.attribute.hashCode())
                                     return t1.attribute.hashCode() - t2.attribute.hashCode();
+                                else
+                                    return t1.value.length() - t2.value.length();
                             }
                         });
 
                         String description = json.getJSONObject("data").getString("description");
                         Boolean isFavorite = json.getJSONObject("data").getBoolean("isFavorite");
                         Boolean hasQuestion = json.getJSONObject("data").getBoolean("hasQuestion");
+                        String imageUrl = json.getJSONObject("data").getString("img");
+                        Bitmap image = null;
+                        if (!imageUrl.equals("")){
+                            URL imageURL = new URL(imageUrl);
+                            HttpURLConnection conn = (HttpURLConnection) imageURL.openConnection();
+                            conn.setDoInput(true);
+                            conn.connect();
+                            InputStream is = conn.getInputStream();
+                            image = BitmapFactory.decodeStream(is);
+                            is.close();
+                        }
 
                         Map<String, Integer> unique = new HashMap<>();
+                        nameUnique.clear();
                         JSONObject relation = new JSONObject();
                         JSONArray nodes = new JSONArray();
                         JSONObject self = new JSONObject();
@@ -321,6 +344,10 @@ public class Request {
                         for (int i = 0; i < data.length(); i++){
                             JSONObject item = data.getJSONObject(i);
                             if (item.has("object_label")){
+                                if (!nameUnique.contains(item.getString("object_label") + item.getString("predicate_label") + "+o"))
+                                    nameUnique.add(item.getString("object_label") + item.getString("predicate_label") + "+o");
+                                else
+                                    continue;
                                 JSONObject link = new JSONObject();
                                 link.put("source", name);
                                 link.put("target", item.getString("object_label"));
@@ -335,13 +362,17 @@ public class Request {
                                 }
                                 else {
                                     int cnt = unique.get(item.getString("object_label"));
-                                    JSONObject style = new JSONObject("{normal:{curveness:" + String.valueOf(cnt * 0.4) + "}}");
+                                    JSONObject style = new JSONObject("{normal:{curveness:" + String.valueOf(0.1 + cnt * 0.2) + "}}");
                                     link.put("lineStyle", style);
                                     unique.put(item.getString("object_label"), cnt + 1);
                                 }
                                 links.put(link);
                             }
                             else {
+                                if (!nameUnique.contains(item.getString("subject_label") + item.getString("predicate_label") + "+s"))
+                                    nameUnique.add(item.getString("subject_label") + item.getString("predicate_label") + "+s");
+                                else
+                                    continue;
                                 JSONObject link = new JSONObject();
                                 link.put("source", item.getString("subject_label"));
                                 link.put("target", name);
@@ -356,7 +387,7 @@ public class Request {
                                 }
                                 else {
                                     int cnt = unique.get(item.getString("subject_label"));
-                                    JSONObject style = new JSONObject("{normal:{curveness:" + String.valueOf(cnt * 0.4) + "}}");
+                                    JSONObject style = new JSONObject("{normal:{curveness:" + String.valueOf(0.1 + cnt * 0.2) + "}}");
                                     link.put("lineStyle", style);
                                     unique.put(item.getString("subject_label"), cnt + 1);
                                 }
@@ -368,7 +399,7 @@ public class Request {
                         relation.put("links", links);
 
                         handler.sendMessage(handler.obtainMessage(Constant.DETAIL_RESPONSE_SUCCESS,
-                                new Triple<>(property, relation.toString(), new Triple<>(description, isFavorite, hasQuestion))));
+                                new Pair<>(new Triple<>(property, relation.toString(), new Triple<>(isFavorite, hasQuestion, description)), image)));
                     }
                     else throw new Exception();
                 } catch (Exception e) {
