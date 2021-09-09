@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,7 @@ public class OutlineActivity extends AppCompatActivity {
 
     private ActivityOutlineBinding binding;
     private Handler handler;
-    private OutlineListAdapter adapter = new OutlineListAdapter();
+    private OutlineListAdapter adapter;
     private Intent intent;
 
 
@@ -53,6 +54,7 @@ public class OutlineActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
         intent = getIntent();
+        adapter = new OutlineListAdapter();
         initHandler();
         initResult();
         initBack();
@@ -96,7 +98,7 @@ public class OutlineActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        adapter.addItem(label, category, secondTitle);
+                        adapter.addItem(label, intent.getStringExtra("course"), category, secondTitle);
                     }
                 }
             }
@@ -151,7 +153,7 @@ class OutlineListAdapter extends RecyclerView.Adapter {
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), DetailActivity.class);
                     intent.putExtra("name", outline.firstTitle.split("\t", 2)[1]);
-                    intent.putExtra("course", outline.category);
+                    intent.putExtra("course", outline.subject);
                     intent.putExtra("token", ((DataApplication)v.getContext().getApplicationContext()).token);
                     v.getContext().startActivity(intent);
                 }
@@ -161,14 +163,17 @@ class OutlineListAdapter extends RecyclerView.Adapter {
                 addSecondTitle(outline ,i);
             }
             category.setText(outline.category);
+            imageView.setBackgroundResource(R.drawable.ic_outline_expand);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(secondTitle.getVisibility() == View.GONE) {
                         secondTitle.setVisibility(View.VISIBLE);
+                        imageView.setBackgroundResource(R.drawable.ic_outline_close);
                     }
                     else {
                         secondTitle.setVisibility(View.GONE);
+                        imageView.setBackgroundResource(R.drawable.ic_outline_expand);
                     }
 
                 }
@@ -184,7 +189,7 @@ class OutlineListAdapter extends RecyclerView.Adapter {
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), DetailActivity.class);
                     intent.putExtra("name", outline.secondTitle.get(i).split("\t", 2)[1]);
-                    intent.putExtra("course", outline.category);
+                    intent.putExtra("course", outline.subject);
                     intent.putExtra("token", ((DataApplication)v.getContext().getApplicationContext()).token);
                     v.getContext().startActivity(intent);
                 }
@@ -196,10 +201,12 @@ class OutlineListAdapter extends RecyclerView.Adapter {
     private static class Outline {
         String firstTitle;
         String category;
+        String subject;
         List<String> secondTitle;
 
-        Outline (String firstTitle, String category, List<String> secondTitle) {
+        Outline (String firstTitle, String subject, String category, List<String> secondTitle) {
             this.firstTitle = firstTitle;
+            this.subject = subject;
             this.category = category;
             this.secondTitle = secondTitle;
         }
@@ -211,8 +218,8 @@ class OutlineListAdapter extends RecyclerView.Adapter {
         outlineList = new ArrayList<app.edu_kg.pages.outline.OutlineListAdapter.Outline>();
     }
 
-    public void addItem(String firstTitle, String category, List<String> secondTitle) {
-        outlineList.add(new OutlineListAdapter.Outline(firstTitle, category, secondTitle));
+    public void addItem(String firstTitle, String subject, String category, List<String> secondTitle) {
+        outlineList.add(new OutlineListAdapter.Outline(firstTitle, subject, category, secondTitle));
     }
 
 
