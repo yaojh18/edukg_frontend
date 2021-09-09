@@ -75,8 +75,10 @@ public class TestActivity extends AppCompatActivity {
                     try {
                         JSONObject json = (JSONObject) msg.obj;
                         JSONArray entities = json.getJSONArray("data");
-                        if (entities.length() == 0)
+                        if (entities.length() == 0) {
+                            testViewModel.adapter.addTest("没有搜到任何题目，换个关键词在搜搜看吧~", "", "", "", "", 0);
                             throw new Exception();
+                        }
                         for(int i = 0; i < entities.length(); ++i) {
                             String question = entities.getJSONObject(i).getString("qBody");
                             String optA = entities.getJSONObject(i).getString("A");
