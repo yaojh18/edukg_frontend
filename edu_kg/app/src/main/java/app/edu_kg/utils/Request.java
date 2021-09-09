@@ -472,17 +472,16 @@ public class Request {
             @Override
             public void run() {
                 final String url = "http://" + ip + ":8080/API/instanceList";
-                HttpUrl urlQuery =
-                        HttpUrl.parse(url).newBuilder().
-                                addQueryParameter("searchKey", searchKey).
-                                addQueryParameter("course", course).
-                                addQueryParameter("sortMethod", order)
+                HttpUrl urlQuery = HttpUrl.parse(url).newBuilder()
+                                .addQueryParameter("searchKey", searchKey)
+                                .addQueryParameter("course", course)
+                                .addQueryParameter("sortMethod", order)
+                                .addQueryParameter("filterMethod", filter)
                                 .build();
-                okhttp3.Request request =
-                        new okhttp3.Request.Builder().
-                                url(urlQuery).
-                                get().
-                                build();
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                                .url(urlQuery)
+                                .get()
+                                .build();
 
                 try {
                     Response response = client.newCall(request).execute();

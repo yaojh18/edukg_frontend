@@ -11,6 +11,8 @@ import java.io.InputStream;
 public class Functional {
     public static String subjChe2Eng(String ch) {
         switch(ch) {
+            case "语文":
+                return "chinese";
             case "英语":
                 return "english";
             case "数学":
@@ -28,11 +30,13 @@ public class Functional {
             case "政治":
                 return "politics";
             default:
-                return "chinese";
+                return "error";
         }
     }
     public static String subjEng2Che(String ch) {
         switch(ch) {
+            case "chinese":
+                return "语文";
             case "english":
                 return "英语";
             case "math":
@@ -50,7 +54,7 @@ public class Functional {
             case "politics":
                 return "政治";
             default:
-                return "语文";
+                return "错误";
         }
     }
 
@@ -60,8 +64,14 @@ public class Functional {
                 return "default";
             case "拼音":
                 return "pinyin";
-            case "热度":
+            case "访问数":
                 return "accessCount";
+            case "热门":
+                return "popular";
+            case "浏览过":
+                return "history";
+            case "已收藏":
+                return "favorite";
             default:
                 return "error";
         }
@@ -74,7 +84,13 @@ public class Functional {
             case "pinyin":
                 return "拼音";
             case "accessCount":
-                return "热度";
+                return "访问数";
+            case "popular":
+                return "热门";
+            case "history":
+                return "浏览过";
+            case "favorite":
+                return "已收藏";
             default:
                 return "错误";
         }

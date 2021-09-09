@@ -91,10 +91,11 @@ public class Constant {
     };
 
     public final static String[] SEARCH_TYPE_LIST = {"实体", "文本", "试题", "提纲"};
-    public final static String[] ENTITY_FILTER_LIST = {"默认", "拼音", "热度"};
+    public final static String[] ENTITY_FILTER_LIST = {"默认", "拼音", "访问数"};
     public final static String[] OTHER_FILTER_LIST = {"默认"};
     public final static String[] SUBJECT_LIST = {"语文", "数学", "英语", "物理", "化学", "生物", "政治", "历史", "地理"};
-    public final static String[] FILTER_LIST = {"默认"};
+    public final static String[] FILTER_LIST = {"默认", "热门"};
+    public final static String[] FILTER_LIST_USER = {"默认", "热门", "浏览过", "已收藏"};
 
     public static final String APP_KEY = "1432141639";
     public static final String REDIRECT_URL = "https://api.weibo.com/oauth2/default.html";

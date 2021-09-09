@@ -141,11 +141,14 @@ public class SearchActivity extends AppCompatActivity implements ItemListAdapter
         });
 
         // init tab
-        entityFilterAdapter = new ArrayAdapter<>(activity, R.layout.selector_item, Constant.ENTITY_FILTER_LIST);
-        otherFilterAdapter = new ArrayAdapter<>(activity, R.layout.selector_item, Constant.OTHER_FILTER_LIST);
+        entityFilterAdapter = new ArrayAdapter<>(this, R.layout.selector_item, Constant.ENTITY_FILTER_LIST);
+        otherFilterAdapter = new ArrayAdapter<>(this, R.layout.selector_item, Constant.OTHER_FILTER_LIST);
         orderView.setAdapter(entityFilterAdapter);
-        courseView.setAdapter(new ArrayAdapter<>(activity, R.layout.selector_item, Constant.SUBJECT_LIST));
-        filterView.setAdapter(new ArrayAdapter<>(activity, R.layout.selector_item, Constant.FILTER_LIST));
+        courseView.setAdapter(new ArrayAdapter<>(this, R.layout.selector_item, Constant.SUBJECT_LIST));
+        if (!((DataApplication) getApplicationContext()).token.equals(""))
+            filterView.setAdapter(new ArrayAdapter<>(this, R.layout.selector_item, Constant.FILTER_LIST_USER));
+        else
+            filterView.setAdapter(new ArrayAdapter<>(this, R.layout.selector_item, Constant.FILTER_LIST));
 
         TabLayout tabLayout = findViewById(R.id.search_tab);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -171,32 +174,47 @@ public class SearchActivity extends AppCompatActivity implements ItemListAdapter
 
     private void jumpToResult(String type, String searchInput, String order, String course, String filter) {
         Intent intent = null;
-        if(type.equals("实体")) {
-            intent = new Intent(this, ResultActivity.class);
-            intent.putExtra("type", type);
-        }
-        else if(type.equals("文本")) {
-            intent = new Intent(this, LinkActivity.class);
-            intent.putExtra("type", type);
-        }
-        else if(type.equals("试题")) {
-            intent = new Intent(this, TestActivity.class);
-            intent.putExtra("page_type", Constant.EXERCISE_LIST_PAGE);
-        }
-        else{
-            intent = new Intent(this, OutlineActivity.class);
+        switch (type) {
+            case "实体":
+                intent = new Intent(this, ResultActivity.class);
+                intent.putExtra("type", type);
+                intent.putExtra("order", order);
+                intent.putExtra("filter", filter);
+                break;
+            case "文本":
+                intent = new Intent(this, LinkActivity.class);
+                intent.putExtra("type", type);
+                break;
+            case "试题":
+                intent = new Intent(this, TestActivity.class);
+                intent.putExtra("page_type", Constant.EXERCISE_LIST_PAGE);
+                break;
+            default:
+                intent = new Intent(this, OutlineActivity.class);
+                break;
         }
         intent.putExtra("searchInput", searchInput);
         intent.putExtra("course", course);
-        intent.putExtra("order", order);
-        intent.putExtra("filter", filter);
         startActivity(intent);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AutoCompleteTextView filterView = findViewById(R.id.filter);
+        if (!((DataApplication) getApplicationContext()).token.equals(""))
+            filterView.setAdapter(new ArrayAdapter<>(this, R.layout.selector_item, Constant.FILTER_LIST_USER));
+        else
+            filterView.setAdapter(new ArrayAdapter<>(this, R.layout.selector_item, Constant.FILTER_LIST));
     }
 
     @Override
     public void onItemClick(int position) {
         ItemListAdapter.ItemMessage item = searchHistoryList.get(position);
         String[] tmp = item.category.split("\t");
+        if ((tmp[3].equals("已收藏") || tmp[3].equals("浏览过")) && ((DataApplication)getApplicationContext()).token.equals(""))
+            tmp[3] = "默认";
         jumpToResult(tmp[1], item.label, Functional.sortMethodChe2Eng(tmp[2]), item.course, Functional.sortMethodChe2Eng(tmp[3]));
     }
 }
