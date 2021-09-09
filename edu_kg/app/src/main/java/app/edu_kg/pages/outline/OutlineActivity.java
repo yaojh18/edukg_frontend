@@ -2,18 +2,23 @@ package app.edu_kg.pages.outline;
 
 import android.content.Intent;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
 import com.google.android.material.appbar.MaterialToolbar;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,20 +33,18 @@ import java.util.List;
 import app.edu_kg.DataApplication;
 import app.edu_kg.R;
 import app.edu_kg.pages.detail.DetailActivity;
-import app.edu_kg.utils.Constant;
-import app.edu_kg.utils.Functional;
+
 import app.edu_kg.utils.Request;
 
 import app.edu_kg.databinding.ActivityOutlineBinding;
-import app.edu_kg.utils.adapter.ItemListAdapter;
 
-public class OutlineActivity extends AppCompatActivity implements ItemListAdapter.OnItemClickListener {
+public class OutlineActivity extends AppCompatActivity {
 
     private ActivityOutlineBinding binding;
     private Handler handler;
-    private List<ItemListAdapter.ItemMessage> outlineList = new ArrayList<>();
-    private ItemListAdapter adapter = new ItemListAdapter(outlineList, this);
+    private OutlineListAdapter adapter = new OutlineListAdapter();
     private Intent intent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,10 @@ public class OutlineActivity extends AppCompatActivity implements ItemListAdapte
             @Override
             public void handleMessage(Message msg) {
                 JSONObject json = null;
+                RecyclerView resultRecycler = binding.board;
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(binding.getRoot().getContext());
+                resultRecycler.setLayoutManager(linearLayoutManager);
+                resultRecycler.setAdapter(adapter);
                 try {
                     json = (JSONObject) msg.obj;
                 } catch(Exception e) {
@@ -72,31 +79,26 @@ public class OutlineActivity extends AppCompatActivity implements ItemListAdapte
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                outlineList.clear();
+                adapter.clear();
                 if(entities != null) {
                     for(int i = 0; i < entities.length(); ++i) {
                         String label = null;
                         String category = null;
                         JSONArray relationship_list = null;
-                        String secondTitle = "";
+                        List<String> secondTitle = new ArrayList<>();
                         try {
-                            label = (i + 1) + ". " + entities.getJSONObject(i).getString("label");
+                            label = (i + 1) + ".\t" + entities.getJSONObject(i).getString("label");
                             category = "(" + entities.getJSONObject(i).getString("category") + ")";
                             relationship_list = entities.getJSONObject(i).getJSONArray("relationship_list");
                             for(int j = 0; j < relationship_list.length(); ++j) {
-                                if(j != 0) {
-                                    secondTitle += "\n";
-                                }
-                                secondTitle += "--" + (i + 1) + "." + (j + 1) + "  " + relationship_list.getString(j);
+                                secondTitle.add("--" + (i + 1) + "." + (j + 1) + "\t" + relationship_list.getString(j));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-                        outlineList.add(new ItemListAdapter.ItemMessage(label, Functional.subjEng2Che(intent.getStringExtra("course")), category, null, false, secondTitle));
+                        adapter.addItem(label, category, secondTitle);
                     }
                 }
-                adapter.notifyItemChanged(outlineList.size() - 1);
             }
         };
     }
@@ -105,11 +107,6 @@ public class OutlineActivity extends AppCompatActivity implements ItemListAdapte
     private void initResult() {
         String searchInput = intent.getStringExtra("searchInput");
         String course = intent.getStringExtra("course");
-
-        RecyclerView resultRecycler = binding.board;
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        resultRecycler.setLayoutManager(linearLayoutManager);
-        resultRecycler.setAdapter(adapter);
         Request.getOutline(searchInput, course, handler);
     }
 
@@ -119,7 +116,6 @@ public class OutlineActivity extends AppCompatActivity implements ItemListAdapte
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("test", "finish");
                 finish();
             }
         });
@@ -130,18 +126,118 @@ public class OutlineActivity extends AppCompatActivity implements ItemListAdapte
         title.setText(intent.getStringExtra("searchInput"));
     }
 
-    private void jumpToDetail(String name, String course, String token) {
-        Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra("name", name);
-        intent.putExtra("course", course);
-        intent.putExtra("token", token);
-        startActivity(intent);
+}
+
+class OutlineListAdapter extends RecyclerView.Adapter {
+
+    private static class OutlineHolder extends RecyclerView.ViewHolder {
+        TextView firstTitle;
+        TextView category;
+        LinearLayout secondTitle;
+        ImageView imageView;
+
+        OutlineHolder(View itemView) {
+            super(itemView);
+            firstTitle = (TextView) itemView.findViewById(R.id.first_title);
+            category = (TextView) itemView.findViewById(R.id.category);
+            secondTitle = (LinearLayout) itemView.findViewById(R.id.second_title);
+            imageView = (ImageView) itemView.findViewById(R.id.item_image_end);
+        }
+
+        void bind(app.edu_kg.pages.outline.OutlineListAdapter.Outline outline) {
+            firstTitle.setText(outline.firstTitle);
+            firstTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), DetailActivity.class);
+                    intent.putExtra("name", outline.firstTitle.split("\t", 2)[1]);
+                    intent.putExtra("course", outline.category);
+                    intent.putExtra("token", ((DataApplication)v.getContext().getApplicationContext()).token);
+                    v.getContext().startActivity(intent);
+                }
+            });
+            secondTitle.removeAllViews();
+            for(int i = 0; i < outline.secondTitle.size(); ++i) {
+                addSecondTitle(outline ,i);
+            }
+            category.setText(outline.category);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(secondTitle.getVisibility() == View.GONE) {
+                        secondTitle.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        secondTitle.setVisibility(View.GONE);
+                    }
+
+                }
+            });
+        }
+
+        private void addSecondTitle(app.edu_kg.pages.outline.OutlineListAdapter.Outline outline, int i) {
+            TextView textView = new TextView(secondTitle.getContext());
+            textView.setText(outline.secondTitle.get(i));
+            textView.setTextAppearance(R.style.TextAppearance_AppCompat_Body1);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), DetailActivity.class);
+                    intent.putExtra("name", outline.secondTitle.get(i).split("\t", 2)[1]);
+                    intent.putExtra("course", outline.category);
+                    intent.putExtra("token", ((DataApplication)v.getContext().getApplicationContext()).token);
+                    v.getContext().startActivity(intent);
+                }
+            });
+            secondTitle.addView(textView);
+        }
+    }
+
+    private static class Outline {
+        String firstTitle;
+        String category;
+        List<String> secondTitle;
+
+        Outline (String firstTitle, String category, List<String> secondTitle) {
+            this.firstTitle = firstTitle;
+            this.category = category;
+            this.secondTitle = secondTitle;
+        }
+    }
+
+    private List<app.edu_kg.pages.outline.OutlineListAdapter.Outline> outlineList;
+
+    public OutlineListAdapter() {
+        outlineList = new ArrayList<app.edu_kg.pages.outline.OutlineListAdapter.Outline>();
+    }
+
+    public void addItem(String firstTitle, String category, List<String> secondTitle) {
+        outlineList.add(new OutlineListAdapter.Outline(firstTitle, category, secondTitle));
+    }
+
+
+    public void clear() {
+        outlineList.clear();
     }
 
     @Override
-    public void onItemClick(int position) {
-        ItemListAdapter.ItemMessage item = outlineList.get(position);
-        item.showSecondTitle = !item.showSecondTitle;
-        adapter.notifyItemChanged(position);
+    public int getItemCount() {
+        return outlineList.size();
     }
+
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.outline_item, parent, false);
+        return new app.edu_kg.pages.outline.OutlineListAdapter.OutlineHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        app.edu_kg.pages.outline.OutlineListAdapter.Outline message = outlineList.get(position);
+        ((app.edu_kg.pages.outline.OutlineListAdapter.OutlineHolder) holder).bind(message);
+    }
+
 }
